@@ -1,0 +1,83 @@
+---
+title: "Global ancestry analyses"
+author: "Melissa Spear"
+date: "06/05/2020"
+output: html_document
+---
+
+The following code describes the analyses discussed within the global ancestry analyses of the paper. This includes  Figures XXXX, tables XX And supplementary figures XXX. The data can be accessed itself through.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The following section is for Figure 1 of the paper 
+
+
+The following section is for Figure 2 of the paper. 
+
+```{r}
+##Plot Figure 2A
+#pdf("Amerindigenous_ancestry_ancestry_points+wiskers_dbins_081319_Figure1C.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=range(d[,284]),ylim=c(0,1),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.5,cex.axis=0.7, at=c("0.0","0.2","0.4","0.6","0.8","1.0"), labels=c("0","20","40","60","80","100"))
+mtext(side=1,"Birth year",line=1.1)
+mtext(side=2,"Amerindigenous ancestry (%)",line=1.1)
+c=col2rgb(pcol[2])/255;
+I1 = which.min(d[,284])
+I2 = which.max(d[,284])
+points(d[,284],d[,9],col=rgb(c[1],c[2],c[3],0.2),pch=16,cex=0.5)
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit$fitted.values[I1],y1=fit$fitted.values[I2],col="white",lwd=3)
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit$fitted.values[I1],y1=fit$fitted.values[I2],col=pcol[2],lwd=2)
+pw = 10 #partition width, in years
+part=seq(min(floor(d[,9]/10)*10),max(ceiling(d[,284]/10)*10),by=pw)
+for(i in 1:(length(part)-1)){
+  q1 = max(part[i],min(d[,284]));
+  q2 = min(part[i+1],max(d[,284]));
+  dbin = d[which(d[,284]>q1 & d[,284]<=q2),]
+  m = mean(dbin[,9],na.rm=T)
+  se = 2*sd(dbin[,9],na.rm=T)/sqrt(nrow(dbin))
+  segments(x0=q1,x1=q2,y0=m)
+  segments(x0=(q1+q2)/2,y0=m-se,y1=m+se)
+  cat(i,q1,q2,m,se,"\n",sep="\t")
+}
+dev.off()
+```
+
+The following section is for Table 1 of the paper 
+
+The following section is for Supplementary Figure 1 of the paper 
+
+The following section is for Supplementary Figure 2 of the paper 
+
+The following section is for Supplementary Figure 3 of the paper.
+
+The following section is for Supplementary Figure 4 of the paper 
+
+The following section is for Supplementary Figure 5 of the paper.
+
+The following section is for Supplementary Table 1 of the paper. 
+
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
