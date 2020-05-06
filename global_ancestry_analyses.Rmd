@@ -5,13 +5,97 @@ date: "06/05/2020"
 output: html_document
 ---
 
-The following code describes the analyses discussed within the global ancestry analyses of the paper. This includes  Figures XXXX, tables XX And supplementary figures XXX. The data can be accessed itself through.
+The following describes the analyses discussed within the global ancestry analyses of the paper. This includes Figures 1-2, Table 1, Supplementary Figures 1-6 and Supplementay Table 1. The HCHS/SOL data can be accessed itself through dbGaP Study Accession phs000810.v1.p1. HRS data for Supplementary Figure 5 was made available under IRB Study No. A11-E91-13B.
 
+#####Reading in the admixture run file, subsetting the reference pops, extracting admixed samples 
+```{r}
+#Read in the admixture file estimates file 
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+names(HCHS_SOL_admixture_file) <- c("YRI","CEU","AI")
+
+#Reading in the fam file accompaniment of the .bed file called for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+CEU<-fam_file_with_IDs[1:104,] #subset the CEU ref pop
+YRI<-fam_file_with_IDs[105:211,] #subset the YRI ref pop
+AI<-fam_file_with_IDs[212:323,] #subset the AI ref pop 
+
+all_ref<-rbind(CEU,YRI,AI)
+
+#Extracting out only the 95% admixed samples
+admixed_95<-fam_file_with_IDs[which(fam_file_with_IDs$CEU <= 0.95 & fam_file_with_IDs$YRI <=0.95 & fam_file_with_IDs$AI <=0.95),]
+
+dim(admixed_95)
+```
+
+##### Reading in the HCHS/SOL phenotype files and merging with the global ancestry estimates 
+```{r}
+#Read in the HCHS/SOL phenotype file 
+HCHS_SOL_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
+
+#merge the admixed 95 indivudals with the pheno file 
+admixed_with_pheno<-merge(admixed_95, HCHS_SOL_pheno, by.x =c("V1"), by.y=c("SUBJECT_ID"))
+dim(admixed_with_pheno)
+```
+
+#####Subsetting the HCHS/SOL populations 
+```{r}
+#Dominican subset 
+Dominican<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "0"),]
+dim(Dominican)
+```
+
+```{r}
+#Central American subset
+Central_American<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "1"),]
+dim(Central_American)
+```
+
+```{r}
+#Cuban subset
+Cuban<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "2"),]
+dim(Cuban)
+```
+
+```{r}
+#Mexican subset 
+Mexican<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "3"),]
+dim(Mexican)
+```
+
+```{r}
+#Puerto Rican subset 
+Puerto_Rican<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "4"),]
+dim(Puerto_Rican)
+```
+
+```{r}
+#South American subset 
+South_American<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "5"),]
+dim(South_American)
+```
+
+```{r}
+#Mixed/Other samples
+mixed_other<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == '6'),]
+dim(mixed_other)
+```
+
+#N=nrow(d)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 The following section is for Figure 1 of the paper 
+
+
+
+```{r}
+#Package utilized for Figures 1A and 1B 
+library('Ternary') 
+```
+
 
 
 The following section is for Figure 2 of the paper. 
@@ -45,7 +129,7 @@ for(i in 1:(length(part)-1)){
   segments(x0=(q1+q2)/2,y0=m-se,y1=m+se)
   cat(i,q1,q2,m,se,"\n",sep="\t")
 }
-dev.off()
+#dev.off()
 ```
 
 The following section is for Table 1 of the paper 
