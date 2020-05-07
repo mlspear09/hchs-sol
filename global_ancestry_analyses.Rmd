@@ -130,8 +130,48 @@ AddToTernary(points,mixed_other[,7:9],col=pcol[7],pch=16,cex=0.5)
 #dev.off()
 ```
 
+Reading in the UMAP results needed for Figure 1C 
+```{r}
+#read in umap results 
+umap_results_filename<-"/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/projections/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED_UMAP_PC3_NC2_NN15_MD0.5_201944194827.txt"
+umap_results<-read.table(umap_results_filename,header=F,sep=' ')
 
-The following section is for Figure 2 of the paper. 
+```
+
+```{r}
+#plot Figure 1C 
+#pdf('/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/plots/HCHS_SOL_with_ref_mixed_other_101819_3PCs_muted_ref_supplementary_figure1b.pdf',height=2.375,width=2.375,pointsize=5)
+par(mar=c(2.1,2.1,0.1,0.1))  
+#par(mar=c(3,3,1,1))
+plot(all_pops$V1,all_pops$V2,pch=0,type='n',xlab="",ylab="",xaxt='n',yaxt='n',bty='n')
+legend("topleft",legend=c("CEU","AI","YRI","Mexican","Cuban","Dominican","Central American","Puerto Rican","South American","Mixed/Other"),col=c(set3[9],set3[9],set3[9],pcol[1],pcol[2],pcol[3],pcol[4],pcol[5],pcol[6],pcol[7]),pch=5,cex=0.75,bg='white',bty='n')
+points(Mexican_reclassified$V1,Mexican_reclassified$V2,col=pcol[1],pch=5,cex=0.1)
+points(Central_American_reclassified$V1,Central_American_reclassified$V2,col=pcol[4],pch=5,cex=0.1)
+points(South_American_reclassified$V1,South_American_reclassified$V2,col=pcol[6],pch=5,cex=0.1)
+points(Dominican_reclassified$V1,Dominican_reclassified$V2,col=pcol[3],pch=5,cex=0.1)
+points(Cuban_reclassified$V1,Cuban_reclassified$V2,col=pcol[2],pch=5,cex=0.1)
+points(Puerto_Rican_reclassified$V1,Puerto_Rican_reclassified$V2,col=pcol[5],pch=5,cex=0.1)
+points(Mixed_Other$V1,Mixed_Other$V2,col=pcol[7],pch=5,cex=0.1)
+points(CEU$V1,CEU$V2,col=set3[9],pch=5,cex=0.1)
+points(YRI$V1,YRI$V2,col=set3[9],pch=5,cex=0.1)
+points(NAM$V1,NAM$V2,col=set3[9],pch=5,cex=0.1)
+
+#dev.off()
+
+```
+
+
+
+```{r}
+#Legend for 1C 
+```
+
+
+
+
+
+
+#### The following section is for Figure 2 of the paper. 
 
 Subsetting out the admixed 95 samples 
 ```{r}
