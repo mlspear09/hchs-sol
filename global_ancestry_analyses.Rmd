@@ -15,6 +15,7 @@ names(HCHS_SOL_admixture_file) <- c("YRI","CEU","AI")
 
 #Reading in the fam file accompaniment of the .bed file called for the admixture run 
 fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
 fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
 
 #subset ref pops
@@ -34,7 +35,7 @@ dim(fam_file_with_IDs)
 HCHS_SOL_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
 
 #merge the admixture estimates with the pheno file 
-all_with_pheno=merge(fam_file_with_IDs, HCHS_SOL_pheno, by.x =c("V1"), by.y=c("SUBJECT_ID"))
+all_with_pheno=merge(fam_file_with_IDs, HCHS_SOL_pheno, by.x =c("FID"), by.y=c("SUBJECT_ID"))
 dim(all_with_pheno) #minus the ref
 ```
 
@@ -82,14 +83,14 @@ mixed_other<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == '6'),]
 dim(mixed_other)
 ```
 
-The following section is for Figure 1 of the paper 
+##The following section is for Figure 1 of the paper 
 
-Loading in plot dependicies 
 ```{r}
-#Package utilized for Figures 1A and 1B 
+#Loading in package dependicies for Figure 1
 library('Ternary') 
 require(RColorBrewer)
-pcol=brewer.pal(9, "Set1")
+pcol<-brewer.pal(9, "Set1")
+set3<-brewer.pal(9,"Set3")
 ```
 
 ```{r}
@@ -110,7 +111,6 @@ for(i in 1:nrow(all_with_pheno2)){
   iblue = nmh[i,1]*AncRGB[1,3] + nmh[i,2]*AncRGB[2,3] + nmh[i,3]*AncRGB[3,3]
   AddToTernary(points,all_with_pheno2[i,1:3],col=rgb(ired,igreen,iblue,1),pch=16,cex=0.5)
 }
-
 #dev.off()
 ```
 
@@ -136,10 +136,104 @@ Reading in the UMAP results needed for Figure 1C
 umap_results_filename<-"/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/projections/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED_UMAP_PC3_NC2_NN15_MD0.5_201944194827.txt"
 umap_results<-read.table(umap_results_filename,header=F,sep=' ')
 
+#merge IDs with umap results (same fam file run with admixture and smartpca thus why not reading in again) 
+final_umap_file<-cbind(fam_file,umap_results)
+
+#Adding the Population labels for each of the reference groups 
+CEU_umap<-final_umap_file[1:104,]
+CEU_umap$Population = "CEU" 
+
+YRI_umap<-final_umap_file[105:211,]
+YRI_umap$Population = "YRI"
+
+AI_umap<-final_umap_file[212:323,]
+AI_umap$Population = "AI"
+
+reference_umap<-rbind(CEU_umap, YRI_umap, AI_umap)
+
+#Subsetting the phenotype file
+pheno_shortened<-subset(HCHS_SOL_pheno, select = c("SUBJECT_ID", "BKGRD1_C7"))
+
+combined_pheno_fam<-merge(pheno_shortened, fam_file, by.x=c("SUBJECT_ID"), by.y =c("FID"))
+
+#merging the umap results with the HCHS/SOL phenotypes 
+umap_pheno<-merge(combined_pheno_fam, final_umap_file, by.x=c("SUBJECT_ID"), by.y =c("FID"))
+#subset for variables needed for plot itself 
+umap_pheno_subset<-subset(umap_pheno, select=c("IID.x","BKGRD1_C7","V1","V2"))
 ```
 
 ```{r}
-#plot Figure 1C 
+#subset the latinx groups 
+Dominican_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "0"),]
+
+Central_American_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "1"),]
+
+Cuban_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "2"),]
+
+Mexican_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "3"),]
+
+Puerto_Rican_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "4"),]
+
+South_American_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "5"),]
+
+Mixed_Other<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "6"),]
+
+
+Cuban_reclassified$Population = "Cuban"
+Dominican_reclassified$Population = "Dominican"
+Puerto_Rican_reclassified$Population = "Puerto Rican"
+Mexican_reclassified$Population = "Mexican"
+Central_American_reclassified$Population = "Central American"
+South_American_reclassified$Population = "South American"
+Mixed_Other$Population = "Mixed_Other"
+
+
+all_Latinx_pops<-rbind(Cuban_reclassified,Dominican_reclassified, Puerto_Rican_reclassified, Mexican_reclassified, Central_American_reclassified, South_American_reclassified, Mixed_Other)
+Final_Latinx_pops<-subset(all_Latinx_pops,select=c("IID.x","Population","V1","V2"))
+names(Final_Latinx_pops)<-c("IID","Population","V1","V2")
+
+Final_reference=subset(reference_umap,select=c("IID","Population","V1","V2"))  
+
+all_pops<-rbind(Final_Latinx_pops,Final_reference)  
+
+
+```
+
+```{r}
+#Figure 1C 
+##Final code for plotting by admixture gradients 
+
+input<-"/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/projections/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED_UMAP_PC3_NC2_NN15_MD0.5_201944194827.txt"
+umap_results  <- read.table(input,header=F)
+final_umap_file<-cbind(fam_file,umap_results)
+admixture_estimates_filename<-"/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q"
+admixture_estimates<-read.table(admixture_estimates_filename,header=F,sep=" ")
+AncCol=c("#E41A1C","#377EB8","#4DAF4A")
+admixture_estimates3<-subset(admixture_estimates,select=c("V2","V3","V1"))
+
+AncRGB=col2rgb(AncCol)/255
+#pdf("HCHS_SOL_Umap_PC3_admixture_gradients_071519.pdf",height=2.375,width=2.375,pointsize=5)
+par(mar=c(2.1,2.1,0.1,0.1))  
+plot(umap_results,pch=0,type='n',xlab="",ylab="",xaxt='n',yaxt='n',bty='n')
+ae=admixture_estimates3
+for(i in 1:nrow(ae)){
+  ired = ae[i,1]*AncRGB[1,1] + ae[i,2]*AncRGB[2,1] + ae[i,3]*AncRGB[3,1]
+  igreen = ae[i,1]*AncRGB[1,2] + ae[i,2]*AncRGB[2,2] + ae[i,3]*AncRGB[3,2]
+  iblue = ae[i,1]*AncRGB[1,3] + ae[i,2]*AncRGB[2,3] + ae[i,3]*AncRGB[3,3]
+  points(umap_results[i,],col=rgb(ired,igreen,iblue,1),pch=5,cex=0.1)
+}
+#dev.off()  
+```
+
+
+```{r}
+#Legend for 1C 
+```
+
+
+
+```{r}
+#plot Figure 1D 
 #pdf('/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/plots/HCHS_SOL_with_ref_mixed_other_101819_3PCs_muted_ref_supplementary_figure1b.pdf',height=2.375,width=2.375,pointsize=5)
 par(mar=c(2.1,2.1,0.1,0.1))  
 #par(mar=c(3,3,1,1))
@@ -152,22 +246,13 @@ points(Dominican_reclassified$V1,Dominican_reclassified$V2,col=pcol[3],pch=5,cex
 points(Cuban_reclassified$V1,Cuban_reclassified$V2,col=pcol[2],pch=5,cex=0.1)
 points(Puerto_Rican_reclassified$V1,Puerto_Rican_reclassified$V2,col=pcol[5],pch=5,cex=0.1)
 points(Mixed_Other$V1,Mixed_Other$V2,col=pcol[7],pch=5,cex=0.1)
-points(CEU$V1,CEU$V2,col=set3[9],pch=5,cex=0.1)
-points(YRI$V1,YRI$V2,col=set3[9],pch=5,cex=0.1)
-points(NAM$V1,NAM$V2,col=set3[9],pch=5,cex=0.1)
+points(CEU_umap$V1,CEU_umap$V2,col=set3[9],pch=5,cex=0.1)
+points(YRI_umap$V1,YRI_umap$V2,col=set3[9],pch=5,cex=0.1)
+points(AI_umap$V1,AI_umap$V2,col=set3[9],pch=5,cex=0.1)
 
 #dev.off()
 
 ```
-
-
-
-```{r}
-#Legend for 1C 
-```
-
-
-
 
 
 
