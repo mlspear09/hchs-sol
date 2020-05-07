@@ -1,0 +1,85 @@
+---
+title: "global_ancestry_analyses_supps"
+author: "Melissa Spear"
+date: "07/05/2020"
+output: html_document
+---
+The following describes the analyses discussed within the global ancestry analyses of the paper. This includes Supplementary Figures 1-6 and Supplementay Table 1.
+
+```{r}
+#Supplementary Figure 2
+allchr = read.table("/Users/melissaspear/Downloads/HCHS_SOL_only_ALLChr_RFMix_global_ancestry_estimates_050819.txt", header=T, stringsAsFactor = F)
+
+# Reading in the ADMIXTURE estimates
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Downloads/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q",header=F,sep=' ')
+names(HCHS_SOL_admixture_file)<-c("YRI","CEU","NAM")
+
+#reading in the fam file accompaniment of the .bed file i used for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+#Merge admixture estiamtes with RFMix estimates
+admixture_with_RFMIX_global <- merge(fam_file_with_IDs, allchr, by.x =c("V2"), by.y=c("SAMPLE_ID"))
+
+#####Plotting the plot for the paper. 
+require(RColorBrewer)
+pcol=brewer.pal(9, "Set1")
+
+#Euro = Red, Native=Blue,African =Green
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_RFMix_ADMIXTURE_ancestry_concordance_050819.pdf",height=2.25,width=7.25,pointsize=10)
+par(mfrow=c(1,3))
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=c(0,1),ylim=c(0,1),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(0,1,col="black")
+axis(side=1,padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.5,cex.axis=0.7)
+mtext(side=1,"ADMIXTURE (%)",line=1.1,cex=0.75)
+mtext(side=2,"RFMix (%)",line=1.1,cex=0.75)
+points(admixture_with_RFMIX_global$NAM.x, admixture_with_RFMIX_global$NAM_global_mean,col=pcol[2],pch=16,cex=.5)
+plot(1,1,type='n',xlim=c(0,1),ylim=c(0,1),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(0,1,col="black")
+axis(side=1,padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.5,cex.axis=0.7)
+mtext(side=1,"ADMIXTURE (%)",line=1.1,cex=0.75)
+mtext(side=2,"RFMix (%)",line=1.1,cex=0.75)
+points(admixture_with_RFMIX_global$YRI, admixture_with_RFMIX_global$AFR_global_mean,col=pcol[1],pch=16,cex=.5)
+plot(1,1,type='n',xlim=c(0,1),ylim=c(0,1),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(0,1,col="black")
+axis(side=1,padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.5,cex.axis=0.7)
+mtext(side=1,"ADMIXTURE (%)",line=1.1,cex=0.75)
+mtext(side=2,"RFMix (%)",line=1.1,cex=0.75)
+points(admixture_with_RFMIX_global$CEU, admixture_with_RFMIX_global$EUR_global_mean,col=pcol[3],pch=16,cex=.5)
+#dev.off()
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
