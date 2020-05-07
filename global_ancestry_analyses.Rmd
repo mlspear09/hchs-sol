@@ -228,6 +228,29 @@ for(i in 1:nrow(ae)){
 
 ```{r}
 #Legend for 1C 
+AncCol=c("#4DAF4A","#E41A1C","#377EB8")
+
+AncRGB=col2rgb(AncCol)/255
+#pdf("UMAP_ternary_plot_Figure1B_legend.pdf",height=2.375,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+TernaryPlot(alab=expression(''%->% "African ancestry (%)" %->% ''),blab=expression(''%->%"European ancestry (%)" %->% ''),clab=expression(''%<-% "Amerindigenous ancestry (%)" %<-% ''),lab.cex=0.6,axis.cex = 0.5)
+dx=0.01;
+cnt=0
+bk=0;
+for(xi in seq(0,1,length=round(1/dx))){
+  for(yi in seq(0,1,length=round(1/dx))){
+    for(zi in seq(0,1,length=round(1/dx))){
+      if(abs(1-(xi+yi+zi)) < 1e-8){
+        ired = xi*AncRGB[1,1] + yi*AncRGB[1,2] + zi*AncRGB[1,3]
+        igreen = xi*AncRGB[2,1] + yi*AncRGB[2,2] + zi*AncRGB[2,3]
+        iblue = xi*AncRGB[3,1] + yi*AncRGB[3,2] + zi*AncRGB[3,3]
+        AddToTernary(points,c(xi,yi,zi),col=rgb(ired,igreen,iblue,1),pch=20)
+        cnt=cnt+1
+      }
+    }
+  }
+}
+#dev.off()
 ```
 
 
