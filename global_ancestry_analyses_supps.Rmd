@@ -121,3 +121,166 @@ for(i in 1:(length(part)-1)){
 
 ```
 
+Supplementary Figure 4 
+```{r}
+setwd("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures")
+MX_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+no_na=MX_pheno[which(!is.na(MX_pheno$CLINDATE_YR)),]
+with_na = MX_pheno[which(is.na(MX_pheno$CLINDATE_YR)),]
+fit = lm(NAM ~ estimated_birth_year+WEIGHT_FINAL_NORM_OVERALL,data=no_na)
+
+library(boot)
+
+MX_1930s<-MX_pheno[which(MX_pheno$estimated_birth_year>='1930'&MX_pheno$estimated_birth_year<'1940'),]
+MX_1930s$Decade<-"1930s"
+
+MX_1940s<-MX_pheno[which(MX_pheno$estimated_birth_year>='1940'&MX_pheno$estimated_birth_year<'1950'),]
+MX_1940s$Decade<-"1940s"
+
+MX_1950s<-MX_pheno[which(MX_pheno$estimated_birth_year>='1950'&MX_pheno$estimated_birth_year<'1960'),]
+MX_1950s$Decade<-"1950s"
+
+MX_1960s<-MX_pheno[which(MX_pheno$estimated_birth_year>='1960'&MX_pheno$estimated_birth_year<'1970'),]
+MX_1960s$Decade<-"1960s"
+
+MX_1970s<-MX_pheno[which(MX_pheno$estimated_birth_year>='1970'&MX_pheno$estimated_birth_year<'1980'),]
+MX_1970s$Decade<-"1970s"
+
+MX_1980s<-MX_pheno[which(MX_pheno$estimated_birth_year>='1980'&MX_pheno$estimated_birth_year<'1990'),]
+MX_1980s$Decade<-"1980s"
+
+MX_1990s<-MX_pheno[which(MX_pheno$estimated_birth_year>='1990'),]
+MX_1990s$Decade<-"1990s"
+
+
+#9 is the 9th column which is the NAM column 
+sapply(9, function(x) mean(MX_1930s[,x]))
+sapply(9, function(x) mean(MX_1940s[,x]))
+sapply(9, function(x) mean(MX_1950s[,x]))
+sapply(9, function(x) mean(MX_1960s[,x]))
+sapply(9, function(x) mean(MX_1970s[,x]))
+sapply(9, function(x) mean(MX_1980s[,x]))
+sapply(9, function(x) mean(MX_1990s[,x]))
+
+
+#Bootstrap resampling
+
+#1930s
+set.seed(1234)
+resamples_1930s<-lapply(1:1000,function(i) sample(MX_1930s$NAM,replace=T))
+resamples_means_1930s<-sapply(resamples_1930s,mean)
+#sqrt(var(resamples_means_1930s))
+
+
+#1940s
+set.seed(1234)
+resamples_1940s<-lapply(1:1000,function(i) sample(MX_1940s$NAM,replace=T))
+resamples_means_1940s<-sapply(resamples_1940s,mean)
+#sqrt(var(resamples_means_1940s))
+
+#1950s
+set.seed(1234)
+resamples_1950s<-lapply(1:1000,function(i) sample(MX_1950s$NAM,replace=T))
+resamples_means_1950s<-sapply(resamples_1950s,mean)
+#sqrt(var(resamples_means_1950s))
+
+#1960s
+set.seed(1234)
+resamples_1960s<-lapply(1:1000,function(i) sample(MX_1960s$NAM,replace=T))
+resamples_means_1960s<-sapply(resamples_1960s,mean)
+#sqrt(var(resamples_means_1960s))
+
+#1970s
+set.seed(1234)
+resamples_1970s<-lapply(1:1000,function(i) sample(MX_1970s$NAM,replace=T))
+resamples_means_1970s<-sapply(resamples_1970s,mean)
+#sqrt(var(resamples_means_1970s))
+
+#1980s
+set.seed(1234)
+resamples_1980s<-lapply(1:1000,function(i) sample(MX_1980s$NAM,replace=T))
+resamples_means_1980s<-sapply(resamples_1980s,mean)
+#sqrt(var(resamples_means_1980s))
+
+#1990s
+set.seed(1234)
+resamples_1990s<-lapply(1:1000,function(i) sample(MX_1990s$NAM,replace=T))
+resamples_means_1990s<-sapply(resamples_1990s,mean)
+#sqrt(var(resamples_means_1990s))
+
+########################
+#
+# Plotting the ridgeline plot of the bootstrap resampling 
+#
+########################
+library(ggplot2)
+library(ggridges)
+#need to reshape the data
+
+#reshaping the data in order to work with ggridges
+#1930s
+df.means.1930s=data.frame(resamples_means_1930s)
+names(df.means.1930s)=c("NAM_means")
+df.means.1930s$Decade<-"1930s"
+df.means.1930s$ascending_decade<-"1"
+df.means.1930s$descending_decade<-"7"
+
+#1940s
+df.means.1940s=data.frame(resamples_means_1940s)
+names(df.means.1940s)=c("NAM_means")
+df.means.1940s$Decade<-"1940s"
+df.means.1940s$ascending_decade<-"2"
+df.means.1940s$descending_decade<-"6"
+
+#1950s
+df.means.1950s=data.frame(resamples_means_1950s)
+names(df.means.1950s)=c("NAM_means")
+df.means.1950s$Decade<-"1950s"
+df.means.1950s$ascending_decade<-"3"
+df.means.1950s$descending_decade<-"5"
+
+#1960s
+df.means.1960s=data.frame(resamples_means_1960s)
+names(df.means.1960s)=c("NAM_means")
+df.means.1960s$Decade<-"1960s"
+df.means.1960s$ascending_decade<-"4"
+df.means.1960s$descending_decade<-"4"
+
+#1970s
+df.means.1970s=data.frame(resamples_means_1970s)
+names(df.means.1970s)=c("NAM_means")
+df.means.1970s$Decade<-"1970s"
+df.means.1970s$ascending_decade<-"5"
+df.means.1970s$descending_decade<-"3"
+
+#1980s
+df.means.1980s=data.frame(resamples_means_1980s)
+names(df.means.1980s)=c("NAM_means")
+df.means.1980s$Decade<-"1980s"
+df.means.1980s$ascending_decade<-"6"
+df.means.1980s$descending_decade<-"2"
+
+#1990s
+df.means.1990s=data.frame(resamples_means_1990s)
+names(df.means.1990s)=c("NAM_means")
+df.means.1990s$Decade<-"1990s"
+df.means.1990s$ascending_decade<-"7"
+df.means.1990s$descending_decade<-"1"
+
+
+all_decades<-rbind(df.means.1930s,df.means.1940s,df.means.1950s,df.means.1960s,df.means.1970s,df.means.1980s,df.means.1990s)
+
+require(RColorBrewer)
+myColors=brewer.pal(7, "Set1")
+
+#Plotting ridgeline plot
+pdf("MX_NAM_ancestry_ridgeline_plot_bootstrap_resampling_072319_supplementary_figure4.pdf",height=2.375,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.2))
+ggplot(all_decades,aes(x=NAM_means,y=Decade,fill=factor(Decade))) +
+  geom_density_ridges(scale=1)+ theme_bw() + theme(axis.text.x=element_text(size=rel(0.8)),axis.text.y=element_text(size=rel(0.8))) + theme(axis.title.x = element_text(size=10),axis.title.y = element_text(size=10))+
+  scale_y_discrete(expand=c(0.1,0)) + scale_fill_manual(values=c("#E41A1C","#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628")) + theme(legend.position = "none") + labs(x="Amerindigenous ancestry (%)", y="Decades")
+dev.off()
+
+```
+
