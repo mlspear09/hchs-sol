@@ -1,0 +1,366 @@
+---
+title: "Global ancestry analyses - Figure 2/Table 1"
+author: "Melissa Spear"
+date: "12/05/2020"
+output: html_document
+---
+
+The following section is for Figure 2 and Table 1 of the paper.
+
+#####Reading in the admixture run file, subsetting the reference pops, extracting admixed samples 
+```{r}
+#Read in the admixture file estimates file 
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+names(HCHS_SOL_admixture_file) <- c("YRI","CEU","AI")
+
+#Reading in the fam file accompaniment of the .bed file called for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+#subset ref pops
+CEU<-fam_file_with_IDs[1:104,] #subset the CEU ref pop
+YRI<-fam_file_with_IDs[105:211,] #subset the YRI ref pop
+AI<-fam_file_with_IDs[212:323,] #subset the AI ref pop 
+
+all_ref<-rbind(CEU,YRI,AI)
+
+#all HCHS/SOL with reference pops 
+dim(fam_file_with_IDs)
+
+```
+
+##### Reading in the HCHS/SOL phenotype files and merging with the global ancestry estimates 
+```{r}
+#Read in the HCHS/SOL phenotype file 
+HCHS_SOL_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
+
+#merge the admixture estimates with the pheno file 
+all_with_pheno=merge(fam_file_with_IDs, HCHS_SOL_pheno, by.x =c("FID"), by.y=c("SUBJECT_ID"))
+dim(all_with_pheno) #minus the ref
+```
+
+
+Subsetting out the admixed 95 samples 
+```{r}
+#Extracting out only the 95% admixed samples
+admixed_with_pheno<-all_with_pheno[which(all_with_pheno$CEU <= 0.95 & all_with_pheno$YRI <=0.95 & all_with_pheno$AI <=0.95),]
+
+#admixed_with_pheno<-merge(admixed_95, HCHS_SOL_pheno, by.x =c("V1"), by.y=c("SUBJECT_ID"))
+dim(admixed_with_pheno)
+```
+
+#####Subsetting the admixed 95 HCHS/SOL populations.
+These are the sample sizes listed in Supplementary Table 1. 
+```{r}
+#Dominican subset 
+Dominican_admixed<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "0"),]
+dim(Dominican_admixed)
+```
+
+```{r}
+#Central American subset
+Central_American_admixed<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "1"),]
+dim(Central_American_admixed)
+```
+
+```{r}
+#Cuban subset
+Cuban_admixed<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "2"),]
+dim(Cuban_admixed)
+```
+
+```{r}
+#Mexican subset 
+Mexican_admixed<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "3"),]
+dim(Mexican_admixed)
+```
+
+```{r}
+#Puerto Rican subset 
+Puerto_Rican_admixed<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "4"),]
+dim(Puerto_Rican_admixed)
+```
+
+```{r}
+#South American subset 
+South_American_admixed<-admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 == "5"),]
+dim(South_American_admixed)
+```
+
+
+```{r}
+##Plot Figure 2A
+
+#phenotype file of the admixed 95 mexican samples 
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+N=nrow(d)
+
+fit = lm(d[,9] ~ d[,284]+log(d[,179])) #linear model: AI ancestry vs birth year
+
+#pdf("Amerindigenous_ancestry_ancestry_points+wiskers_dbins_081319_Figure1C.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=range(d[,284]),ylim=c(0,1),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.5,cex.axis=0.7, at=c("0.0","0.2","0.4","0.6","0.8","1.0"), labels=c("0","20","40","60","80","100"))
+mtext(side=1,"Birth year",line=1.1)
+mtext(side=2,"Amerindigenous ancestry (%)",line=1.1)
+c=col2rgb(pcol[2])/255;
+I1 = which.min(d[,284])
+I2 = which.max(d[,284])
+points(d[,284],d[,9],col=rgb(c[1],c[2],c[3],0.2),pch=16,cex=0.5)
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit$fitted.values[I1],y1=fit$fitted.values[I2],col="white",lwd=3)
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit$fitted.values[I1],y1=fit$fitted.values[I2],col=pcol[2],lwd=2)
+pw = 10 #partition width, in years
+part=seq(min(floor(d[,9]/10)*10),max(ceiling(d[,284]/10)*10),by=pw)
+for(i in 1:(length(part)-1)){
+  q1 = max(part[i],min(d[,284]));
+  q2 = min(part[i+1],max(d[,284]));
+  dbin = d[which(d[,284]>q1 & d[,284]<=q2),]
+  m = mean(dbin[,9],na.rm=T)
+  se = 2*sd(dbin[,9],na.rm=T)/sqrt(nrow(dbin))
+  segments(x0=q1,x1=q2,y0=m)
+  segments(x0=(q1+q2)/2,y0=m-se,y1=m+se)
+  cat(i,q1,q2,m,se,"\n",sep="\t")
+}
+#dev.off()
+```
+
+
+```{r}
+#Figure 2B
+MX_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+set.seed(123)
+fit.native = lm(NAM ~ estimated_birth_year+ log(WEIGHT_FINAL_NORM_OVERALL),data=MX_pheno)
+
+#Bootstrap iterations of global ancestry 
+library(boot)
+
+boot_fn <- function(data, indices) {
+  d <- data[indices, ]
+  d <- d[order(d$estimated_birth_year),]
+  loess_fit <- loess(NAM ~ estimated_birth_year, d,
+                     control = loess.control(surface = "direct"))
+  predict(loess_fit, data.frame(estimated_birth_year = seq(1934, 1993, 1)), se = T)$fit
+}
+
+loess_boot <- boot(MX_pheno, R = 1000, statistic = boot_fn)
+
+``` 
+
+```{r}
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/NativeAmerican_ancestry_bootstrap_loess_linear_081319_new_figure_2B.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=range(d[,284]),ylim=c(0.38,0.55),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0.35,0.6,by=0.05),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90)
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90,at=c("0.35","0.4","0.45","0.5","0.55","0.6"), labels=c("35","40","45","50","55","60"))
+mtext(side=1,"Birth year",line=1.1)
+mtext(side=2,"Amerindigenous ancestry (%)",line=1.1)
+#plot(MX_pheno$estimated_birth_year, MX_pheno$NAM,ylim=c(0.3,0.6),pch = 20, col = "black", xlab = "Birth year",
+     #ylab = "Native American ancestry (%)")
+for(i in sample(nrow(loess_boot$t), 1000)) { #function to plot each row on top of one another 
+  lines(seq(1934, 1993, 1), loess_boot$t[i,], col = "gray",lwd=0.75)
+}
+I1 = which.min(d[,284])
+I2 = which.max(d[,284])
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit.native$fitted.values[I1],y1=fit.native$fitted.values[I2],col="white",lwd=4)
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit.native$fitted.values[I1],y1=fit.native$fitted.values[I2],col=pcol[2],lwd=3)
+pw = 10 #partition width, in years
+part=seq(min(floor(d[,9]/10)*10),max(ceiling(d[,284]/10)*10),by=pw)
+for(i in 1:(length(part)-1)){
+  q1 = max(part[i],min(d[,284]));
+  q2 = min(part[i+1],max(d[,284]));
+  dbin = d[which(d[,284]>q1 & d[,284]<=q2),]
+  m = mean(dbin[,9],na.rm=T)
+  se = 2*sd(dbin[,9],na.rm=T)/sqrt(nrow(dbin))
+  segments(x0=q1,x1=q2,y0=m)
+  segments(x0=(q1+q2)/2,y0=m-se,y1=m+se)
+  cat(i,q1,q2,m,se,"\n",sep="\t")
+}
+conf_97.5 <- apply(loess_boot$t, 2, function(x) quantile(x, .975))
+conf_2.5 <- apply(loess_boot$t, 2, function(x) quantile(x, .025))
+lines(seq(1934, 1993, 1), conf_97.5, type ="l",
+      col = "black", lty=5)
+lines(seq(1934, 1993, 1), conf_2.5, type ="l",
+      col = "black",lty=5)
+dev.off()
+
+```
+
+
+
+The following section is for Table 1 of the paper 
+
+```{r}
+Mexican_reclassified<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+#Migrant status
+US_born = Mexican_reclassified[which(Mexican_reclassified$US_BORN == '1'),]
+US_migrant = Mexican_reclassified[which(Mexican_reclassified$US_BORN == '0'),]
+
+US_born_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = US_born)
+US_migrant_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = US_migrant)
+
+#Region 
+Chicago = Mexican_reclassified[which(Mexican_reclassified$CENTER == 'C'),]
+San_Diego = Mexican_reclassified[which(Mexican_reclassified$CENTER == 'S'),]
+Miami = Mexican_reclassified[which(Mexican_reclassified$CENTER == 'M'),]
+Bronx = Mexican_reclassified[which(Mexican_reclassified$CENTER == 'B'),]
+
+Chicago_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Chicago)
+San_Diego_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = San_Diego)
+
+#Educational_attainment
+Mexican_less_high_school = Mexican_reclassified[which(Mexican_reclassified$EDUCATION_C3 == '1'),]
+Mexican_high_school = Mexican_reclassified[which(Mexican_reclassified$EDUCATION_C3 == '2'),]
+Mexican_higher_high_school = Mexican_reclassified[which(Mexican_reclassified$EDUCATION_C3 == '3'),]
+
+
+Mexican_less_high_school_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_less_high_school)
+Mexican_high_school_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_high_school)
+Mexican_higher_high_school_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_higher_high_school)
+
+#Sex
+male = Mexican_reclassified[which(Mexican_reclassified$GENDER == 'M'),]
+female = Mexican_reclassified[which(Mexican_reclassified$GENDER == 'F'),]
+
+male_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = male)
+female_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = female)
+
+
+###
+All<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+ 
+All[1,1]<-"All"
+All[1,2]<-dim(d)[1]
+All[1,3]<-mean(d$NAM)
+All[1,4]<-median(d$NAM)
+All[1,5]<-summary(fit)$r.squared
+All[1,6]<-summary(fit)$coeff[2,1]
+All[1,7]<-summary(fit)$coeff[2,2]
+All[1,8]<-summary(fit)$coeff[2,4]
+
+#chicago
+Chicago_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+Chicago_df[1,1]<-"Chicago"
+Chicago_df[1,2]<-dim(Chicago)[1]
+Chicago_df[1,3]<-mean(Chicago$NAM)
+Chicago_df[1,4]<-median(Chicago$NAM)
+Chicago_df[1,5]<-summary(Chicago_model)$r.squared
+Chicago_df[1,6]<-summary(Chicago_model)$coeff[2,1]
+Chicago_df[1,7]<-summary(Chicago_model)$coeff[2,2]
+Chicago_df[1,8]<-summary(Chicago_model)$coeff[2,4]
+
+#San diego
+San_Diego_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+San_Diego_df[1,1]<-"San Diego"
+San_Diego_df[1,2]<-dim(San_Diego)[1]
+San_Diego_df[1,3]<-mean(San_Diego$NAM)
+San_Diego_df[1,4]<-median(San_Diego$NAM)
+San_Diego_df[1,5]<-summary(San_Diego_model)$r.squared
+San_Diego_df[1,6]<-summary(San_Diego_model)$coeff[2,1]
+San_Diego_df[1,7]<-summary(San_Diego_model)$coeff[2,2]
+San_Diego_df[1,8]<-summary(San_Diego_model)$coeff[2,4]
+
+#US born 
+US_born_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+US_born_df[1,1]<-"US born"
+US_born_df[1,2]<-dim(US_born)[1]
+US_born_df[1,3]<-mean(US_born$NAM)
+US_born_df[1,4]<-median(US_born$NAM)
+US_born_df[1,5]<-summary(US_born_model)$r.squared
+US_born_df[1,6]<-summary(US_born_model)$coeff[2,1]
+US_born_df[1,7]<-summary(US_born_model)$coeff[2,2]
+US_born_df[1,8]<-summary(US_born_model)$coeff[2,4]
+
+#US Migrant
+US_migrant_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+US_migrant_df[1,1]<-"US migrant"
+US_migrant_df[1,2]<-dim(US_migrant)[1]
+US_migrant_df[1,3]<-mean(US_migrant$NAM)
+US_migrant_df[1,4]<-median(US_migrant$NAM)
+US_migrant_df[1,5]<-summary(US_migrant_model)$r.squared
+US_migrant_df[1,6]<-summary(US_migrant_model)$coeff[2,1]
+US_migrant_df[1,7]<-summary(US_migrant_model)$coeff[2,2]
+US_migrant_df[1,8]<-summary(US_migrant_model)$coeff[2,4]
+
+#Male 
+
+male_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+male_df[1,1]<-"Male"
+male_df[1,2]<-dim(male)[1]
+male_df[1,3]<-mean(male$NAM)
+male_df[1,4]<-median(male$NAM)
+male_df[1,5]<-summary(male_model)$r.squared
+male_df[1,6]<-summary(male_model)$coeff[2,1]
+male_df[1,7]<-summary(male_model)$coeff[2,2]
+male_df[1,8]<-summary(male_model)$coeff[2,4]
+
+#Female
+female_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+female_df[1,1]<-"Female"
+female_df[1,2]<-dim(female)[1]
+female_df[1,3]<-mean(female$NAM)
+female_df[1,4]<-median(female$NAM)
+female_df[1,5]<-summary(female_model)$r.squared
+female_df[1,6]<-summary(female_model)$coeff[2,1]
+female_df[1,7]<-summary(female_model)$coeff[2,2]
+female_df[1,8]<-summary(female_model)$coeff[2,4]
+
+#less than high school
+Mexican_less_high_school_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+Mexican_less_high_school_df[1,1]<-"<HS"
+Mexican_less_high_school_df[1,2]<-dim(Mexican_less_high_school)[1]
+Mexican_less_high_school_df[1,3]<-mean(Mexican_less_high_school$NAM)
+Mexican_less_high_school_df[1,4]<-median(Mexican_less_high_school$NAM)
+Mexican_less_high_school_df[1,5]<-summary(Mexican_less_high_school_model)$r.squared
+Mexican_less_high_school_df[1,6]<-summary(Mexican_less_high_school_model)$coeff[2,1]
+Mexican_less_high_school_df[1,7]<-summary(Mexican_less_high_school_model)$coeff[2,2]
+Mexican_less_high_school_df[1,8]<-summary(Mexican_less_high_school_model)$coeff[2,4]
+
+#high school equiv
+Mexican_high_school_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+Mexican_high_school_df[1,1]<-"=HS"
+Mexican_high_school_df[1,2]<-dim(Mexican_high_school)[1]
+Mexican_high_school_df[1,3]<-mean(Mexican_high_school$NAM)
+Mexican_high_school_df[1,4]<-median(Mexican_high_school$NAM)
+Mexican_high_school_df[1,5]<-summary(Mexican_high_school_model)$r.squared
+Mexican_high_school_df[1,6]<-summary(Mexican_high_school_model)$coeff[2,1]
+Mexican_high_school_df[1,7]<-summary(Mexican_high_school_model)$coeff[2,2]
+Mexican_high_school_df[1,8]<-summary(Mexican_high_school_model)$coeff[2,4]
+
+#Greater than high school 
+Mexican_higher_high_school_df<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
+
+Mexican_higher_high_school_df[1,1]<-">HS"
+Mexican_higher_high_school_df[1,2]<-dim(Mexican_higher_high_school)[1]
+Mexican_higher_high_school_df[1,3]<-mean(Mexican_higher_high_school$NAM)
+Mexican_higher_high_school_df[1,4]<-median(Mexican_higher_high_school$NAM)
+Mexican_higher_high_school_df[1,5]<-summary(Mexican_higher_high_school_model)$r.squared
+Mexican_higher_high_school_df[1,6]<-summary(Mexican_higher_high_school_model)$coeff[2,1]
+Mexican_higher_high_school_df[1,7]<-summary(Mexican_higher_high_school_model)$coeff[2,2]
+Mexican_higher_high_school_df[1,8]<-summary(Mexican_higher_high_school_model)$coeff[2,4]
+
+
+###Merging all models 
+all_models<-rbind(All,Chicago_df,San_Diego_df,US_born_df,US_migrant_df,male_df,female_df,Mexican_less_high_school_df,Mexican_high_school_df,Mexican_higher_high_school_df)
+
+all_models
+
+```
+
+
