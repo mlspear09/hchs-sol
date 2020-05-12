@@ -8,10 +8,10 @@ The following describes the analyses discussed within the global ancestry analys
 
 ```{r}
 #Supplementary Figure 2
-allchr = read.table("/Users/melissaspear/Downloads/HCHS_SOL_only_ALLChr_RFMix_global_ancestry_estimates_050819.txt", header=T, stringsAsFactor = F)
+allchr = read.table("/Volumes/LaCie/Downloads/HCHS_SOL_only_ALLChr_RFMix_global_ancestry_estimates_050819.txt", header=T, stringsAsFactor = F)
 
 # Reading in the ADMIXTURE estimates
-HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Downloads/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q",header=F,sep=' ')
+HCHS_SOL_admixture_file<-read.table("/Volumes/LaCie/Downloads/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q",header=F,sep=' ')
 names(HCHS_SOL_admixture_file)<-c("YRI","CEU","NAM")
 
 #reading in the fam file accompaniment of the .bed file i used for the admixture run 
@@ -21,6 +21,10 @@ fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
 #Merge admixture estiamtes with RFMix estimates
 admixture_with_RFMIX_global <- merge(fam_file_with_IDs, allchr, by.x =c("V2"), by.y=c("SAMPLE_ID"))
 
+```
+
+Supplementary Figure 2
+```{r}
 #####Plotting the plot for the paper. 
 require(RColorBrewer)
 pcol=brewer.pal(9, "Set1")
@@ -60,26 +64,60 @@ points(admixture_with_RFMIX_global$CEU, admixture_with_RFMIX_global$EUR_global_m
 
 ```
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Supplementary Figure 3
+```{r}
+allchr = read.table("/Volumes/LaCie/Downloads/HCHS_SOL_only_ALLChr_RFMix_global_ancestry_estimates_050819.txt", header=T, stringsAsFactor = F)
+
+# Reading in the ADMIXTURE estimates
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q",header=F,sep=' ')
+names(HCHS_SOL_admixture_file)<-c("YRI","CEU","NAM")
+
+#reading in the fam file accompaniment of the .bed file i used for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+#Merge admixture estiamtes with RFMix estimates
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+admixture_with_RFMIX_global <- merge(fam_file_with_IDs, allchr, by.x =c("V2"), by.y=c("SAMPLE_ID"))
+
+pheno_new_global_ancestry_estiamtes<-merge(d,admixture_with_RFMIX_global,by.x=c("V2"),by.y=c("V2"))
+
+fit = lm(pheno_new_global_ancestry_estiamtes[,301] ~ pheno_new_global_ancestry_estiamtes[,284]+log(pheno_new_global_ancestry_estiamtes[,179])) #linear model: Native ancestry vs birth year
+
+fit = lm(pheno_new_global_ancestry_estiamtes[,301] ~ pheno_new_global_ancestry_estiamtes[,284]+log(pheno_new_global_ancestry_estiamtes[,179])) #linear model: Native ancestry vs birth year
+
+
+#plot code it self 
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_RFMix_NativeAmerican_ancestry_points+wiskers_dbins_071519_supplementary_figure3.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=range(pheno_new_global_ancestry_estiamtes[,284]),ylim=c(0,1),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.5,cex.axis=0.7)
+mtext(side=1,"Birth year",line=1.1)
+mtext(side=2,"Amerindigenous ancestry (%)",line=1.1)
+c=col2rgb(pcol[2])/255;
+I1 = which.min(pheno_new_global_ancestry_estiamtes[,284])
+I2 = which.max(pheno_new_global_ancestry_estiamtes[,284])
+points(pheno_new_global_ancestry_estiamtes[,284],pheno_new_global_ancestry_estiamtes[,301],col=rgb(c[1],c[2],c[3],0.2),pch=16,cex=0.5)
+segments(x0=pheno_new_global_ancestry_estiamtes[I1,284], x1=pheno_new_global_ancestry_estiamtes[I2,284],y0=fit$fitted.values[I1],y1=fit$fitted.values[I2],col="white",lwd=3)
+segments(x0=pheno_new_global_ancestry_estiamtes[I1,284], x1=pheno_new_global_ancestry_estiamtes[I2,284],y0=fit$fitted.values[I1],y1=fit$fitted.values[I2],col=pcol[2],lwd=2)
+
+pw = 10 #partition width, in years
+part=seq(min(floor(pheno_new_global_ancestry_estiamtes[,301]/10)*10),max(ceiling(pheno_new_global_ancestry_estiamtes[,284]/10)*10),by=pw)
+for(i in 1:(length(part)-1)){
+  q1 = max(part[i],min(pheno_new_global_ancestry_estiamtes[,284]));
+  q2 = min(part[i+1],max(pheno_new_global_ancestry_estiamtes[,284]));
+  dbin = pheno_new_global_ancestry_estiamtes[which(pheno_new_global_ancestry_estiamtes[,284]>q1 & pheno_new_global_ancestry_estiamtes[,284]<=q2),]
+  m = mean(dbin[,301],na.rm=T)
+  se = 2*sd(dbin[,301],na.rm=T)/sqrt(nrow(dbin))
+  segments(x0=q1,x1=q2,y0=m)
+  segments(x0=(q1+q2)/2,y0=m-se,y1=m+se)
+  cat(i,q1,q2,m,se,"\n",sep="\t")
+}
+#dev.off()
+
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
