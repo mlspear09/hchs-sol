@@ -5,7 +5,7 @@ date: "06/05/2020"
 output: html_document
 ---
 
-The following describes the analyses discussed within the global ancestry analyses of the paper. This includes Figures 1-2, Table 1, Supplementary Figures 1-6 and Supplementay Table 1. The HCHS/SOL data can be accessed itself through dbGaP Study Accession phs000810.v1.p1. HRS data for Supplementary Figure 5 was made available under IRB Study No. A11-E91-13B.
+The following describes the analyses discussed within the global ancestry analyses of the paper. This includes Figures 1, Supplementary Figures 1-5 and Supplementay Table 1. The HCHS/SOL data can be accessed itself through dbGaP Study Accession phs000810.v1.p1. 
 
 #####Reading in the admixture run file, subsetting the reference pops, extracting admixed samples 
 ```{r}
