@@ -255,11 +255,11 @@ for(xi in seq(0,1,length=round(1/dx))){
 
 ```{r}
 #plot Figure 1D 
-#pdf('/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/plots/HCHS_SOL_with_ref_mixed_other_101819_3PCs_muted_ref_supplementary_figure1b.pdf',height=2.375,width=2.375,pointsize=5)
+pdf('/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/plots/HCHS_SOL_with_ref_mixed_other_101819_3PCs_muted_ref_new_figure1d.pdf',height=2.375,width=2.375,pointsize=5)
 par(mar=c(2.1,2.1,0.1,0.1))  
 #par(mar=c(3,3,1,1))
 plot(all_pops$V1,all_pops$V2,pch=0,type='n',xlab="",ylab="",xaxt='n',yaxt='n',bty='n')
-legend("topleft",legend=c("CEU","AI","YRI","Mexican","Cuban","Dominican","Central American","Puerto Rican","South American","Mixed/Other"),col=c(set3[9],set3[9],set3[9],pcol[1],pcol[2],pcol[3],pcol[4],pcol[5],pcol[6],pcol[7]),pch=5,cex=0.75,bg='white',bty='n')
+legend("bottomleft",legend=c("CEU","AI","YRI","Mexican","Cuban","Dominican","Central American","Puerto Rican","South American","Mixed/Other"),col=c(set3[9],set3[9],set3[9],pcol[1],pcol[2],pcol[3],pcol[4],pcol[5],pcol[6],pcol[7]),pch=5,cex=0.75,bg='white',bty='n')
 points(Mexican_reclassified$V1,Mexican_reclassified$V2,col=pcol[1],pch=5,cex=0.1)
 points(Central_American_reclassified$V1,Central_American_reclassified$V2,col=pcol[4],pch=5,cex=0.1)
 points(South_American_reclassified$V1,South_American_reclassified$V2,col=pcol[6],pch=5,cex=0.1)
@@ -270,8 +270,7 @@ points(Mixed_Other$V1,Mixed_Other$V2,col=pcol[7],pch=5,cex=0.1)
 points(CEU_umap$V1,CEU_umap$V2,col=set3[9],pch=5,cex=0.1)
 points(YRI_umap$V1,YRI_umap$V2,col=set3[9],pch=5,cex=0.1)
 points(AI_umap$V1,AI_umap$V2,col=set3[9],pch=5,cex=0.1)
-
-#dev.off()
+dev.off()
 
 ```
 
@@ -373,7 +372,7 @@ for(i in 1:(length(part)-1)){
 #Figure 2B
 MX_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
 
-set.seed(1000)
+set.seed(123)
 fit.native = lm(NAM ~ estimated_birth_year+ log(WEIGHT_FINAL_NORM_OVERALL),data=MX_pheno)
 
 #Bootstrap iterations of global ancestry 
@@ -392,7 +391,7 @@ loess_boot <- boot(MX_pheno, R = 1000, statistic = boot_fn)
 ``` 
 
 ```{r}
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/NativeAmerican_ancestry_bootstrap_loess_linear_081319_figure_1D.pdf",height=2.25,width=2.375,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/NativeAmerican_ancestry_bootstrap_loess_linear_081319_new_figure_2B.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.1,0.1))
 plot(1,1,type='n',xlim=range(d[,284]),ylim=c(0.38,0.55),xlab="",ylab="",xaxt='n',yaxt='n')
 abline(h=seq(0.35,0.6,by=0.05),col=rgb(0,0,0,0.1))
@@ -428,7 +427,7 @@ lines(seq(1934, 1993, 1), conf_97.5, type ="l",
       col = "black", lty=5)
 lines(seq(1934, 1993, 1), conf_2.5, type ="l",
       col = "black",lty=5)
-#dev.off()
+dev.off()
 
 ```
 
