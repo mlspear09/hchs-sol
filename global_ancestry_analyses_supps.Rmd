@@ -4,7 +4,130 @@ author: "Melissa Spear"
 date: "07/05/2020"
 output: html_document
 ---
-The following describes the analyses discussed within the global ancestry analyses of the paper. This includes Supplementary Figures 1-6 and Supplementay Table 1.
+The following describes the analyses discussed within the global ancestry analyses of the paper. This includes Supplementary Figures 1-5 and Supplementay Table 1.
+
+The following section is for Supplementary Figure 1 of the paper 
+
+```{r}
+NAM_phenotypes<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/ref_panel_related/Reich2012_NAM_refs_only_tribe_country.txt",header=T,sep=" ")
+
+############################################################################
+####Plotting the UMAP plot, cleared history and copied/pasted 
+fam_filename<-"/Users/melissaspear/Dropbox/HCHS_SOL/smartPCA/data/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam"
+fam_file<-read.table(fam_filename,header=F,sep=" ")
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
+
+
+#Reading in the phenotype 
+all_samples_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header=T, sep ='\t')
+pheno_shortened<-subset(all_samples_pheno, select = c("SUBJECT_ID", "estimated_birth_year", "BKGRD1_C7"))
+combined_pheno_fam<-merge(pheno_shortened, fam_file, by.x=c("SUBJECT_ID"), by.y =c("FID"))
+
+#merging the umap results with the HCHS/SOL phenotypes 
+
+latinx_color_palette<-(brewer.pal(7,"Set2"))
+latinx_color_palette2<-(brewer.pal(11,"BrBG"))
+
+umap_results_filename<-"/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/projections/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED_UMAP_PC3_NC2_NN15_MD0.5_201944194827.txt"
+umap_results  <- read.table(umap_results_filename,header=F)
+final_umap_file<-cbind(fam_file,umap_results)
+
+CEU<-final_umap_file[1:104,]
+CEU$Population = "CEU" 
+
+YRI<-final_umap_file[105:211,]
+YRI$Population = "YRI"
+
+NAM<-final_umap_file[212:323,]
+NAM$Population = "NAM"
+NAM_umap_with_pheno<-merge(NAM_phenotypes,NAM,by.x=c("IID"),by.y=c("IID"))
+Final_NAM_pops<-subset(NAM_umap_with_pheno,select=c("IID","Country","V1","V2")) #Grouping the Populations by Country
+
+CEU_pop = subset(CEU,select=c("IID","Population","V1","V2"))
+YRI_pop = subset(YRI,select=c("IID","Population","V1","V2"))
+
+names(Final_NAM_pops)<-c("IID","Population","V1","V2")
+umap_pheno<-merge(combined_pheno_fam, final_umap_file, by.x=c("SUBJECT_ID"), by.y =c("FID"))
+umap_pheno_subset<-subset(umap_pheno, select=c("IID.x","estimated_birth_year","BKGRD1_C7","V1","V2"))
+  
+#subset the latinx groups 
+Dominican_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "0"),]
+Central_American_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "1"),]
+Cuban_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "2"),]
+Mexican_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "3"),]
+Puerto_Rican_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "4"),]
+South_American_reclassified<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "5"),]
+Mixed_Other<-umap_pheno_subset[which(umap_pheno_subset$BKGRD1_C7 == "6"),]
+  
+Cuban_reclassified$Population = "HCHS/SOL-Cuban"
+Dominican_reclassified$Population = "HCHS/SOL-Dominican"
+Puerto_Rican_reclassified$Population = "HCHS/SOL-Puerto Rican"
+Mexican_reclassified$Population = "HCHS/SOL-Mexican"
+Central_American_reclassified$Population = "HCHS/SOL-Central American"
+South_American_reclassified$Population = "HCHS/SOL-South American"
+Mixed_Other$Population = "HCHS/SOL-Mixed/Other"
+  
+all_Latinx_pops<-rbind(Mexican_reclassified,Puerto_Rican_reclassified,Cuban_reclassified,Dominican_reclassified,Central_American_reclassified,South_American_reclassified,Mixed_Other)
+Final_Latinx_pops<-subset(all_Latinx_pops,select=c("IID.x","Population","V1","V2"))
+names(Final_Latinx_pops)<-c("IID","Population","V1","V2")
+  
+all_pops<-rbind(Final_Latinx_pops,Final_NAM_pops,CEU_pop,YRI_pop)
+
+####separating out teh nam pops 
+
+Mexico = Final_NAM_pops[which(Final_NAM_pops$Population=="Mexico"),]
+Guatemala = Final_NAM_pops[which(Final_NAM_pops$Population=="Guatemala"),]
+Costa_Rica = Final_NAM_pops[which(Final_NAM_pops$Population=="Costa_Rica"),]
+Colombia = Final_NAM_pops[which(Final_NAM_pops$Population=="Colombia"),]
+Guiana = Final_NAM_pops[which(Final_NAM_pops$Population=="Guiana"),]
+Brazil = Final_NAM_pops[which(Final_NAM_pops$Population=="Brazil"),]
+Bolivia_Peru = Final_NAM_pops[which(Final_NAM_pops$Population=="Bolivia_Peru"),]
+Bolivia_Chile = Final_NAM_pops[which(Final_NAM_pops$Population=="Bolivia_Chile"),]
+Paraguay_Argentina = Final_NAM_pops[which(Final_NAM_pops$Population=="Paraguay_Argentina"),]
+Argentina = Final_NAM_pops[which(Final_NAM_pops$Population=="Argentina"),]
+Chile = Final_NAM_pops[which(Final_NAM_pops$Population=="Chile"),]
+
+### Colors by Country 
+require(RColorBrewer)
+mypalette<-(brewer.pal(11,"RdYlBu"))
+
+#grey scale- supplementary figure 1C  
+paired<-(brewer.pal(12,"Paired"))
+set3<-(brewer.pal(9,"Set3"))
+
+
+#pdf('/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/overlap_with_ref/plots/HCHS_SOL_with_ref_mixed_other_101619_3PCs_greycolors_NAMhighlighted_topleft_legend.pdf',height=2.375,width=2.375,pointsize=5)
+par(mar=c(2.1,2.1,0.1,0.1))  
+#par(mar=c(3,3,1,1))
+#legend("bottomright",legend=c("HCHS/SOL-Cuban","HCHS/SOL-Dominican","HCHS/SOL-Puerto Rican","HCHS/SOL-Mexican","HCHS/SOL-Central American","HCHS/SOL-South American","HCHS/SOL-Mixed/Other"),col=c("#543005","#DFC27D","#8C510A","#003C30", "#01665E","#80CDC1","#F5F5F5"),pch=5,cex=0.6,bg='white')
+plot(all_pops$V1,all_pops$V2,pch=0,type='n',xlab="",ylab="",xaxt='n',yaxt='n',bty='n')
+legend("topleft",legend=c("Mexico","Guatemala","Costa_Rica","Colombia","Guiana","Brazil","Bolivia/Peru","Bolivia/Chile","Paraguay/Argentina","Argentina","Chile","CEU","YRI"),col=c(paired[2],paired[5],paired[1],paired[4],paired[3],paired[6],paired[7],paired[8],paired[9],paired[10],paired[11],"black","darkgrey"),pch=18,cex=0.65,bg='white',bty = "n")
+
+points(Mexican_reclassified$V1,Mexican_reclassified$V2,col=set3[9],pch=5,cex=0.1)
+points(Central_American_reclassified$V1,Central_American_reclassified$V2,col=set3[9],pch=5,cex=0.1)
+points(South_American_reclassified$V1,South_American_reclassified$V2,col=set3[9],pch=5,cex=0.1)
+points(Dominican_reclassified$V1,Dominican_reclassified$V2,col=set3[9],pch=5,cex=0.1)
+points(Cuban_reclassified$V1,Cuban_reclassified$V2,col=set3[9],pch=5,cex=0.1)
+points(Puerto_Rican_reclassified$V1,Puerto_Rican_reclassified$V2,col=set3[9],pch=5,cex=0.1)
+points(Mixed_Other$V1,Mixed_Other$V2,col=set3[9],pch=5,cex=0.1)
+points(CEU$V1,CEU$V2,col="black",pch=18,cex=0.6)
+points(YRI$V1,YRI$V2,col="darkgrey",pch=18,cex=0.6)
+#points(NAM$V1,NAM$V2,col=pcol2[1],pch=5,cex=0.1)
+points(Mexico$V1,Mexico$V2,col=paired[2],pch=18,cex=0.6)
+points(Guatemala$V1,Guatemala$V2,col=paired[5],pch=18,cex=0.6)
+points(Costa_Rica$V1,Costa_Rica$V2,col=paired[1],pch=18,cex=0.6)
+points(Colombia$V1,Colombia$V2,col=paired[4],pch=18,cex=0.6)
+points(Guiana$V1,Guiana$V2,col=paired[3],pch=18,cex=0.6)
+points(Brazil$V1,Brazil$V2,col=paired[6],pch=18,cex=0.6)
+points(Bolivia_Peru$V1,Bolivia_Peru$V2,col=paired[7],pch=18,cex=0.6)
+points(Bolivia_Chile$V1,Bolivia_Chile$V2,col=paired[8],pch=18,cex=0.6)
+points(Paraguay_Argentina$V1,Paraguay_Argentina$V2,col=paired[9],pch=18,cex=0.6)
+points(Argentina$V1,Argentina$V2,col=paired[10],pch=18,cex=0.6)
+points(Chile$V1,Chile$V2,col=paired[11],pch=18,cex=0.6)
+
+#dev.off()
+
+```
 
 ```{r}
 #Supplementary Figure 2
@@ -284,3 +407,4 @@ dev.off()
 
 ```
 
+Supplementary Figure 5  code is at https://github.com/diazale/hispanic_admix/blob/master/code/hrs_admix.R
