@@ -1,0 +1,730 @@
+---
+title: "Supplementary_Figure7"
+author: "Melissa Spear"
+date: "13/05/2020"
+output: html_document
+---
+
+
+```{r}
+#####
+# The following scripts remove all of the duplicates from each of the files. In order to reduce file size .
+#####
+
+###30s samples
+pi_30s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_30s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_30s_30s_excluded = pi_30s_30s[which(pi_30s_30s$V1 != pi_30s_30s$V2),]
+
+pi_30s_30s_excluded$V1 <- as.character(pi_30s_30s_excluded$V1)
+pi_30s_30s_excluded$V2 <- as.character(pi_30s_30s_excluded$V2)
+pi_30s_30s_excluded$V3 <- as.numeric(as.character(pi_30s_30s_excluded$V3))
+
+
+###40s samples 
+pi_40s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_40s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_40s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_40s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_40s_40s_excluded = pi_40s_40s[which(pi_40s_40s$V1 != pi_40s_40s$V2),]
+
+pi_40s_30s$V1 <- as.character(pi_40s_30s$V1)
+pi_40s_40s_excluded$V1 <- as.character(pi_40s_40s_excluded$V1)
+
+pi_40s_30s$V2 <- as.character(pi_40s_30s$V2)
+pi_40s_40s_excluded$V2 <- as.character(pi_40s_40s_excluded$V2)
+
+pi_40s_30s$V3 <- as.numeric(pi_40s_30s$V3)
+pi_40s_40s_excluded$V3 <- as.numeric(as.character(pi_40s_40s_excluded$V3))
+
+#50s samples 
+pi_50s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_50s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_50s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_50s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_50s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_50s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_50s_50s_excluded = pi_50s_50s[which(pi_50s_50s$V1 != pi_50s_50s$V2),]
+
+pi_50s_30s$V1 <- as.character(pi_50s_30s$V1)
+pi_50s_40s$V1 <- as.character(pi_50s_40s$V1)
+pi_50s_50s_excluded$V1 <- as.character(pi_50s_50s_excluded$V1)
+
+pi_50s_30s$V2 <- as.character(pi_50s_30s$V2)
+pi_50s_40s$V2 <- as.character(pi_50s_40s$V2)
+pi_50s_50s_excluded$V2 <- as.character(pi_50s_50s_excluded$V2)
+
+pi_50s_30s$V3 <- as.numeric(pi_50s_30s$V3)
+pi_50s_40s$V3 <- as.numeric(pi_50s_40s$V3)
+pi_50s_50s_excluded$V3 <- as.numeric(as.character(pi_50s_50s_excluded$V3))
+
+#####60s samples
+pi_60s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_60s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_60s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_60s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_60s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_60s_60s_excluded = pi_60s_60s[which(pi_60s_60s$V1 != pi_60s_60s$V2),]
+
+pi_60s_30s$V1 <- as.character(pi_60s_30s$V1)
+pi_60s_40s$V1 <- as.character(pi_60s_40s$V1)
+pi_60s_50s$V1 <- as.character(pi_60s_50s$V1)
+pi_60s_60s_excluded$V1 <- as.character(pi_60s_60s_excluded$V1)
+
+pi_60s_30s$V2 <- as.character(pi_60s_30s$V2)
+pi_60s_40s$V2 <- as.character(pi_60s_40s$V2)
+pi_60s_50s$V2 <- as.character(pi_60s_50s$V2)
+pi_60s_60s_excluded$V2 <- as.character(pi_60s_60s_excluded$V2)
+
+pi_60s_30s$V3 <- as.numeric(pi_60s_30s$V3)
+pi_60s_40s$V3 <- as.numeric(pi_60s_40s$V3)
+pi_60s_50s$V3 <- as.numeric(as.character(pi_60s_50s$V3))
+pi_60s_50s <- pi_60s_50s[which(!is.na(pi_60s_50s$V3)),] #needed to remove one pair which had PI of "None"
+pi_60s_60s_excluded$V3 <- as.numeric(as.character(pi_60s_60s_excluded$V3))
+
+#####70s samples 
+pi_70s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_70s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_70s_70s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_70s_70s_excluded = pi_70s_70s[which(pi_70s_70s$V1 != pi_70s_70s$V2),]
+
+pi_70s_30s$V1 <- as.character(pi_70s_30s$V1)
+pi_70s_40s$V1 <- as.character(pi_70s_40s$V1)
+pi_70s_50s$V1 <- as.character(pi_70s_50s$V1)
+pi_70s_60s$V1 <- as.character(pi_70s_60s$V1)
+pi_70s_70s_excluded$V1 <- as.character(pi_70s_70s_excluded$V1)
+
+pi_70s_30s$V2 <- as.character(pi_70s_30s$V2)
+pi_70s_40s$V2 <- as.character(pi_70s_40s$V2)
+pi_70s_50s$V2 <- as.character(pi_70s_50s$V2)
+pi_70s_60s$V2 <- as.character(pi_70s_60s$V2)
+pi_70s_70s_excluded$V2 <- as.character(pi_70s_70s_excluded$V2)
+
+pi_70s_30s$V3 <- as.numeric(pi_70s_30s$V3)
+pi_70s_40s$V3 <- as.numeric(pi_70s_40s$V3)
+pi_70s_50s$V3 <- as.numeric(pi_70s_50s$V3)
+pi_70s_60s$V3 <- as.numeric(pi_70s_60s$V3)
+pi_70s_70s_excluded$V3 <- as.numeric(as.character(pi_70s_70s_excluded$V3))
+
+####80s samples 
+pi_80s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_70s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_70s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_80s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_80s_80s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_80s_80s_excluded = pi_80s_80s[which(pi_80s_80s$V1 != pi_80s_80s$V2),]
+
+pi_80s_30s$V1 <- as.character(pi_80s_30s$V1)
+pi_80s_40s$V1 <- as.character(pi_80s_40s$V1)
+pi_80s_50s$V1 <- as.character(pi_80s_50s$V1)
+pi_80s_60s$V1 <- as.character(pi_80s_60s$V1)
+pi_80s_70s$V1 <- as.character(pi_80s_70s$V1)
+pi_80s_80s_excluded$V1 <- as.character(pi_80s_80s_excluded$V1)
+
+pi_80s_30s$V2 <- as.character(pi_80s_30s$V2)
+pi_80s_40s$V2 <- as.character(pi_80s_40s$V2)
+pi_80s_50s$V2 <- as.character(pi_80s_50s$V2)
+pi_80s_60s$V2 <- as.character(pi_80s_60s$V2)
+pi_80s_70s$V2 <- as.character(pi_80s_70s$V2)
+pi_80s_80s_excluded$V2 <- as.character(pi_80s_80s_excluded$V2)
+
+pi_80s_30s$V3 <- as.numeric(pi_80s_30s$V3)
+pi_80s_40s$V3 <- as.numeric(pi_80s_40s$V3)
+pi_80s_50s$V3 <- as.numeric(pi_80s_50s$V3)
+pi_80s_60s$V3 <- as.numeric(pi_80s_60s$V3)
+pi_80s_70s$V3 <- as.numeric(pi_80s_70s$V3)
+pi_80s_80s_excluded$V3 <- as.numeric(as.character(pi_80s_80s_excluded$V3))
+
+####90s samples 
+pi_90s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_70s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_70s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_80s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_80s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_90s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_90s_90s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_90s_90s_excluded = pi_90s_90s[which(pi_90s_90s$V1 != pi_90s_90s$V2),]
+
+pi_90s_30s$V1 <- as.character(pi_90s_30s$V1)
+pi_90s_40s$V1 <- as.character(pi_90s_40s$V1)
+pi_90s_50s$V1 <- as.character(pi_90s_50s$V1)
+pi_90s_60s$V1 <- as.character(pi_90s_60s$V1)
+pi_90s_70s$V1 <- as.character(pi_90s_70s$V1)
+pi_90s_80s$V1 <- as.character(pi_90s_80s$V1)
+pi_90s_90s_excluded$V1 <- as.character(pi_90s_90s_excluded$V1)
+
+pi_90s_30s$V2 <- as.character(pi_90s_30s$V2)
+pi_90s_40s$V2 <- as.character(pi_90s_40s$V2)
+pi_90s_50s$V2 <- as.character(pi_90s_50s$V2)
+pi_90s_60s$V2 <- as.character(pi_90s_60s$V2)
+pi_90s_70s$V2 <- as.character(pi_90s_70s$V2)
+pi_90s_80s$V2 <- as.character(pi_90s_80s$V2)
+pi_90s_90s_excluded$V2 <- as.character(pi_90s_90s_excluded$V2)
+
+#Need to change "type of" for each. For some reason not reading all as the class it should be 
+pi_90s_30s$V3 <- as.numeric(pi_90s_30s$V3)
+pi_90s_40s$V3 <- as.numeric(pi_90s_40s$V3)
+pi_90s_50s$V3 <- as.numeric(as.character(pi_90s_50s$V3))
+pi_90s_50s <- pi_90s_50s[which(!is.na(pi_90s_50s$V3)),] #Remove the row with the 'None/NA' value 
+
+pi_90s_60s$V3 <- as.numeric(pi_90s_60s$V3)
+pi_90s_70s$V3 <- as.numeric(pi_90s_70s$V3)
+pi_90s_80s$V3 <- as.numeric(pi_90s_80s$V3)
+pi_90s_90s_excluded$V3 <- as.numeric(as.character(pi_90s_90s_excluded$V3))
+pi_90s_90s_excluded <- pi_90s_90s_excluded[which(!is.na(pi_90s_90s_excluded$V3)),] #Remove the row with the 'None/NA' value 
+
+
+##############################################################################
+#
+#
+# Calculating Fst
+#
+#
+##############################################################################
+
+#### 30s and all 
+
+#Calculating Fst for 30s-40s
+Ht_30s_40s<-sum(pi_30s_30s_excluded$V3,pi_40s_30s$V3,pi_40s_40s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_40s_30s$V3)+length(pi_40s_40s_excluded$V3))
+Hs_30s_40s<-sum(pi_30s_30s_excluded$V3,pi_40s_40s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_40s_40s_excluded$V3))
+fst_30s_40s<-(Ht_30s_40s-Hs_30s_40s)/Ht_30s_40s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
+  bsample_40s_30s <- sample(pi_40s_30s$V3,replace=T)
+  bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
+  Ht_30s_40s_bstrap <- sum(bsample_30s_30s,bsample_40s_30s,bsample_40s_40s)/(length(bsample_30s_30s)+length(bsample_40s_30s)+length(bsample_40s_40s))
+  Hs_30s_40s_bstrap<-sum(bsample_30s_30s,bsample_40s_40s)/(length(bsample_30s_30s)+length(bsample_40s_40s))
+  fst_30s_40s_bstrap<-(Ht_30s_40s_bstrap-Hs_30s_40s_bstrap)/Ht_30s_40s_bstrap
+  bstrap <- c(bstrap,fst_30s_40s_bstrap)}
+
+sem_fst_30s_40s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_30s_40s_bstrap<-c(mean(bstrap)-2*sem_fst_30s_40s_bstrap,mean(bstrap)+2*sem_fst_30s_40s_bstrap)
+
+                
+#Calculating Fst for 30s-50s
+Ht_30s_50s<-sum(pi_30s_30s_excluded$V3,pi_50s_30s$V3,pi_50s_50s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_50s_30s$V3)+length(pi_50s_50s_excluded$V3))
+Hs_30s_50s<-sum(pi_30s_30s_excluded$V3,pi_50s_50s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_50s_50s_excluded$V3))
+fst_30s_50s<-(Ht_30s_50s-Hs_30s_50s)/Ht_30s_50s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
+  bsample_50s_30s <- sample(pi_50s_30s$V3,replace=T)
+  bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
+  Ht_30s_50s_bstrap <- sum(bsample_30s_30s,bsample_50s_30s,bsample_50s_50s)/(length(bsample_30s_30s)+length(bsample_50s_30s)+length(bsample_50s_50s))
+  Hs_30s_50s_bstrap<-sum(bsample_30s_30s,bsample_50s_50s)/(length(bsample_30s_30s)+length(bsample_50s_50s))
+  fst_30s_50s_bstrap<-(Ht_30s_50s_bstrap-Hs_30s_50s_bstrap)/Ht_30s_50s_bstrap
+  bstrap <- c(bstrap,fst_30s_50s_bstrap)}
+
+sem_fst_30s_50s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_30s_50s_bstrap<-c(mean(bstrap)-2*sem_fst_30s_50s_bstrap,mean(bstrap)+2*sem_fst_30s_50s_bstrap)
+
+#Calculating Fst for 30s-60s
+Ht_30s_60s<-sum(pi_30s_30s_excluded$V3,pi_60s_30s$V3,pi_60s_60s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_60s_30s$V3)+length(pi_60s_60s_excluded$V3))
+Hs_30s_60s<-sum(pi_30s_30s_excluded$V3,pi_60s_60s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_60s_60s_excluded$V3))
+fst_30s_60s<-(Ht_30s_60s-Hs_30s_60s)/Ht_30s_60s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
+  bsample_60s_30s <- sample(pi_60s_30s$V3,replace=T)
+  bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
+  Ht_30s_60s_bstrap <- sum(bsample_30s_30s,bsample_60s_30s,bsample_60s_60s)/(length(bsample_30s_30s)+length(bsample_60s_30s)+length(bsample_60s_60s))
+  Hs_30s_60s_bstrap<-sum(bsample_30s_30s,bsample_60s_60s)/(length(bsample_30s_30s)+length(bsample_60s_60s))
+  fst_30s_60s_bstrap<-(Ht_30s_60s_bstrap-Hs_30s_60s_bstrap)/Ht_30s_60s_bstrap
+  bstrap <- c(bstrap,fst_30s_60s_bstrap)}
+
+sem_fst_30s_60s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_30s_60s_bstrap<-c(mean(bstrap)-2*sem_fst_30s_60s_bstrap,mean(bstrap)+2*sem_fst_30s_60s_bstrap)
+
+#Calculating Fst for 30s-70s
+Ht_30s_70s<-sum(pi_30s_30s_excluded$V3,pi_70s_30s$V3,pi_70s_70s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_70s_30s$V3)+length(pi_70s_70s_excluded$V3))
+Hs_30s_70s<-sum(pi_30s_30s_excluded$V3,pi_70s_70s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_70s_70s_excluded$V3))
+fst_30s_70s<-(Ht_30s_70s-Hs_30s_70s)/Ht_30s_70s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
+  bsample_70s_30s <- sample(pi_70s_30s$V3,replace=T)
+  bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
+  Ht_30s_70s_bstrap <- sum(bsample_30s_30s,bsample_70s_30s,bsample_70s_70s)/(length(bsample_30s_30s)+length(bsample_70s_30s)+length(bsample_70s_70s))
+  Hs_30s_70s_bstrap<-sum(bsample_30s_30s,bsample_70s_70s)/(length(bsample_30s_30s)+length(bsample_70s_70s))
+  fst_30s_70s_bstrap<-(Ht_30s_70s_bstrap-Hs_30s_70s_bstrap)/Ht_30s_70s_bstrap
+  bstrap <- c(bstrap,fst_30s_70s_bstrap)}
+
+sem_fst_30s_70s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_30s_70s_bstrap<-c(mean(bstrap)-2*sem_fst_30s_70s_bstrap,mean(bstrap)+2*sem_fst_30s_70s_bstrap)
+
+#Calculating Fst for 30s-80s
+Ht_30s_80s<-sum(pi_30s_30s_excluded$V3,pi_80s_30s$V3,pi_80s_80s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_80s_30s$V3)+length(pi_80s_80s_excluded$V3))
+Hs_30s_80s<-sum(pi_30s_30s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_80s_80s_excluded$V3))
+fst_30s_80s<-(Ht_30s_80s-Hs_30s_80s)/Ht_30s_80s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
+  bsample_80s_30s <- sample(pi_80s_30s$V3,replace=T)
+  bsample_80s_80s <- sample(pi_80s_80s_excluded$V3,replace=T)
+  Ht_30s_80s_bstrap <- sum(bsample_30s_30s,bsample_80s_30s,bsample_80s_80s)/(length(bsample_30s_30s)+length(bsample_80s_30s)+length(bsample_80s_80s))
+  Hs_30s_80s_bstrap<-sum(bsample_30s_30s,bsample_80s_80s)/(length(bsample_30s_30s)+length(bsample_80s_80s))
+  fst_30s_80s_bstrap<-(Ht_30s_80s_bstrap-Hs_30s_80s_bstrap)/Ht_30s_80s_bstrap
+  bstrap <- c(bstrap,fst_30s_80s_bstrap)}
+
+sem_fst_30s_80s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_30s_80s_bstrap<-c(mean(bstrap)-2*sem_fst_30s_80s_bstrap,mean(bstrap)+2*sem_fst_30s_80s_bstrap)
+
+
+#Calculating Fst for 30s-90s
+Ht_30s_90s<-sum(pi_30s_30s_excluded$V3,pi_90s_30s$V3,pi_90s_90s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_90s_30s$V3)+length(pi_90s_90s_excluded$V3))
+Hs_30s_90s<-sum(pi_30s_30s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_90s_90s_excluded$V3))
+fst_30s_90s<-(Ht_30s_90s-Hs_30s_90s)/Ht_30s_90s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
+  bsample_90s_30s <- sample(pi_90s_30s$V3,replace=T)
+  bsample_90s_90s <- sample(pi_90s_90s_excluded$V3,replace=T)
+  Ht_30s_90s_bstrap <- sum(bsample_30s_30s,bsample_90s_30s,bsample_90s_90s)/(length(bsample_30s_30s)+length(bsample_90s_30s)+length(bsample_90s_90s))
+  Hs_30s_90s_bstrap<-sum(bsample_30s_30s,bsample_90s_90s)/(length(bsample_30s_30s)+length(bsample_90s_90s))
+  fst_30s_90s_bstrap<-(Ht_30s_90s_bstrap-Hs_30s_90s_bstrap)/Ht_30s_90s_bstrap
+  bstrap <- c(bstrap,fst_30s_90s_bstrap)}
+
+sem_fst_30s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_30s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_30s_90s_bstrap,mean(bstrap)+2*sem_fst_30s_90s_bstrap)
+
+
+
+###40s and all 
+#Calculating Fst for 40s-50s
+Ht_40s_50s<-sum(pi_40s_40s_excluded$V3,pi_50s_40s$V3,pi_50s_50s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_50s_40s$V3)+length(pi_50s_50s_excluded$V3))
+Hs_40s_50s<-sum(pi_40s_40s_excluded$V3,pi_50s_50s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_50s_50s_excluded$V3))
+fst_40s_50s<-(Ht_40s_50s-Hs_40s_50s)/Ht_40s_50s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
+  bsample_50s_40s <- sample(pi_50s_40s$V3,replace=T)
+  bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
+  Ht_40s_50s_bstrap <- sum(bsample_40s_40s,bsample_50s_40s,bsample_50s_50s)/(length(bsample_40s_40s)+length(bsample_50s_40s)+length(bsample_50s_50s))
+  Hs_40s_50s_bstrap<-sum(bsample_40s_40s,bsample_50s_50s)/(length(bsample_40s_40s)+length(bsample_50s_50s))
+  fst_40s_50s_bstrap<-(Ht_40s_50s_bstrap-Hs_40s_50s_bstrap)/Ht_40s_50s_bstrap
+  bstrap <- c(bstrap,fst_40s_50s_bstrap)}
+
+sem_fst_40s_50s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_40s_50s_bstrap<-c(mean(bstrap)-2*sem_fst_40s_50s_bstrap,mean(bstrap)+2*sem_fst_40s_50s_bstrap)
+
+
+#Calculating Fst for 40s-60s
+Ht_40s_60s<-sum(pi_40s_40s_excluded$V3,pi_60s_40s$V3,pi_60s_60s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_60s_40s$V3)+length(pi_60s_60s_excluded$V3))
+Hs_40s_60s<-sum(pi_40s_40s_excluded$V3,pi_60s_60s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_60s_60s_excluded$V3))
+fst_40s_60s<-(Ht_40s_60s-Hs_40s_60s)/Ht_40s_60s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
+  bsample_60s_40s <- sample(pi_60s_40s$V3,replace=T)
+  bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
+  Ht_40s_60s_bstrap <- sum(bsample_40s_40s,bsample_60s_40s,bsample_60s_60s)/(length(bsample_40s_40s)+length(bsample_60s_40s)+length(bsample_60s_60s))
+  Hs_40s_60s_bstrap<-sum(bsample_40s_40s,bsample_60s_60s)/(length(bsample_40s_40s)+length(bsample_60s_60s))
+  fst_40s_60s_bstrap<-(Ht_40s_60s_bstrap-Hs_40s_60s_bstrap)/Ht_40s_60s_bstrap
+  bstrap <- c(bstrap,fst_40s_60s_bstrap)}
+
+sem_fst_40s_60s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_40s_60s_bstrap<-c(mean(bstrap)-2*sem_fst_40s_60s_bstrap,mean(bstrap)+2*sem_fst_40s_60s_bstrap)
+
+#Calculating Fst for 40s-70s
+Ht_40s_70s<-sum(pi_40s_40s_excluded$V3,pi_70s_40s$V3,pi_70s_70s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_70s_40s$V3)+length(pi_70s_70s_excluded$V3))
+Hs_40s_70s<-sum(pi_40s_40s_excluded$V3,pi_70s_70s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_70s_70s_excluded$V3))
+fst_40s_70s<-(Ht_40s_70s-Hs_40s_70s)/Ht_40s_70s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
+  bsample_70s_40s <- sample(pi_70s_40s$V3,replace=T)
+  bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
+  Ht_40s_70s_bstrap <- sum(bsample_40s_40s,bsample_70s_40s,bsample_70s_70s)/(length(bsample_40s_40s)+length(bsample_70s_40s)+length(bsample_70s_70s))
+  Hs_40s_70s_bstrap<-sum(bsample_40s_40s,bsample_70s_70s)/(length(bsample_40s_40s)+length(bsample_70s_70s))
+  fst_40s_70s_bstrap<-(Ht_40s_70s_bstrap-Hs_40s_70s_bstrap)/Ht_40s_70s_bstrap
+  bstrap <- c(bstrap,fst_40s_70s_bstrap)}
+
+sem_fst_40s_70s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_40s_70s_bstrap<-c(mean(bstrap)-2*sem_fst_40s_70s_bstrap,mean(bstrap)+2*sem_fst_40s_70s_bstrap)
+
+#Calculating Fst for 40s-80s
+Ht_40s_80s<-sum(pi_40s_40s_excluded$V3,pi_80s_40s$V3,pi_80s_80s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_80s_40s$V3)+length(pi_80s_80s_excluded$V3))
+Hs_40s_80s<-sum(pi_40s_40s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_80s_80s_excluded$V3))
+fst_40s_80s<-(Ht_40s_80s-Hs_40s_80s)/Ht_40s_80s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
+  bsample_80s_40s <- sample(pi_80s_40s$V3,replace=T)
+  bsample_80s_80s <- sample(pi_80s_80s_excluded$V3,replace=T)
+  Ht_40s_80s_bstrap <- sum(bsample_40s_40s,bsample_80s_40s,bsample_80s_80s)/(length(bsample_40s_40s)+length(bsample_80s_40s)+length(bsample_80s_80s))
+  Hs_40s_80s_bstrap<-sum(bsample_40s_40s,bsample_80s_80s)/(length(bsample_40s_40s)+length(bsample_80s_80s))
+  fst_40s_80s_bstrap<-(Ht_40s_80s_bstrap-Hs_40s_80s_bstrap)/Ht_40s_80s_bstrap
+  bstrap <- c(bstrap,fst_40s_80s_bstrap)}
+
+sem_fst_40s_80s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_40s_80s_bstrap<-c(mean(bstrap)-2*sem_fst_40s_80s_bstrap,mean(bstrap)+2*sem_fst_40s_80s_bstrap)
+
+#Calculating Fst for 40s-90s
+Ht_40s_90s<-sum(pi_40s_40s_excluded$V3,pi_90s_40s$V3,pi_90s_90s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_90s_40s$V3)+length(pi_90s_90s_excluded$V3))
+Hs_40s_90s<-sum(pi_40s_40s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_90s_90s_excluded$V3))
+fst_40s_90s<-(Ht_40s_90s-Hs_40s_90s)/Ht_40s_90s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
+  bsample_90s_40s <- sample(pi_90s_40s$V3,replace=T)
+  bsample_90s_90s <- sample(pi_90s_90s_excluded$V3,replace=T)
+  Ht_40s_90s_bstrap <- sum(bsample_40s_40s,bsample_90s_40s,bsample_90s_90s)/(length(bsample_40s_40s)+length(bsample_90s_40s)+length(bsample_90s_90s))
+  Hs_40s_90s_bstrap<-sum(bsample_40s_40s,bsample_90s_90s)/(length(bsample_40s_40s)+length(bsample_90s_90s))
+  fst_40s_90s_bstrap<-(Ht_40s_90s_bstrap-Hs_40s_90s_bstrap)/Ht_40s_90s_bstrap
+  bstrap <- c(bstrap,fst_40s_90s_bstrap)}
+
+sem_fst_40s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_40s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_40s_90s_bstrap,mean(bstrap)+2*sem_fst_40s_90s_bstrap)
+
+###50s and all 
+#Calculating Fst for 50s-60s
+Ht_50s_60s<-sum(pi_50s_50s_excluded$V3,pi_60s_50s$V3,pi_60s_60s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_60s_50s$V3)+length(pi_60s_60s_excluded$V3))
+Hs_50s_60s<-sum(pi_50s_50s_excluded$V3,pi_60s_60s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_60s_60s_excluded$V3))
+fst_50s_60s<-(Ht_50s_60s-Hs_50s_60s)/Ht_50s_60s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
+  bsample_60s_50s <- sample(pi_60s_50s$V3,replace=T)
+  bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
+  Ht_50s_60s_bstrap <- sum(bsample_50s_50s,bsample_60s_50s,bsample_60s_60s)/(length(bsample_50s_50s)+length(bsample_60s_50s)+length(bsample_60s_60s))
+  Hs_50s_60s_bstrap<-sum(bsample_50s_50s,bsample_60s_60s)/(length(bsample_50s_50s)+length(bsample_60s_60s))
+  fst_50s_60s_bstrap<-(Ht_50s_60s_bstrap-Hs_50s_60s_bstrap)/Ht_50s_60s_bstrap
+  bstrap <- c(bstrap,fst_50s_60s_bstrap)}
+
+sem_fst_50s_60s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_50s_60s_bstrap<-c(mean(bstrap)-2*sem_fst_50s_60s_bstrap,mean(bstrap)+2*sem_fst_50s_60s_bstrap)
+
+#Calculating Fst for 50s-70s
+Ht_50s_70s<-sum(pi_50s_50s_excluded$V3,pi_70s_50s$V3,pi_70s_70s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_70s_50s$V3)+length(pi_70s_70s_excluded$V3))
+Hs_50s_70s<-sum(pi_50s_50s_excluded$V3,pi_70s_70s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_70s_70s_excluded$V3))
+fst_50s_70s<-(Ht_50s_70s-Hs_50s_70s)/Ht_50s_70s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
+  bsample_70s_50s <- sample(pi_70s_50s$V3,replace=T)
+  bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
+  Ht_50s_70s_bstrap <- sum(bsample_50s_50s,bsample_70s_50s,bsample_70s_70s)/(length(bsample_50s_50s)+length(bsample_70s_50s)+length(bsample_70s_70s))
+  Hs_50s_70s_bstrap<-sum(bsample_50s_50s,bsample_70s_70s)/(length(bsample_50s_50s)+length(bsample_70s_70s))
+  fst_50s_70s_bstrap<-(Ht_50s_70s_bstrap-Hs_50s_70s_bstrap)/Ht_50s_70s_bstrap
+  bstrap <- c(bstrap,fst_50s_70s_bstrap)}
+
+sem_fst_50s_70s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_50s_70s_bstrap<-c(mean(bstrap)-2*sem_fst_50s_70s_bstrap,mean(bstrap)+2*sem_fst_50s_70s_bstrap)
+
+
+#Calculating Fst for 50s-80s
+Ht_50s_80s<-sum(pi_50s_50s_excluded$V3,pi_80s_50s$V3,pi_80s_80s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_80s_50s$V3)+length(pi_80s_80s_excluded$V3))
+Hs_50s_80s<-sum(pi_50s_50s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_80s_80s_excluded$V3))
+fst_50s_80s<-(Ht_50s_80s-Hs_50s_80s)/Ht_50s_80s
+
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
+  bsample_80s_50s <- sample(pi_80s_50s$V3,replace=T)
+  bsample_80s_80s <- sample(pi_80s_80s_excluded$V3,replace=T)
+  Ht_50s_80s_bstrap <- sum(bsample_50s_50s,bsample_80s_50s,bsample_80s_80s)/(length(bsample_50s_50s)+length(bsample_80s_50s)+length(bsample_80s_80s))
+  Hs_50s_80s_bstrap<-sum(bsample_50s_50s,bsample_80s_80s)/(length(bsample_50s_50s)+length(bsample_80s_80s))
+  fst_50s_80s_bstrap<-(Ht_50s_80s_bstrap-Hs_50s_80s_bstrap)/Ht_50s_80s_bstrap
+  bstrap <- c(bstrap,fst_50s_80s_bstrap)}
+
+sem_fst_50s_80s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_50s_80s_bstrap<-c(mean(bstrap)-2*sem_fst_50s_80s_bstrap,mean(bstrap)+2*sem_fst_50s_80s_bstrap)
+
+
+#Calculating Fst for 50s-90s
+Ht_50s_90s<-sum(pi_50s_50s_excluded$V3,pi_90s_50s$V3,pi_90s_90s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_90s_50s$V3)+length(pi_90s_90s_excluded$V3))
+Hs_50s_90s<-sum(pi_50s_50s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_90s_90s_excluded$V3))
+fst_50s_90s<-(Ht_50s_90s-Hs_50s_90s)/Ht_50s_90s
+
+#bootstrap resampling to calcualte errors bars 
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
+  bsample_90s_50s <- sample(pi_90s_50s$V3,replace=T)
+  bsample_90s_90s <- sample(pi_90s_90s_excluded$V3,replace=T)
+  Ht_50s_90s_bstrap <- sum(bsample_50s_50s,bsample_90s_50s,bsample_90s_90s)/(length(bsample_50s_50s)+length(bsample_90s_50s)+length(bsample_90s_90s))
+  Hs_50s_90s_bstrap<-sum(bsample_50s_50s,bsample_90s_90s)/(length(bsample_50s_50s)+length(bsample_90s_90s))
+  fst_50s_90s_bstrap<-(Ht_50s_90s_bstrap-Hs_50s_90s_bstrap)/Ht_50s_90s_bstrap
+  bstrap <- c(bstrap,fst_50s_90s_bstrap)}
+
+sem_fst_50s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_50s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_50s_90s_bstrap,mean(bstrap)+2*sem_fst_50s_90s_bstrap)
+
+
+###60s and all 
+#Calculating Fst for 60s-70s
+Ht_60s_70s<-sum(pi_60s_60s_excluded$V3,pi_70s_60s$V3,pi_70s_70s_excluded$V3)/(length(pi_60s_60s_excluded$V3)+length(pi_70s_60s$V3)+length(pi_70s_70s_excluded$V3))
+Hs_60s_70s<-sum(pi_60s_60s_excluded$V3,pi_70s_70s_excluded$V3)/(length(pi_60s_60s_excluded$V3)+length(pi_70s_70s_excluded$V3))
+fst_60s_70s<-(Ht_60s_70s-Hs_60s_70s)/Ht_60s_70s
+
+#bootstrap resampling to calcualte errors bars 
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
+  bsample_70s_60s <- sample(pi_70s_60s$V3,replace=T)
+  bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
+  Ht_60s_70s_bstrap <- sum(bsample_60s_60s,bsample_70s_60s,bsample_70s_70s)/(length(bsample_60s_60s)+length(bsample_70s_60s)+length(bsample_70s_70s))
+  Hs_60s_70s_bstrap<-sum(bsample_60s_60s,bsample_70s_70s)/(length(bsample_60s_60s)+length(bsample_70s_70s))
+  fst_60s_70s_bstrap<-(Ht_60s_70s_bstrap-Hs_60s_70s_bstrap)/Ht_60s_70s_bstrap
+  bstrap <- c(bstrap,fst_60s_70s_bstrap)}
+
+sem_fst_60s_70s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_60s_70s_bstrap<-c(mean(bstrap)-2*sem_fst_60s_70s_bstrap,mean(bstrap)+2*sem_fst_60s_70s_bstrap)
+
+
+#Calculating Fst for 60s-80s
+Ht_60s_80s<-sum(pi_60s_60s_excluded$V3,pi_80s_60s$V3,pi_80s_80s_excluded$V3)/(length(pi_60s_60s_excluded$V3)+length(pi_80s_60s$V3)+length(pi_80s_80s_excluded$V3))
+Hs_60s_80s<-sum(pi_60s_60s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_60s_60s_excluded$V3)+length(pi_80s_80s_excluded$V3))
+fst_60s_80s<-(Ht_60s_80s-Hs_60s_80s)/Ht_60s_80s
+
+#bootstrap resampling to calcualte errors bars 
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
+  bsample_80s_60s <- sample(pi_80s_60s$V3,replace=T)
+  bsample_80s_80s <- sample(pi_80s_80s_excluded$V3,replace=T)
+  Ht_60s_80s_bstrap <- sum(bsample_60s_60s,bsample_80s_60s,bsample_80s_80s)/(length(bsample_60s_60s)+length(bsample_80s_60s)+length(bsample_80s_80s))
+  Hs_60s_80s_bstrap<-sum(bsample_60s_60s,bsample_80s_80s)/(length(bsample_60s_60s)+length(bsample_80s_80s))
+  fst_60s_80s_bstrap<-(Ht_60s_80s_bstrap-Hs_60s_80s_bstrap)/Ht_60s_80s_bstrap
+  bstrap <- c(bstrap,fst_60s_80s_bstrap)}
+
+sem_fst_60s_80s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_60s_80s_bstrap<-c(mean(bstrap)-2*sem_fst_60s_80s_bstrap,mean(bstrap)+2*sem_fst_60s_80s_bstrap)
+
+
+#Calculating Fst for 60s-90s
+Ht_60s_90s<-sum(pi_60s_60s_excluded$V3,pi_90s_60s$V3,pi_90s_90s_excluded$V3)/(length(pi_60s_60s_excluded$V3)+length(pi_90s_60s$V3)+length(pi_90s_90s_excluded$V3))
+Hs_60s_90s<-sum(pi_60s_60s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_60s_60s_excluded$V3)+length(pi_90s_90s_excluded$V3))
+fst_60s_90s<-(Ht_60s_90s-Hs_60s_90s)/Ht_60s_90s
+
+#bootstrap resampling to calcualte errors bars 
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
+  bsample_90s_60s <- sample(pi_90s_60s$V3,replace=T)
+  bsample_90s_90s <- sample(pi_90s_90s_excluded$V3,replace=T)
+  Ht_60s_90s_bstrap <- sum(bsample_60s_60s,bsample_90s_60s,bsample_90s_90s)/(length(bsample_60s_60s)+length(bsample_90s_60s)+length(bsample_90s_90s))
+  Hs_60s_90s_bstrap<-sum(bsample_60s_60s,bsample_90s_90s)/(length(bsample_60s_60s)+length(bsample_90s_90s))
+  fst_60s_90s_bstrap<-(Ht_60s_90s_bstrap-Hs_60s_90s_bstrap)/Ht_60s_90s_bstrap
+  bstrap <- c(bstrap,fst_60s_90s_bstrap)}
+
+sem_fst_60s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_60s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_60s_90s_bstrap,mean(bstrap)+2*sem_fst_60s_90s_bstrap)
+
+
+###70s and all 
+#Calculating Fst for 70s-80s
+Ht_70s_80s<-sum(pi_70s_70s_excluded$V3,pi_80s_70s$V3,pi_80s_80s_excluded$V3)/(length(pi_70s_70s_excluded$V3)+length(pi_80s_70s$V3)+length(pi_80s_80s_excluded$V3))
+Hs_70s_80s<-sum(pi_70s_70s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_70s_70s_excluded$V3)+length(pi_80s_80s_excluded$V3))
+fst_70s_80s<-(Ht_70s_80s-Hs_70s_80s)/Ht_70s_80s
+
+#bootstrap resampling to calcualte errors bars 
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
+  bsample_80s_70s <- sample(pi_80s_70s$V3,replace=T)
+  bsample_80s_80s <- sample(pi_80s_80s_excluded$V3,replace=T)
+  Ht_70s_80s_bstrap <- sum(bsample_70s_70s,bsample_80s_70s,bsample_80s_80s)/(length(bsample_70s_70s)+length(bsample_80s_70s)+length(bsample_80s_80s))
+  Hs_70s_80s_bstrap<-sum(bsample_70s_70s,bsample_80s_80s)/(length(bsample_70s_70s)+length(bsample_80s_80s))
+  fst_70s_80s_bstrap<-(Ht_70s_80s_bstrap-Hs_70s_80s_bstrap)/Ht_70s_80s_bstrap
+  bstrap <- c(bstrap,fst_70s_80s_bstrap)}
+
+sem_fst_70s_80s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_70s_80s_bstrap<-c(mean(bstrap)-2*sem_fst_70s_80s_bstrap,mean(bstrap)+2*sem_fst_70s_80s_bstrap)
+
+
+#Calculating Fst for 70s-90s
+Ht_70s_90s<-sum(pi_70s_70s_excluded$V3,pi_90s_70s$V3,pi_90s_90s_excluded$V3)/(length(pi_70s_70s_excluded$V3)+length(pi_90s_70s$V3)+length(pi_90s_90s_excluded$V3))
+Hs_70s_90s<-sum(pi_70s_70s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_70s_70s_excluded$V3)+length(pi_90s_90s_excluded$V3))
+fst_70s_90s<-(Ht_70s_90s-Hs_70s_90s)/Ht_70s_90s
+
+#bootstrap resampling to calcualte errors bars 
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
+  bsample_90s_70s <- sample(pi_90s_70s$V3,replace=T)
+  bsample_90s_90s <- sample(pi_90s_90s_excluded$V3,replace=T)
+  Ht_70s_90s_bstrap <- sum(bsample_70s_70s,bsample_90s_70s,bsample_90s_90s)/(length(bsample_70s_70s)+length(bsample_90s_70s)+length(bsample_90s_90s))
+  Hs_70s_90s_bstrap<-sum(bsample_70s_70s,bsample_90s_90s)/(length(bsample_70s_70s)+length(bsample_90s_90s))
+  fst_70s_90s_bstrap<-(Ht_70s_90s_bstrap-Hs_70s_90s_bstrap)/Ht_70s_90s_bstrap
+  bstrap <- c(bstrap,fst_70s_90s_bstrap)}
+
+sem_fst_70s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_70s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_70s_90s_bstrap,mean(bstrap)+2*sem_fst_70s_90s_bstrap)
+
+
+###80s and all 
+#Calculating Fst for 80s-90s
+Ht_80s_90s<-sum(pi_80s_80s_excluded$V3,pi_90s_80s$V3,pi_90s_90s_excluded$V3)/(length(pi_80s_80s_excluded$V3)+length(pi_90s_80s$V3)+length(pi_90s_90s_excluded$V3))
+Hs_80s_90s<-sum(pi_80s_80s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_80s_80s_excluded$V3)+length(pi_90s_90s_excluded$V3))
+fst_80s_90s<-(Ht_80s_90s-Hs_80s_90s)/Ht_80s_90s
+
+#bootstrap resamplign to calcualte errors bars 
+###need to sample the  80s/80s samples and the 80s/90s sampels and the 90s/90s samples. store those rsmaples and then calcualte Fst. Do this 1000 times. then find standard deviation. 2*this is error bars  
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample_80_80s <- sample(pi_80s_80s_excluded$V3,replace=T)
+  bsample_90_80s <- sample(pi_90s_80s$V3,replace=T)
+  bsample_90_90s <- sample(pi_90s_90s_excluded$V3,replace=T)
+  Ht_80s_90s_bstrap <- sum(bsample_80_80s,bsample_90_80s,bsample_90_90s)/(length(bsample_80_80s)+length(bsample_90_80s)+length(bsample_90_90s))
+  Hs_80s_90s_bstrap<-sum(bsample_80_80s,bsample_90_90s)/(length(bsample_80_80s)+length(bsample_90_90s))
+  fst_80s_90s_bstrap<-(Ht_80s_90s_bstrap-Hs_80s_90s_bstrap)/Ht_80s_90s_bstrap
+  bstrap <- c(bstrap,fst_80s_90s_bstrap)}
+
+sem_fst_80s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
+error_range_fst_80s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_80s_90s_bstrap,mean(bstrap)+2*sem_fst_80s_90s_bstrap)
+sd_fst_80s_90s_bstrap<-sd(bstrap)
+
+
+###
+
+
+##########
+
+##########
+fst_40s_dataframe<-data.frame("Gen_back"=1, "fst"=c(fst_30s_40s))
+fst_50s_dataframe<-data.frame("Gen_back"=1:2, "fst"=c(fst_30s_50s,fst_40s_50s))
+fst_60s_dataframe<-data.frame("Gen_back"=1:3, "fst"=c(fst_30s_60s,fst_40s_60s,fst_50s_60s))
+fst_70s_dataframe<-data.frame("Gen_back"=1:4, "fst"=c(fst_30s_70s,fst_40s_70s,fst_50s_70s,fst_60s_70s))
+fst_80s_dataframe<-data.frame("Gen_back"=1:5, "fst"=c(fst_30s_80s,fst_40s_80s,fst_50s_80s,fst_60s_80s,fst_70s_80s))
+fst_90s_dataframe<-data.frame("Gen_back"=1:6, "fst"=c(fst_30s_90s,fst_40s_90s,fst_50s_90s,fst_60s_90s,fst_70s_90s,fst_80s_90s))
+
+#with error bars 
+fst_40s_dataframe<-data.frame("Gen_back"=1, "fst"=c(fst_30s_40s), "error_bars"=c(sem_fst_30s_40s_bstrap))
+fst_50s_dataframe<-data.frame("Gen_back"=1:2, "fst"=c(fst_30s_50s,fst_40s_50s),"error_bars"=c(sem_fst_30s_50s_bstrap,sem_fst_40s_50s_bstrap))
+fst_60s_dataframe<-data.frame("Gen_back"=1:3, "fst"=c(fst_30s_60s,fst_40s_60s,fst_50s_60s),"error_bars"=c(sem_fst_30s_60s_bstrap,sem_fst_40s_60s_bstrap,sem_fst_50s_60s_bstrap))
+fst_70s_dataframe<-data.frame("Gen_back"=1:4, "fst"=c(fst_30s_70s,fst_40s_70s,fst_50s_70s,fst_60s_70s),"error_bars"=c(sem_fst_30s_70s_bstrap,sem_fst_40s_70s_bstrap,sem_fst_50s_70s_bstrap,sem_fst_60s_70s_bstrap))
+fst_80s_dataframe<-data.frame("Gen_back"=1:5, "fst"=c(fst_30s_80s,fst_40s_80s,fst_50s_80s,fst_60s_80s,fst_70s_80s),"error_bars"=c(sem_fst_30s_80s_bstrap,sem_fst_40s_80s_bstrap,sem_fst_50s_80s_bstrap,sem_fst_60s_80s_bstrap,sem_fst_70s_80s_bstrap))
+fst_90s_dataframe<-data.frame("Gen_back"=1:6, "fst"=c(fst_30s_90s,fst_40s_90s,fst_50s_90s,fst_60s_90s,fst_70s_90s,fst_80s_90s),"error_bars"=c(sem_fst_30s_90s_bstrap,sem_fst_40s_90s_bstrap,sem_fst_50s_90s_bstrap,sem_fst_60s_90s_bstrap,sem_fst_70s_90s_bstrap,sem_fst_80s_90s_bstrap))
+
+
+
+
+all_fst<-rbind(fst_40s_dataframe,fst_50s_dataframe,fst_60s_dataframe,fst_70s_dataframe,fst_80s_dataframe,fst_90s_dataframe)
+
+########
+#
+#Plotting Fst
+#
+
+require(RColorBrewer)
+myColors=brewer.pal(7, "Set1")
+
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_Fst_NAM_ancestry_preceding_decades_ALL_071219.pdf",height=2.375,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=c(1,7),ylim=range(fst_80s_dataframe$fst),xlab="",ylab="",xaxt='n',yaxt='n')
+#grid(nx = NULL, ny = NULL, col = "gray")
+#plot(fst[,4],fst[,3],type='n',xlim=range(fst[,4]),col=jColors$color[match(fst$Decade_initial,jColors$Decade_initial)],xlab="",ylab="",xaxt='n',yaxt='n')
+axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s"))
+axis(side=2,padj=1.5,cex.axis=0.5)
+mtext(side=1,"Decades",line=1.1)
+mtext(side=2,expression("F"[ST]),line=1.1)
+abline(h=seq(-0.001,0.0015,by=0.0005),col=rgb(0,0,0,0.1))
+abline(v=seq(0,6,by=1),col=rgb(0,0,0,0.1))
+#plot(means_30s_dataframe, type ="b", xaxt = "n", col="red", main = "PI paired with decades", ylab= "PI", xlab = "Decades") 
+#axis(1, at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s"), xlab ="Decades")
+legend("bottomright",legend=c("40s","50s","60s","70s","80s","90s"), col=c("#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628"),lty=1,lwd=0.75,bg="white",cex=0.6)
+#points(means_30s_dataframe, type ="b", col="red") 
+points(fst_40s_dataframe,pch=19,type ="b",col="#FF7F00",lwd=1.5)
+#arrows(fst_40s_dataframe$Gen_back,fst_40s_dataframe$fst+(2*fst_40s_dataframe$error_bars), fst_40s_dataframe$Gen_back,fst_40s_dataframe$fst-(2*fst_40s_dataframe$error_bars),length=0.05, angle=90, code=3)
+points(fst_50s_dataframe,pch=19,type ="b",col="#FFFF33",lwd=1.5)
+#arrows(fst_50s_dataframe$Gen_back,fst_50s_dataframe$fst+(2*fst_50s_dataframe$error_bars), fst_50s_dataframe$Gen_back,fst_50s_dataframe$fst-(2*fst_50s_dataframe$error_bars),length=0.05, angle=90, code=3)
+points(fst_60s_dataframe,pch=19,type ="b",col="#4DAF4A",lwd=1.5)
+#arrows(fst_60s_dataframe$Gen_back,fst_60s_dataframe$fst+(2*fst_60s_dataframe$error_bars), fst_60s_dataframe$Gen_back,fst_60s_dataframe$fst-(2*fst_60s_dataframe$error_bars),length=0.05, angle=90, code=3)
+points(fst_70s_dataframe,pch=19,type ="b",col="#377EB8",lwd=1.5)
+#arrows(fst_70s_dataframe$Gen_back,fst_70s_dataframe$fst+(2*fst_70s_dataframe$error_bars), fst_70s_dataframe$Gen_back,fst_70s_dataframe$fst-(2*fst_70s_dataframe$error_bars),length=0.05, angle=90, code=3)
+points(fst_80s_dataframe,pch=19,type ="b",col="#984EA3",lwd=1.5)
+#arrows(fst_80s_dataframe$Gen_back,fst_80s_dataframe$fst+(2*fst_80s_dataframe$error_bars), fst_80s_dataframe$Gen_back,fst_80s_dataframe$fst-(2*fst_80s_dataframe$error_bars),length=0.05, angle=90, code=3)
+points(fst_90s_dataframe,pch=19,type ="b",col="#A65628",lwd=1.5)
+#arrows(fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst+(2*fst_90s_dataframe$error_bars), fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst-(2*fst_90s_dataframe$error_bars),length=0.05, angle=90, code=3)
+
+dev.off()
+
+
+####### Above plot but ith error bars 
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_Fst_NAM_ancestry_preceding_decades_ALL_with_error_bars_071219.pdf",height=2.375,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=c(1,7),ylim=range(fst_80s_dataframe$fst),xlab="",ylab="",xaxt='n',yaxt='n')
+#grid(nx = NULL, ny = NULL, col = "gray")
+#plot(fst[,4],fst[,3],type='n',xlim=range(fst[,4]),col=jColors$color[match(fst$Decade_initial,jColors$Decade_initial)],xlab="",ylab="",xaxt='n',yaxt='n')
+axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s"))
+axis(side=2,padj=1.5,cex.axis=0.5)
+mtext(side=1,"Decades",line=1.1)
+mtext(side=2,expression("F"[ST]),line=1.1)
+abline(h=seq(-0.001,0.0015,by=0.0005),col=rgb(0,0,0,0.1))
+abline(v=seq(0,6,by=1),col=rgb(0,0,0,0.1))
+#axis(1, at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s"), xlab ="Decades")
+legend("bottomright",legend=c("40s","50s","60s","70s","80s","90s"), col=c("#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628"),lty=1,lwd=0.75,bg="white",cex=0.6)
+points(fst_40s_dataframe,pch=19,type ="b",col="#FF7F00",lwd=1.5,cex=0.75)
+arrows(fst_40s_dataframe$Gen_back,fst_40s_dataframe$fst+(2*fst_40s_dataframe$error_bars),fst_40s_dataframe$Gen_back,fst_40s_dataframe$fst-(2*fst_40s_dataframe$error_bars),length=0.05,angle=90,code=3)
+points(fst_50s_dataframe,pch=19,type ="b",col="#FFFF33",lwd=1.5,cex=0.75)
+arrows(fst_50s_dataframe$Gen_back,fst_50s_dataframe$fst+(2*fst_50s_dataframe$error_bars),fst_50s_dataframe$Gen_back,fst_50s_dataframe$fst-(2*fst_50s_dataframe$error_bars),length=0.05,angle=90,code=3)
+points(fst_60s_dataframe,pch=19,type ="b",col="#4DAF4A",lwd=1.5,cex=0.75)
+arrows(fst_60s_dataframe$Gen_back,fst_60s_dataframe$fst+(2*fst_60s_dataframe$error_bars),fst_60s_dataframe$Gen_back,fst_60s_dataframe$fst-(2*fst_60s_dataframe$error_bars),length=0.05,angle=90,code=3)
+points(fst_70s_dataframe,pch=19,type ="b",col="#377EB8",lwd=1.5,cex=0.75)
+arrows(fst_70s_dataframe$Gen_back,fst_70s_dataframe$fst+(2*fst_70s_dataframe$error_bars),fst_70s_dataframe$Gen_back,fst_70s_dataframe$fst-(2*fst_70s_dataframe$error_bars),length=0.05,angle=90,code=3)
+points(fst_80s_dataframe,pch=19,type ="b",col="#984EA3",lwd=1.5,cex=0.75)
+arrows(fst_80s_dataframe$Gen_back,fst_80s_dataframe$fst+(2*fst_80s_dataframe$error_bars),fst_80s_dataframe$Gen_back,fst_80s_dataframe$fst-(2*fst_80s_dataframe$error_bars),length=0.05,angle=90,code=3)
+points(fst_90s_dataframe,pch=19,type ="b",col="#A65628",lwd=1.5,cex=0.75)
+arrows(fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst+(2*fst_90s_dataframe$error_bars),fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst-(2*fst_90s_dataframe$error_bars),length=0.05,angle=90,code=3)
+dev.off()
+
+
+
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
