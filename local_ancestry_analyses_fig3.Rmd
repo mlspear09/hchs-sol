@@ -251,31 +251,9 @@ lower_90_0_bound<-quantile(bstrap,.025)
 upper_90_0_bound<-quantile(bstrap,.975)
 
 ```
-####plotting all individuals 
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_PI_NAM_ancestry_allsamples_decadesback_ALL_072219.pdf",height=2.375,width=2.375,pointsize=10)
-par(mar=c(2.1,2.1,0.2,0.1))
-plot(1,1,type='n',xlim=c(1,7),ylim=c(0.299,0.304),xlab="",ylab="",xaxt='n',yaxt='n')
-axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("0","1","2","3","4","5","6")) 
-axis(side=2,padj=1.5,cex.axis=0.7)
-mtext(side=1,"Decades ago",line=1.1)
-mtext(side=2,expression(pi),line=1.1)
-abline(h=seq(0.299,0.304,by=0.0005),col=rgb(0,0,0,0.1))
-legend("bottomright",legend=c("30s","40s","50s","60s","70s","80s","90s"), col=c("#E41A1C","#377EB8","#4DAF4A","#984EA3","#FF7F00","#FFFF33","#A65628"),lty=1,lwd=0.75,bg="white",cex=0.45)
-points(means_30s_dataframe,pch=19,type="b",col="#E41A1C")
-points(means_40s_dataframe,pch=19,type="b",col="#FF7F00")
-points(means_50s_dataframe,pch=19,type="b",col="#FFFF33")
-points(means_60s_dataframe,pch=19,type="b",col="#4DAF4A")
-points(means_70s_dataframe,pch=19,type="b",col="#377EB8")
-points(means_80s_dataframe,pch=19,type="b",col="#984EA3")
-points(means_90s_dataframe,pch=19,type="b",col="#A65628")
-#dev.off()
 
-```
-
-#############################################################################
-##########################################################################################
-#One plot thats has all ,sampels gen 0, us-migrant gen 0, migrant migrant 0, us us 0,
-
+```{r}
+#subsetting of indivudals 
 #############################
 #Us born vs us migrant
 
@@ -304,10 +282,14 @@ us_born_migrant_30s_30s=all_30s_pi_us_born_migrant[which(all_30s_pi_us_born_migr
 all_us_born_migrant_within_gens<-rbind(us_born_migrant_90s_90s,us_born_migrant_80s_80s,us_born_migrant_70s_70s,us_born_migrant_60s_60s,us_born_migrant_50s_50s,us_born_migrant_40s_40s,us_born_migrant_30s_30s)
 means_all_us_born_migrant_within_gens<-aggregate(all_us_born_migrant_within_gens$pi, list(all_us_born_migrant_within_gens$Decade_initial), mean)
 
+```
+
+```{r}
 ###########
 #Running the bootsrap iterations for this group. 
 
 #90s us born-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -319,7 +301,8 @@ for (i in 1:1000){
 lower_90_0_bound_us_born_migrant<-quantile(bstrap,.025)
 upper_90_0_bound_us_born_migrant<-quantile(bstrap,.975)
 
-#80s us born-migrant 
+#80s us born-migrant
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -332,6 +315,7 @@ lower_80_0_bound_us_born_migrant<-quantile(bstrap,.025)
 upper_80_0_bound_us_born_migrant<-quantile(bstrap,.975)
 
 #70s us born-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -345,6 +329,7 @@ upper_70_0_bound_us_born_migrant<-quantile(bstrap,.975)
 
 
 #60s us born-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -357,6 +342,7 @@ lower_60_0_bound_us_born_migrant<-quantile(bstrap,.025)
 upper_60_0_bound_us_born_migrant<-quantile(bstrap,.975)
 
 #50s us born-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -369,6 +355,7 @@ lower_50_0_bound_us_born_migrant<-quantile(bstrap,.025)
 upper_50_0_bound_us_born_migrant<-quantile(bstrap,.975)
 
 #40s us born-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -380,7 +367,8 @@ for (i in 1:1000){
 lower_40_0_bound_us_born_migrant<-quantile(bstrap,.025)
 upper_40_0_bound_us_born_migrant<-quantile(bstrap,.975)
 
-#30s us born-migrant 
+#30s us born-migrant
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -396,16 +384,11 @@ upper_30_0_bound_us_born_migrant<-quantile(bstrap,.975)
 us_born_migrant_dataframe=data.frame(c(1,2,3,4,5,6,7),c(means_all_us_born_migrant_within_gens$x),c(lower_30_0_bound_us_born_migrant[[1]],lower_40_0_bound_us_born_migrant[[1]],lower_50_0_bound_us_born_migrant[[1]],lower_60_0_bound_us_born_migrant[[1]],lower_70_0_bound_us_born_migrant[[1]],lower_80_0_bound_us_born_migrant[[1]],lower_90_0_bound_us_born_migrant[[1]]),c(upper_30_0_bound_us_born_migrant[[1]],upper_40_0_bound_us_born_migrant[[1]],upper_50_0_bound_us_born_migrant[[1]],upper_60_0_bound_us_born_migrant[[1]],upper_70_0_bound_us_born_migrant[[1]],upper_80_0_bound_us_born_migrant[[1]],upper_90_0_bound_us_born_migrant[[1]]))
 names(us_born_migrant_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
 
+```
 
 
-
-#############################################################################
-#############################################################################
-
+```{r}
 #######US born to US born 
-
-#US born compared to us born
-
 us_born_us_born = second_match[which(second_match$US_born_IID1=="1" & second_match$US_born_IID2=="1"),]
 
 us_born_us_born_90s_90s = us_born_us_born[which(us_born_us_born$Decade_initial=="1990s"),]
@@ -422,6 +405,7 @@ means_all_us_born_us_born_within_gens<-aggregate(all_us_born_us_born_within_gens
 
 #running the bootstrap iterations 
 #90s us born-us_born 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -434,6 +418,7 @@ lower_90_0_bound_us_born_us_born<-quantile(bstrap,.025)
 upper_90_0_bound_us_born_us_born<-quantile(bstrap,.975)
 
 #80s us born-us_born 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -446,6 +431,7 @@ lower_80_0_bound_us_born_us_born<-quantile(bstrap,.025)
 upper_80_0_bound_us_born_us_born<-quantile(bstrap,.975)
 
 #70s us born-us_born 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -457,8 +443,8 @@ for (i in 1:1000){
 lower_70_0_bound_us_born_us_born<-quantile(bstrap,.025)
 upper_70_0_bound_us_born_us_born<-quantile(bstrap,.975)
 
-
 #60s us born-us_born 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -471,6 +457,7 @@ lower_60_0_bound_us_born_us_born<-quantile(bstrap,.025)
 upper_60_0_bound_us_born_us_born<-quantile(bstrap,.975)
 
 #50s us born-us_born 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -483,6 +470,7 @@ lower_50_0_bound_us_born_us_born<-quantile(bstrap,.025)
 upper_50_0_bound_us_born_us_born<-quantile(bstrap,.975)
 
 #40s us born-us_born 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -495,6 +483,7 @@ lower_40_0_bound_us_born_us_born<-quantile(bstrap,.025)
 upper_40_0_bound_us_born_us_born<-quantile(bstrap,.975)
 
 #30s us born-us_born 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -506,18 +495,13 @@ for (i in 1:1000){
 lower_30_0_bound_us_born_us_born<-quantile(bstrap,.025)
 upper_30_0_bound_us_born_us_born<-quantile(bstrap,.975)
 
-#> length(us_born_us_born_30s_30s$pi)
-#[1] 15
-
-
 ###merging the CI infroamtion together 
 us_born_us_born_dataframe=data.frame(c(1,2,3,4,5,6,7),c(means_all_us_born_us_born_within_gens$x),c(lower_30_0_bound_us_born_us_born[[1]],lower_40_0_bound_us_born_us_born[[1]],lower_50_0_bound_us_born_us_born[[1]],lower_60_0_bound_us_born_us_born[[1]],lower_70_0_bound_us_born_us_born[[1]],lower_80_0_bound_us_born_us_born[[1]],lower_90_0_bound_us_born_us_born[[1]]),c(upper_30_0_bound_us_born_us_born[[1]],upper_40_0_bound_us_born_us_born[[1]],upper_50_0_bound_us_born_us_born[[1]],upper_60_0_bound_us_born_us_born[[1]],upper_70_0_bound_us_born_us_born[[1]],upper_80_0_bound_us_born_us_born[[1]],upper_90_0_bound_us_born_us_born[[1]]))
 names(us_born_us_born_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
 
+```
 
-#############################################################################
-#############################################################################
-
+```{r}
 ###########
 #migrant to migrant
 
@@ -536,7 +520,8 @@ means_all_migrant_migrant_within_gens<-aggregate(all_migrant_migrant_within_gens
 
 #running the bootsrap iterations 
 
-#90s us born-migrant 
+#90s migrant-migrant
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -548,7 +533,8 @@ for (i in 1:1000){
 lower_90_0_bound_migrant_migrant<-quantile(bstrap,.025)
 upper_90_0_bound_migrant_migrant<-quantile(bstrap,.975)
 
-#80s us born-migrant 
+#80s migrant-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -560,7 +546,8 @@ for (i in 1:1000){
 lower_80_0_bound_migrant_migrant<-quantile(bstrap,.025)
 upper_80_0_bound_migrant_migrant<-quantile(bstrap,.975)
 
-#70s us born-migrant 
+#70s migrant-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -572,8 +559,8 @@ for (i in 1:1000){
 lower_70_0_bound_migrant_migrant<-quantile(bstrap,.025)
 upper_70_0_bound_migrant_migrant<-quantile(bstrap,.975)
 
-
-#60s us born-migrant 
+#60s migrant-migrant 
+set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -585,7 +572,8 @@ for (i in 1:1000){
 lower_60_0_bound_migrant_migrant<-quantile(bstrap,.025)
 upper_60_0_bound_migrant_migrant<-quantile(bstrap,.975)
 
-#50s us born-migrant 
+#50s migrant-migrant 
+set.seed(1234) 
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -597,7 +585,8 @@ for (i in 1:1000){
 lower_50_0_bound_migrant_migrant<-quantile(bstrap,.025)
 upper_50_0_bound_migrant_migrant<-quantile(bstrap,.975)
 
-#40s us born-migrant 
+#40s migrant-migrant 
+set.seed(1234) 
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -609,7 +598,8 @@ for (i in 1:1000){
 lower_40_0_bound_migrant_migrant<-quantile(bstrap,.025)
 upper_40_0_bound_migrant_migrant<-quantile(bstrap,.975)
 
-#30s us born-migrant 
+#30s migrant-migrant 
+set.seed(1234) 
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
@@ -630,23 +620,23 @@ migrant_migrant_all_lower_bounds<-rbind(lower_30_0_bound_migrant_migrant[[1]],lo
 
 migrant_migrant_dataframe=data.frame(c(1,2,3,4,5,6,7),c(means_all_migrant_migrant_within_gens$x),c(lower_30_0_bound_migrant_migrant[[1]],lower_40_0_bound_migrant_migrant[[1]],lower_50_0_bound_migrant_migrant[[1]],lower_60_0_bound_migrant_migrant[[1]],lower_70_0_bound_migrant_migrant[[1]],lower_80_0_bound_migrant_migrant[[1]],lower_90_0_bound_migrant_migrant[[1]]),c(upper_30_0_bound_migrant_migrant[[1]],upper_40_0_bound_migrant_migrant[[1]],upper_50_0_bound_migrant_migrant[[1]],upper_60_0_bound_migrant_migrant[[1]],upper_70_0_bound_migrant_migrant[[1]],upper_80_0_bound_migrant_migrant[[1]],upper_90_0_bound_migrant_migrant[[1]]))
 names(migrant_migrant_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
+```
 
-#####################################################################################
-######
-###all samples 
-
+```{r}
+###merging all samples 
 all_samples_within_gens=rbind(all_90s_pi_0,all_80s_pi_0,all_70s_pi_0,all_60s_pi_0,all_50s_pi_0,all_40s_pi_0,all_30s_pi_0)
 means_all_samples_within_gens<-aggregate(all_samples_within_gens$pi, list(all_samples_within_gens$Decade_initial), mean)
 
 
 all_samples_dataframe=data.frame(c(1,2,3,4,5,6,7),c(means_all_samples_within_gens$x),c(lower_30_0_bound[[1]],lower_40_0_bound[[1]],lower_50_0_bound[[1]],lower_60_0_bound[[1]],lower_70_0_bound[[1]],lower_80_0_bound[[1]],lower_90_0_bound[[1]]),c(upper_30_0_bound[[1]],upper_40_0_bound[[1]],upper_50_0_bound[[1]],upper_60_0_bound[[1]],upper_70_0_bound[[1]],upper_80_0_bound[[1]],upper_90_0_bound[[1]]))
 names(all_samples_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
+```
 
-
+```{r}
 ###################
 mycolors2=brewer.pal(11, "Spectral")
 ####plotting all individuals 
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_PI_NAM_ancestry_migrant_us_born_within_gens_ALL_with_CI_072219_supplementary_figure7.pdf",height=2.25,width=2.375,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_PI_NAM_ancestry_migrant_us_born_within_gens_ALL_with_CI_072219_new_figure3a.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.3,0.1))
 plot(1,1,type='n',xlim=c(1,7),ylim=c(0.295,0.31),xlab="",ylab="",xaxt='n',yaxt='n')
 axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s")) 
@@ -668,6 +658,6 @@ polygon(c(migrant_migrant_dataframe$decade_order,rev(migrant_migrant_dataframe$d
 #us born us born
 points(means_all_us_born_us_born_within_gens,pch=19,type="b",col=mycolors2[1])
 polygon(c(us_born_us_born_dataframe$decade_order,rev(us_born_us_born_dataframe$decade_order)),c(us_born_us_born_dataframe$upper_CI,rev(us_born_us_born_dataframe$lower_CI)),col=adjustcolor(mycolors2[1], alpha.f = 0.20), border = NA)
-#dev.off()
+dev.off()
 
 ```
