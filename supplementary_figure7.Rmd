@@ -176,11 +176,7 @@ pi_90s_90s_excluded <- pi_90s_90s_excluded[which(!is.na(pi_90s_90s_excluded$V3))
 ```{r}
 
 ##############################################################################
-#
-#
 # Calculating Fst
-#
-#
 ##############################################################################
 
 #### 30s and all 
@@ -416,6 +412,8 @@ error_range_fst_40s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_40s_90s_bstrap,mean(bst
 
 ```
 
+
+
 ```{r}
 ###50s and all 
 #Calculating Fst for 50s-60s
@@ -650,6 +648,9 @@ sd_fst_80s_90s_bstrap<-sd(bstrap)
 
 ```
 
+
+
+
 ```{r}
 #creating data frames for plotting. 
 ##########
@@ -676,46 +677,13 @@ all_fst<-rbind(fst_40s_dataframe,fst_50s_dataframe,fst_60s_dataframe,fst_70s_dat
 
 ```{r}
 ########
-#
 #Plotting Fst
-#
+#######
 
 require(RColorBrewer)
 myColors=brewer.pal(7, "Set1")
 
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_Fst_NAM_ancestry_preceding_decades_ALL_071219.pdf",height=2.375,width=2.375,pointsize=10)
-par(mar=c(2.1,2.1,0.1,0.1))
-plot(1,1,type='n',xlim=c(1,7),ylim=range(fst_80s_dataframe$fst),xlab="",ylab="",xaxt='n',yaxt='n')
-#grid(nx = NULL, ny = NULL, col = "gray")
-#plot(fst[,4],fst[,3],type='n',xlim=range(fst[,4]),col=jColors$color[match(fst$Decade_initial,jColors$Decade_initial)],xlab="",ylab="",xaxt='n',yaxt='n')
-axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s"))
-axis(side=2,padj=1.5,cex.axis=0.5)
-mtext(side=1,"Decades",line=1.1)
-mtext(side=2,expression("F"[ST]),line=1.1)
-abline(h=seq(-0.001,0.0015,by=0.0005),col=rgb(0,0,0,0.1))
-abline(v=seq(0,6,by=1),col=rgb(0,0,0,0.1))
-#plot(means_30s_dataframe, type ="b", xaxt = "n", col="red", main = "PI paired with decades", ylab= "PI", xlab = "Decades") 
-#axis(1, at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s"), xlab ="Decades")
-legend("bottomright",legend=c("40s","50s","60s","70s","80s","90s"), col=c("#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628"),lty=1,lwd=0.75,bg="white",cex=0.6)
-#points(means_30s_dataframe, type ="b", col="red") 
-points(fst_40s_dataframe,pch=19,type ="b",col="#FF7F00",lwd=1.5)
-#arrows(fst_40s_dataframe$Gen_back,fst_40s_dataframe$fst+(2*fst_40s_dataframe$error_bars), fst_40s_dataframe$Gen_back,fst_40s_dataframe$fst-(2*fst_40s_dataframe$error_bars),length=0.05, angle=90, code=3)
-points(fst_50s_dataframe,pch=19,type ="b",col="#FFFF33",lwd=1.5)
-#arrows(fst_50s_dataframe$Gen_back,fst_50s_dataframe$fst+(2*fst_50s_dataframe$error_bars), fst_50s_dataframe$Gen_back,fst_50s_dataframe$fst-(2*fst_50s_dataframe$error_bars),length=0.05, angle=90, code=3)
-points(fst_60s_dataframe,pch=19,type ="b",col="#4DAF4A",lwd=1.5)
-#arrows(fst_60s_dataframe$Gen_back,fst_60s_dataframe$fst+(2*fst_60s_dataframe$error_bars), fst_60s_dataframe$Gen_back,fst_60s_dataframe$fst-(2*fst_60s_dataframe$error_bars),length=0.05, angle=90, code=3)
-points(fst_70s_dataframe,pch=19,type ="b",col="#377EB8",lwd=1.5)
-#arrows(fst_70s_dataframe$Gen_back,fst_70s_dataframe$fst+(2*fst_70s_dataframe$error_bars), fst_70s_dataframe$Gen_back,fst_70s_dataframe$fst-(2*fst_70s_dataframe$error_bars),length=0.05, angle=90, code=3)
-points(fst_80s_dataframe,pch=19,type ="b",col="#984EA3",lwd=1.5)
-#arrows(fst_80s_dataframe$Gen_back,fst_80s_dataframe$fst+(2*fst_80s_dataframe$error_bars), fst_80s_dataframe$Gen_back,fst_80s_dataframe$fst-(2*fst_80s_dataframe$error_bars),length=0.05, angle=90, code=3)
-points(fst_90s_dataframe,pch=19,type ="b",col="#A65628",lwd=1.5)
-#arrows(fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst+(2*fst_90s_dataframe$error_bars), fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst-(2*fst_90s_dataframe$error_bars),length=0.05, angle=90, code=3)
-
-dev.off()
-
-
-####### Above plot but ith error bars 
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_Fst_NAM_ancestry_preceding_decades_ALL_with_error_bars_071219.pdf",height=2.375,width=2.375,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_Fst_NAM_ancestry_preceding_decades_ALL_with_error_bars_051420_supplementary_figure7.pdf",height=2.375,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.1,0.1))
 plot(1,1,type='n',xlim=c(1,7),ylim=range(fst_80s_dataframe$fst),xlab="",ylab="",xaxt='n',yaxt='n')
 #grid(nx = NULL, ny = NULL, col = "gray")
@@ -741,8 +709,4 @@ arrows(fst_80s_dataframe$Gen_back,fst_80s_dataframe$fst+(2*fst_80s_dataframe$err
 points(fst_90s_dataframe,pch=19,type ="b",col="#A65628",lwd=1.5,cex=0.75)
 arrows(fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst+(2*fst_90s_dataframe$error_bars),fst_90s_dataframe$Gen_back,fst_90s_dataframe$fst-(2*fst_90s_dataframe$error_bars),length=0.05,angle=90,code=3)
 dev.off()
-
-
-
-
 ```
