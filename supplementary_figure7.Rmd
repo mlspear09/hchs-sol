@@ -8,6 +8,7 @@ output: html_document
 Supplementary Figure 7
 
 ```{r}
+#Reading in all files and subsettting 
 #####
 # The following scripts remove all of the duplicates from each of the files. In order to reduce file size .
 #####
@@ -170,6 +171,9 @@ pi_90s_80s$V3 <- as.numeric(pi_90s_80s$V3)
 pi_90s_90s_excluded$V3 <- as.numeric(as.character(pi_90s_90s_excluded$V3))
 pi_90s_90s_excluded <- pi_90s_90s_excluded[which(!is.na(pi_90s_90s_excluded$V3)),] #Remove the row with the 'None/NA' value 
 
+```
+
+```{r}
 
 ##############################################################################
 #
@@ -186,7 +190,9 @@ Ht_30s_40s<-sum(pi_30s_30s_excluded$V3,pi_40s_30s$V3,pi_40s_40s_excluded$V3)/(le
 Hs_30s_40s<-sum(pi_30s_30s_excluded$V3,pi_40s_40s_excluded$V3)/(length(pi_30s_30s_excluded$V3)+length(pi_40s_40s_excluded$V3))
 fst_30s_40s<-(Ht_30s_40s-Hs_30s_40s)/Ht_30s_40s
 
+
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
@@ -207,6 +213,7 @@ Hs_30s_50s<-sum(pi_30s_30s_excluded$V3,pi_50s_50s_excluded$V3)/(length(pi_30s_30
 fst_30s_50s<-(Ht_30s_50s-Hs_30s_50s)/Ht_30s_50s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
@@ -226,6 +233,7 @@ Hs_30s_60s<-sum(pi_30s_30s_excluded$V3,pi_60s_60s_excluded$V3)/(length(pi_30s_30
 fst_30s_60s<-(Ht_30s_60s-Hs_30s_60s)/Ht_30s_60s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
@@ -245,6 +253,7 @@ Hs_30s_70s<-sum(pi_30s_30s_excluded$V3,pi_70s_70s_excluded$V3)/(length(pi_30s_30
 fst_30s_70s<-(Ht_30s_70s-Hs_30s_70s)/Ht_30s_70s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
@@ -264,6 +273,7 @@ Hs_30s_80s<-sum(pi_30s_30s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_30s_30
 fst_30s_80s<-(Ht_30s_80s-Hs_30s_80s)/Ht_30s_80s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
@@ -284,6 +294,7 @@ Hs_30s_90s<-sum(pi_30s_30s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_30s_30
 fst_30s_90s<-(Ht_30s_90s-Hs_30s_90s)/Ht_30s_90s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_30s_30s <- sample(pi_30s_30s_excluded$V3,replace=T)
@@ -297,8 +308,10 @@ for (i in 1:1000){
 sem_fst_30s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
 error_range_fst_30s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_30s_90s_bstrap,mean(bstrap)+2*sem_fst_30s_90s_bstrap)
 
+```
 
 
+```{r}
 ###40s and all 
 #Calculating Fst for 40s-50s
 Ht_40s_50s<-sum(pi_40s_40s_excluded$V3,pi_50s_40s$V3,pi_50s_50s_excluded$V3)/(length(pi_40s_40s_excluded$V3)+length(pi_50s_40s$V3)+length(pi_50s_50s_excluded$V3))
@@ -306,6 +319,7 @@ Hs_40s_50s<-sum(pi_40s_40s_excluded$V3,pi_50s_50s_excluded$V3)/(length(pi_40s_40
 fst_40s_50s<-(Ht_40s_50s-Hs_40s_50s)/Ht_40s_50s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
@@ -326,6 +340,7 @@ Hs_40s_60s<-sum(pi_40s_40s_excluded$V3,pi_60s_60s_excluded$V3)/(length(pi_40s_40
 fst_40s_60s<-(Ht_40s_60s-Hs_40s_60s)/Ht_40s_60s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
@@ -345,6 +360,7 @@ Hs_40s_70s<-sum(pi_40s_40s_excluded$V3,pi_70s_70s_excluded$V3)/(length(pi_40s_40
 fst_40s_70s<-(Ht_40s_70s-Hs_40s_70s)/Ht_40s_70s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
@@ -364,6 +380,7 @@ Hs_40s_80s<-sum(pi_40s_40s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_40s_40
 fst_40s_80s<-(Ht_40s_80s-Hs_40s_80s)/Ht_40s_80s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
@@ -383,6 +400,7 @@ Hs_40s_90s<-sum(pi_40s_40s_excluded$V3,pi_90s_90s_excluded$V3)/(length(pi_40s_40
 fst_40s_90s<-(Ht_40s_90s-Hs_40s_90s)/Ht_40s_90s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_40s_40s <- sample(pi_40s_40s_excluded$V3,replace=T)
@@ -396,6 +414,9 @@ for (i in 1:1000){
 sem_fst_40s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
 error_range_fst_40s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_40s_90s_bstrap,mean(bstrap)+2*sem_fst_40s_90s_bstrap)
 
+```
+
+```{r}
 ###50s and all 
 #Calculating Fst for 50s-60s
 Ht_50s_60s<-sum(pi_50s_50s_excluded$V3,pi_60s_50s$V3,pi_60s_60s_excluded$V3)/(length(pi_50s_50s_excluded$V3)+length(pi_60s_50s$V3)+length(pi_60s_60s_excluded$V3))
@@ -403,6 +424,8 @@ Hs_50s_60s<-sum(pi_50s_50s_excluded$V3,pi_60s_60s_excluded$V3)/(length(pi_50s_50
 fst_50s_60s<-(Ht_50s_60s-Hs_50s_60s)/Ht_50s_60s
 
 bstrap <- c()
+set.seed(1234)
+
 for (i in 1:1000){
   # First take the sample
   bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
@@ -422,6 +445,7 @@ Hs_50s_70s<-sum(pi_50s_50s_excluded$V3,pi_70s_70s_excluded$V3)/(length(pi_50s_50
 fst_50s_70s<-(Ht_50s_70s-Hs_50s_70s)/Ht_50s_70s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
@@ -442,6 +466,7 @@ Hs_50s_80s<-sum(pi_50s_50s_excluded$V3,pi_80s_80s_excluded$V3)/(length(pi_50s_50
 fst_50s_80s<-(Ht_50s_80s-Hs_50s_80s)/Ht_50s_80s
 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
@@ -463,6 +488,7 @@ fst_50s_90s<-(Ht_50s_90s-Hs_50s_90s)/Ht_50s_90s
 
 #bootstrap resampling to calcualte errors bars 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_50s_50s <- sample(pi_50s_50s_excluded$V3,replace=T)
@@ -476,6 +502,9 @@ for (i in 1:1000){
 sem_fst_50s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
 error_range_fst_50s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_50s_90s_bstrap,mean(bstrap)+2*sem_fst_50s_90s_bstrap)
 
+```
+
+```{r}
 
 ###60s and all 
 #Calculating Fst for 60s-70s
@@ -485,6 +514,7 @@ fst_60s_70s<-(Ht_60s_70s-Hs_60s_70s)/Ht_60s_70s
 
 #bootstrap resampling to calcualte errors bars 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
@@ -506,6 +536,7 @@ fst_60s_80s<-(Ht_60s_80s-Hs_60s_80s)/Ht_60s_80s
 
 #bootstrap resampling to calcualte errors bars 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
@@ -527,6 +558,7 @@ fst_60s_90s<-(Ht_60s_90s-Hs_60s_90s)/Ht_60s_90s
 
 #bootstrap resampling to calcualte errors bars 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_60s_60s <- sample(pi_60s_60s_excluded$V3,replace=T)
@@ -540,7 +572,9 @@ for (i in 1:1000){
 sem_fst_60s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
 error_range_fst_60s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_60s_90s_bstrap,mean(bstrap)+2*sem_fst_60s_90s_bstrap)
 
+```
 
+```{r}
 ###70s and all 
 #Calculating Fst for 70s-80s
 Ht_70s_80s<-sum(pi_70s_70s_excluded$V3,pi_80s_70s$V3,pi_80s_80s_excluded$V3)/(length(pi_70s_70s_excluded$V3)+length(pi_80s_70s$V3)+length(pi_80s_80s_excluded$V3))
@@ -549,6 +583,7 @@ fst_70s_80s<-(Ht_70s_80s-Hs_70s_80s)/Ht_70s_80s
 
 #bootstrap resampling to calcualte errors bars 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
@@ -570,6 +605,7 @@ fst_70s_90s<-(Ht_70s_90s-Hs_70s_90s)/Ht_70s_90s
 
 #bootstrap resampling to calcualte errors bars 
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_70s_70s <- sample(pi_70s_70s_excluded$V3,replace=T)
@@ -583,6 +619,10 @@ for (i in 1:1000){
 sem_fst_70s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
 error_range_fst_70s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_70s_90s_bstrap,mean(bstrap)+2*sem_fst_70s_90s_bstrap)
 
+```
+
+
+```{r}
 
 ###80s and all 
 #Calculating Fst for 80s-90s
@@ -593,6 +633,7 @@ fst_80s_90s<-(Ht_80s_90s-Hs_80s_90s)/Ht_80s_90s
 #bootstrap resamplign to calcualte errors bars 
 ###need to sample the  80s/80s samples and the 80s/90s sampels and the 90s/90s samples. store those rsmaples and then calcualte Fst. Do this 1000 times. then find standard deviation. 2*this is error bars  
 bstrap <- c()
+set.seed(1234)
 for (i in 1:1000){
   # First take the sample
   bsample_80_80s <- sample(pi_80s_80s_excluded$V3,replace=T)
@@ -607,8 +648,10 @@ sem_fst_80s_90s_bstrap<-sd(bstrap)/sqrt(length(bstrap))
 error_range_fst_80s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_80s_90s_bstrap,mean(bstrap)+2*sem_fst_80s_90s_bstrap)
 sd_fst_80s_90s_bstrap<-sd(bstrap)
 
+```
 
-
+```{r}
+#creating data frames for plotting. 
 ##########
 fst_40s_dataframe<-data.frame("Gen_back"=1, "fst"=c(fst_30s_40s))
 fst_50s_dataframe<-data.frame("Gen_back"=1:2, "fst"=c(fst_30s_50s,fst_40s_50s))
@@ -626,10 +669,12 @@ fst_80s_dataframe<-data.frame("Gen_back"=1:5, "fst"=c(fst_30s_80s,fst_40s_80s,fs
 fst_90s_dataframe<-data.frame("Gen_back"=1:6, "fst"=c(fst_30s_90s,fst_40s_90s,fst_50s_90s,fst_60s_90s,fst_70s_90s,fst_80s_90s),"error_bars"=c(sem_fst_30s_90s_bstrap,sem_fst_40s_90s_bstrap,sem_fst_50s_90s_bstrap,sem_fst_60s_90s_bstrap,sem_fst_70s_90s_bstrap,sem_fst_80s_90s_bstrap))
 
 
-
-
 all_fst<-rbind(fst_40s_dataframe,fst_50s_dataframe,fst_60s_dataframe,fst_70s_dataframe,fst_80s_dataframe,fst_90s_dataframe)
 
+
+```
+
+```{r}
 ########
 #
 #Plotting Fst
@@ -701,27 +746,3 @@ dev.off()
 
 
 ```
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
