@@ -1,5 +1,5 @@
 ---
-title: "local_ancestry_analyses_fig3"
+title: "Figure 3A"
 author: "Melissa Spear"
 date: "13/05/2020"
 output: html_document
