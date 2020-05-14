@@ -5,6 +5,7 @@ date: "13/05/2020"
 output: html_document
 ---
 
+Supplementary Figure 7
 
 ```{r}
 #####
@@ -12,7 +13,7 @@ output: html_document
 #####
 
 ###30s samples
-pi_30s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_30s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_30s_30s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_30s_30s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
 pi_30s_30s_excluded = pi_30s_30s[which(pi_30s_30s$V1 != pi_30s_30s$V2),]
 
 pi_30s_30s_excluded$V1 <- as.character(pi_30s_30s_excluded$V1)
