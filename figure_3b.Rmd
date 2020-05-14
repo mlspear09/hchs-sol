@@ -6,24 +6,14 @@ output: html_document
 ---
 
 ```{r}
-#NAM ancestry plots- changes in proportiosn for Mexicans.
-setwd("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures")
-#setwd("/Users/melissaleespear/Dropbox/HCHS_SOL/paper/figures")
+#AI ancestry plots- changes in proportiosn for Mexicans.
 ##This plot uses base R grahpics to plot the paper verison of the figure
 
 
 #######################
-# This plot plots the proportion change in log scale of NAM ancestral tracts
-
-#plotting the same new plot with data points overlaid
-
-#library(doParallel)
-
-require(RColorBrewer)
-myColors=brewer.pal(7, "Set1")
+# This plots the proportion change in log scale of NAM ancestral tract
 
 library("reshape2")
-#innameTRACTS.1990 = paste('/Users/melissaspear/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/bed_files/Mexican/1990s/output/boot0.bins.data.txt', sep="")
 innameTRACTS.1990 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1990s/boot0.bins.data.txt', sep="")
 MX_1990s = read.table(innameTRACTS.1990, header= T, check.names=F)
 Pop_dataframe <-data.frame(Pop = c("NAM", "CEU", "YRI")) #the order of these labels is based on the order they were put into tracts 
@@ -48,7 +38,6 @@ MX.1990.YRI <- do.call(data.frame, lapply(MX.1990.YRI, function(x) {replace(x, i
 MX.1990.NAM_no0s = MX.1990.NAM[which(MX.1990.NAM$prop!='0'),]
 
 #1980s
-#innameTRACTS.1980 = paste('/Users/melissaspear/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/bed_files/Mexican/1980s/output/boot0.bins.data.txt', sep="")
 innameTRACTS.1980 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1980s/boot0.bins.data.txt', sep="")
 MX_1980s = read.table(innameTRACTS.1980, header= T, check.names=F)
 MX_1980s_merged <- cbind(MX_1980s, Pop_dataframe)
@@ -69,7 +58,6 @@ MX.1980.YRI <- do.call(data.frame, lapply(MX.1980.YRI, function(x) {replace(x, i
 MX.1980.NAM_no0s = MX.1980.NAM[which(MX.1980.NAM$prop!='0'),]
 
 #1970s
-#innameTRACTS.1970 = paste('/Users/melissaspear/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/bed_files/Mexican/1970s/output/boot0.bins.data.txt', sep="")
 innameTRACTS.1970 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1970s/boot0.bins.data.txt', sep="")
 MX_1970s = read.table(innameTRACTS.1970, header= T, check.names=F)
 MX_1970s_merged <- cbind(MX_1970s, Pop_dataframe)
@@ -90,7 +78,6 @@ MX.1970.YRI <- do.call(data.frame, lapply(MX.1970.YRI, function(x) {replace(x, i
 MX.1970.NAM_no0s = MX.1970.NAM[which(MX.1970.NAM$prop!='0'),]
 
 #1960s
-#innameTRACTS.1960 = paste('/Users/melissaspear/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/bed_files/Mexican/1960s/output/boot0.bins.data.txt', sep="")
 innameTRACTS.1960 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1960s/boot0.bins.data.txt', sep="")
 MX_1960s = read.table(innameTRACTS.1960, header= T, check.names=F)
 MX_1960s_merged <- cbind(MX_1960s, Pop_dataframe)
@@ -111,7 +98,6 @@ MX.1960.YRI <- do.call(data.frame, lapply(MX.1960.YRI, function(x) {replace(x, i
 MX.1960.NAM_no0s = MX.1960.NAM[which(MX.1960.NAM$prop!='0'),]
 
 #1950s
-#innameTRACTS.1950 = paste('/Users/melissaspear/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/bed_files/Mexican/1950s/output/boot0.bins.data.txt', sep="")
 innameTRACTS.1950 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1950s/boot0.bins.data.txt', sep="")
 MX_1950s = read.table(innameTRACTS.1950, header= T, check.names=F)
 MX_1950s_merged <- cbind(MX_1950s, Pop_dataframe)
@@ -132,7 +118,6 @@ MX.1950.YRI <- do.call(data.frame, lapply(MX.1950.YRI, function(x) {replace(x, i
 MX.1950.NAM_no0s = MX.1950.NAM[which(MX.1950.NAM$prop!='0'),]
 
 #1940s
-#innameTRACTS.1940 = paste('/Users/melissaspear/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/bed_files/Mexican/1940s/output/boot0.bins.data.txt', sep="")
 innameTRACTS.1940 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1940s/boot0.bins.data.txt', sep="")
 MX_1940s = read.table(innameTRACTS.1940, header= T, check.names=F)
 MX_1940s_merged <- cbind(MX_1940s, Pop_dataframe)
@@ -153,7 +138,6 @@ MX.1940.YRI <- do.call(data.frame, lapply(MX.1940.YRI, function(x) {replace(x, i
 MX.1940.NAM_no0s = MX.1940.NAM[which(MX.1940.NAM$prop!='0'),]
 
 #1930s
-#innameTRACTS.1930 = paste('/Users/melissaspear/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/bed_files/Mexican/1930s/output/boot0.bins.data.txt', sep="")
 innameTRACTS.1930 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1930s/boot0.bins.data.txt', sep="")
 MX_1930s = read.table(innameTRACTS.1930, header= T, check.names=F)
 MX_1930s_merged <- cbind(MX_1930s, Pop_dataframe)
@@ -177,10 +161,16 @@ all_NAM_decades = rbind(MX.1930.NAM, MX.1940.NAM, MX.1950.NAM, MX.1960.NAM, MX.1
 all_CEU_decades = rbind(MX.1930.CEU, MX.1940.CEU, MX.1950.CEU, MX.1960.CEU, MX.1970.CEU, MX.1980.CEU, MX.1990.CEU)
 all_YRI_decades = rbind(MX.1930.YRI, MX.1940.YRI, MX.1950.YRI, MX.1960.YRI, MX.1970.YRI, MX.1980.YRI, MX.1990.YRI)
 
-#pdf("Mexicans_NAM_ancestral_tracts_proportion_change_log_scale_042919.pdf",height=2.25,width=2.375,pointsize=10)
-pdf("Mexicans_NAM_ancestral_tracts_proportion_change_log_scale_071619_Figure_2B.pdf",height=2.25,width=2.375,pointsize=10)
+```
+
+Plot figure 
+```{r}
+require(RColorBrewer)
+myColors=brewer.pal(7, "Set1")
+
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/Mexicans_NAM_ancestral_tracts_proportion_change_log_scale_071619_Figure_3B_new.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,3.25,0.25,0.35))
-plot(prop~variable100,type='n',data=all_NAM_decades,pch=19,log="y",xlab="",ylab="",xaxt='n',yaxt='n')
+plot(prop~variable100,type='n',data=all_NAM_decades,pch=19,log="y",xlab="",ylab="",xaxt='n',yaxt='n', alpha=0.5)
 grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
 #abline(h=seq(0,300,by=0.1),col=rgb(0,0,0,0.1))
 #abline(v=seq(0,300,by=50),col=rgb(0,0,0,0.1))
@@ -196,55 +186,7 @@ points(prop~variable100,data=MX.1960.NAM,pch=19,col="#4DAF4A",cex=0.75)
 points(prop~variable100,data=MX.1970.NAM,pch=19,col="#377EB8",cex=0.75)
 points(prop~variable100,data=MX.1980.NAM,pch=19,col="#984EA3",cex=0.75)
 points(prop~variable100,data=MX.1990.NAM,pch=19,col="#A65628",cex=0.75)
-legend("topright",legend=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"),col=c("#E41A1C","#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628"),pch=19,cex =0.75,bg="white")
-
-dev.off()
-
-#pdf("Mexicans_NAM_ancestral_tracts_proportion_change_042919.pdf",height=2.25,width=2.375,pointsize=10)
-pdf("Mexicans_NAM_ancestral_tracts_proportion_change_071619.pdf",height=2.25,width=2.375,pointsize=10)
-par(mar=c(2.1,2.6,0.1,0.35))
-plot(prop~variable100,type='n',data=all_NAM_decades,pch=19,xlab="",ylab="",xaxt='n',yaxt='n')
-grid(nx = NULL, ny = NULL, col = "lightgray", lty = "dotted")
-axis(side=1,padj=-2,cex.axis=0.7,cex.lab=0.9)
-#axis(side=2,hadj=0.55,padj=0.35,cex.axis=0.7)
-axis(side=2,padj=1.5,cex.axis=0.7,cex.lab=0.9)
-mtext(side=1,"tract length (cM)",line=1.1)
-mtext(side=2,"Proportion of total Native",line=1.7)
-mtext(side=2,"American ancestral tracts",line=1.0)
-points(prop~variable100,data=MX.1930.NAM,pch=19,col="#E41A1C",cex=0.75)
-points(prop~variable100,data=MX.1940.NAM,pch=19,col="#FF7F00",cex=0.75)
-points(prop~variable100,data=MX.1950.NAM,pch=19,col="#FFFF33",cex=0.75)
-points(prop~variable100,data=MX.1960.NAM,pch=19,col="#4DAF4A",cex=0.75)
-points(prop~variable100,data=MX.1970.NAM,pch=19,col="#377EB8",cex=0.75)
-points(prop~variable100,data=MX.1980.NAM,pch=19,col="#984EA3",cex=0.75)
-points(prop~variable100,data=MX.1990.NAM,pch=19,col="#A65628",cex=0.75)
-legend("topright",legend=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"),col=c("#E41A1C","#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628"),pch=19,cex =0.75,bg="white")
-dev.off()
-
+legend("bottomleft",legend=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"),col=c("#E41A1C","#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628"),pch=19,cex =0.75,bg="white")
+#dev.off()
 
 ```
-
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
