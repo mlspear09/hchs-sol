@@ -22,8 +22,8 @@ pi_30s_30s_excluded$V3 <- as.numeric(as.character(pi_30s_30s_excluded$V3))
 
 
 ###40s samples 
-pi_40s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_40s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_40s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_40s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_40s_30s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_30s_40s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_40s_40s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_40s_40s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
 pi_40s_40s_excluded = pi_40s_40s[which(pi_40s_40s$V1 != pi_40s_40s$V2),]
 
 pi_40s_30s$V1 <- as.character(pi_40s_30s$V1)
@@ -36,9 +36,9 @@ pi_40s_30s$V3 <- as.numeric(pi_40s_30s$V3)
 pi_40s_40s_excluded$V3 <- as.numeric(as.character(pi_40s_40s_excluded$V3))
 
 #50s samples 
-pi_50s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_50s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_50s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_50s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_50s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_50s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_50s_30s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_30s_50s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_50s_40s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_40s_50s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_50s_50s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_50s_50s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
 pi_50s_50s_excluded = pi_50s_50s[which(pi_50s_50s$V1 != pi_50s_50s$V2),]
 
 pi_50s_30s$V1 <- as.character(pi_50s_30s$V1)
@@ -54,10 +54,10 @@ pi_50s_40s$V3 <- as.numeric(pi_50s_40s$V3)
 pi_50s_50s_excluded$V3 <- as.numeric(as.character(pi_50s_50s_excluded$V3))
 
 #####60s samples
-pi_60s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_60s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_60s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_60s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_60s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_60s_30s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_30s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_60s_40s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_40s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_60s_50s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_50s_60s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_60s_60s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_60s_60s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
 pi_60s_60s_excluded = pi_60s_60s[which(pi_60s_60s$V1 != pi_60s_60s$V2),]
 
 pi_60s_30s$V1 <- as.character(pi_60s_30s$V1)
@@ -77,11 +77,11 @@ pi_60s_50s <- pi_60s_50s[which(!is.na(pi_60s_50s$V3)),] #needed to remove one pa
 pi_60s_60s_excluded$V3 <- as.numeric(as.character(pi_60s_60s_excluded$V3))
 
 #####70s samples 
-pi_70s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_70s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_70s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_70s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_70s_70s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_70s_70s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_70s_30s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_30s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_40s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_40s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_50s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_50s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_60s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_60s_70s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_70s_70s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_70s_70s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
 pi_70s_70s_excluded = pi_70s_70s[which(pi_70s_70s$V1 != pi_70s_70s$V2),]
 
 pi_70s_30s$V1 <- as.character(pi_70s_30s$V1)
@@ -103,12 +103,12 @@ pi_70s_60s$V3 <- as.numeric(pi_70s_60s$V3)
 pi_70s_70s_excluded$V3 <- as.numeric(as.character(pi_70s_70s_excluded$V3))
 
 ####80s samples 
-pi_80s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_80s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_80s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_80s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_80s_70s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_70s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_80s_80s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_80s_80s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_80s_30s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_30s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_40s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_40s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_50s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_50s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_60s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_60s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_70s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_70s_80s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_80s_80s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_80s_80s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
 pi_80s_80s_excluded = pi_80s_80s[which(pi_80s_80s$V1 != pi_80s_80s$V2),]
 
 pi_80s_30s$V1 <- as.character(pi_80s_30s$V1)
@@ -133,13 +133,13 @@ pi_80s_70s$V3 <- as.numeric(pi_80s_70s$V3)
 pi_80s_80s_excluded$V3 <- as.numeric(as.character(pi_80s_80s_excluded$V3))
 
 ####90s samples 
-pi_90s_30s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_30s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_90s_40s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_40s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_90s_50s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_50s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_90s_60s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_60s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_90s_70s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_70s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_90s_80s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_80s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
-pi_90s_90s = read.table('/Users/melissaspear/Downloads/results/HCHS_SOL_Mexican_90s_90s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
+pi_90s_30s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_30s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_40s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_40s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_50s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_50s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_60s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_60s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_70s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_70s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_80s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_80s_90s_PI_calculations_061219.txt', sep = ' ', header =F)
+pi_90s_90s = read.table('/Volumes/LaCie/Downloads/results/HCHS_SOL_Mexican_90s_90s_PI_calculations_061219_nodups.txt', sep = ' ', header =F)
 pi_90s_90s_excluded = pi_90s_90s[which(pi_90s_90s$V1 != pi_90s_90s$V2),]
 
 pi_90s_30s$V1 <- as.character(pi_90s_30s$V1)
@@ -608,10 +608,6 @@ error_range_fst_80s_90s_bstrap<-c(mean(bstrap)-2*sem_fst_80s_90s_bstrap,mean(bst
 sd_fst_80s_90s_bstrap<-sd(bstrap)
 
 
-###
-
-
-##########
 
 ##########
 fst_40s_dataframe<-data.frame("Gen_back"=1, "fst"=c(fst_30s_40s))
