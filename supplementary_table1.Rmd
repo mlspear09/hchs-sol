@@ -1,0 +1,313 @@
+---
+title: "supplementary table 1"
+author: "Melissa Spear"
+date: "15/05/2020"
+output: html_document
+---
+
+
+```{r}
+##########
+#
+# The following scripts create the supplementary table of results for the other HCHS/SOL populations
+# all three ancestries 
+#
+##########
+setwd("/Users/melissaleespear/Dropbox/HCHS_SOL/paper/tables")
+
+#Read in the admixture file estimates file 
+HCHS_SOL_admixture_file <- read.table("/Users/melissaleespear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+names(HCHS_SOL_admixture_file) <- c("YRI","CEU","NAM")
+
+##reading in the fam file accompaniment of the .bed file i used for the admixture run 
+fam_file = read.table("/Users/melissaleespear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+##Pulling out only the 95% admixed samples from the previous analysis I used to fit a line to 
+admixed_95 <- fam_file_with_IDs[which(fam_file_with_IDs$CEU <= 0.95 & fam_file_with_IDs$YRI <=0.95 & fam_file_with_IDs$NAM <=0.95),]
+#> dim(admixed_95)
+#[1] 9913    9
+#Read in the phenotype file 
+
+HCHS_SOL_pheno<-read.table("/Users/melissaleespear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
+
+#merge the admixture estimates with the pheno file 
+admixed_with_pheno = merge(admixed_95, HCHS_SOL_pheno, by.x =c("V1"), by.y=c("SUBJECT_ID"))
+
+# removing all the "Other" samples 
+no_mixed_heritage = admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 != '6'),]
+
+################################################
+
+#subsetting of pops
+Dominican_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C7 == "0"),]
+
+Central_American_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C7 == "1"),]
+
+Cuban_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C7 == "2"),]
+
+Mexican_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C7 == "3"),]
+
+Puerto_Rican_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C7 == "4"),]
+
+South_American_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C7 == "5"),]
+
+```
+
+```{r}
+########################################3
+#Linear Regression 
+
+#Mexicans
+Mexican_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_reclassified)
+Mexican_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_reclassified)
+Mexican_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_reclassified)
+
+##Creating the different rows of each table.
+
+Mexican_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Mexican_table_NAM[1,1]<-"Mexican"
+Mexican_table_NAM[1,2]<-"NAM"
+Mexican_table_NAM[1,3]<-dim(Mexican_reclassified)[1]
+Mexican_table_NAM[1,4]<-summary(Mexican_fit_NAM)$r.squared
+Mexican_table_NAM[1,5]<-summary(Mexican_fit_NAM)$coeff[2,1]
+Mexican_table_NAM[1,6]<-summary(Mexican_fit_NAM)$coeff[2,2]
+Mexican_table_NAM[1,7]<-summary(Mexican_fit_NAM)$coeff[2,4]
+
+Mexican_table_AFR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Mexican_table_AFR[1,1]<-"Mexican"
+Mexican_table_AFR[1,2]<-"AFR"
+Mexican_table_AFR[1,3]<-dim(Mexican_reclassified)[1]
+Mexican_table_AFR[1,4]<-summary(Mexican_fit_AFR)$r.squared
+Mexican_table_AFR[1,5]<-summary(Mexican_fit_AFR)$coeff[2,1]
+Mexican_table_AFR[1,6]<-summary(Mexican_fit_AFR)$coeff[2,2]
+Mexican_table_AFR[1,7]<-summary(Mexican_fit_AFR)$coeff[2,4]
+
+Mexican_table_EUR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Mexican_table_EUR[1,1]<-"Mexican"
+Mexican_table_EUR[1,2]<-"EUR"
+Mexican_table_EUR[1,3]<-dim(Mexican_reclassified)[1]
+Mexican_table_EUR[1,4]<-summary(Mexican_fit_EUR)$r.squared
+Mexican_table_EUR[1,5]<-summary(Mexican_fit_EUR)$coeff[2,1]
+Mexican_table_EUR[1,6]<-summary(Mexican_fit_EUR)$coeff[2,2]
+Mexican_table_EUR[1,7]<-summary(Mexican_fit_EUR)$coeff[2,4]
+
+all_mexicans_table<-rbind(Mexican_table_NAM,Mexican_table_AFR,Mexican_table_EUR)
+
+```
+
+```{r}
+####Cubans
+
+Cuban_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Cuban_reclassified)
+Cuban_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Cuban_reclassified)
+Cuban_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Cuban_reclassified)
+
+##Creating the different rows of each table.
+
+Cuban_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Cuban_table_NAM[1,1]<-"Cuban"
+Cuban_table_NAM[1,2]<-"NAM"
+Cuban_table_NAM[1,3]<-dim(Cuban_reclassified)[1]
+Cuban_table_NAM[1,4]<-summary(Cuban_fit_NAM)$r.squared
+Cuban_table_NAM[1,5]<-summary(Cuban_fit_NAM)$coeff[2,1]
+Cuban_table_NAM[1,6]<-summary(Cuban_fit_NAM)$coeff[2,2]
+Cuban_table_NAM[1,7]<-summary(Cuban_fit_NAM)$coeff[2,4]
+
+Cuban_table_AFR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Cuban_table_AFR[1,1]<-"Cuban"
+Cuban_table_AFR[1,2]<-"AFR"
+Cuban_table_AFR[1,3]<-dim(Cuban_reclassified)[1]
+Cuban_table_AFR[1,4]<-summary(Cuban_fit_AFR)$r.squared
+Cuban_table_AFR[1,5]<-summary(Cuban_fit_AFR)$coeff[2,1]
+Cuban_table_AFR[1,6]<-summary(Cuban_fit_AFR)$coeff[2,2]
+Cuban_table_AFR[1,7]<-summary(Cuban_fit_AFR)$coeff[2,4]
+
+Cuban_table_EUR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Cuban_table_EUR[1,1]<-"Cuban"
+Cuban_table_EUR[1,2]<-"EUR"
+Cuban_table_EUR[1,3]<-dim(Cuban_reclassified)[1]
+Cuban_table_EUR[1,4]<-summary(Cuban_fit_EUR)$r.squared
+Cuban_table_EUR[1,5]<-summary(Cuban_fit_EUR)$coeff[2,1]
+Cuban_table_EUR[1,6]<-summary(Cuban_fit_EUR)$coeff[2,2]
+Cuban_table_EUR[1,7]<-summary(Cuban_fit_EUR)$coeff[2,4]
+
+all_Cubans_table<-rbind(Cuban_table_NAM,Cuban_table_AFR,Cuban_table_EUR)
+```
+
+```{r}
+#########
+#Dominican 
+
+Dominican_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Dominican_reclassified)
+Dominican_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Dominican_reclassified)
+Dominican_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Dominican_reclassified)
+
+##Creating the different rows of each table.
+
+Dominican_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Dominican_table_NAM[1,1]<-"Dominican"
+Dominican_table_NAM[1,2]<-"NAM"
+Dominican_table_NAM[1,3]<-dim(Dominican_reclassified)[1]
+Dominican_table_NAM[1,4]<-summary(Dominican_fit_NAM)$r.squared
+Dominican_table_NAM[1,5]<-summary(Dominican_fit_NAM)$coeff[2,1]
+Dominican_table_NAM[1,6]<-summary(Dominican_fit_NAM)$coeff[2,2]
+Dominican_table_NAM[1,7]<-summary(Dominican_fit_NAM)$coeff[2,4]
+
+Dominican_table_AFR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Dominican_table_AFR[1,1]<-"Dominican"
+Dominican_table_AFR[1,2]<-"AFR"
+Dominican_table_AFR[1,3]<-dim(Dominican_reclassified)[1]
+Dominican_table_AFR[1,4]<-summary(Dominican_fit_AFR)$r.squared
+Dominican_table_AFR[1,5]<-summary(Dominican_fit_AFR)$coeff[2,1]
+Dominican_table_AFR[1,6]<-summary(Dominican_fit_AFR)$coeff[2,2]
+Dominican_table_AFR[1,7]<-summary(Dominican_fit_AFR)$coeff[2,4]
+
+Dominican_table_EUR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Dominican_table_EUR[1,1]<-"Dominican"
+Dominican_table_EUR[1,2]<-"EUR"
+Dominican_table_EUR[1,3]<-dim(Dominican_reclassified)[1]
+Dominican_table_EUR[1,4]<-summary(Dominican_fit_EUR)$r.squared
+Dominican_table_EUR[1,5]<-summary(Dominican_fit_EUR)$coeff[2,1]
+Dominican_table_EUR[1,6]<-summary(Dominican_fit_EUR)$coeff[2,2]
+Dominican_table_EUR[1,7]<-summary(Dominican_fit_EUR)$coeff[2,4]
+
+all_Dominicans_table<-rbind(Dominican_table_NAM,Dominican_table_AFR,Dominican_table_EUR)
+
+```
+
+```{r}
+#######
+#Central Americans
+
+Central_American_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Central_American_reclassified)
+Central_American_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Central_American_reclassified)
+Central_American_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Central_American_reclassified)
+
+##Creating the different rows of each table.
+
+Central_American_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Central_American_table_NAM[1,1]<-"Central_American"
+Central_American_table_NAM[1,2]<-"NAM"
+Central_American_table_NAM[1,3]<-dim(Central_American_reclassified)[1]
+Central_American_table_NAM[1,4]<-summary(Central_American_fit_NAM)$r.squared
+Central_American_table_NAM[1,5]<-summary(Central_American_fit_NAM)$coeff[2,1]
+Central_American_table_NAM[1,6]<-summary(Central_American_fit_NAM)$coeff[2,2]
+Central_American_table_NAM[1,7]<-summary(Central_American_fit_NAM)$coeff[2,4]
+
+Central_American_table_AFR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Central_American_table_AFR[1,1]<-"Central_American"
+Central_American_table_AFR[1,2]<-"AFR"
+Central_American_table_AFR[1,3]<-dim(Central_American_reclassified)[1]
+Central_American_table_AFR[1,4]<-summary(Central_American_fit_AFR)$r.squared
+Central_American_table_AFR[1,5]<-summary(Central_American_fit_AFR)$coeff[2,1]
+Central_American_table_AFR[1,6]<-summary(Central_American_fit_AFR)$coeff[2,2]
+Central_American_table_AFR[1,7]<-summary(Central_American_fit_AFR)$coeff[2,4]
+
+Central_American_table_EUR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Central_American_table_EUR[1,1]<-"Central_American"
+Central_American_table_EUR[1,2]<-"EUR"
+Central_American_table_EUR[1,3]<-dim(Central_American_reclassified)[1]
+Central_American_table_EUR[1,4]<-summary(Central_American_fit_EUR)$r.squared
+Central_American_table_EUR[1,5]<-summary(Central_American_fit_EUR)$coeff[2,1]
+Central_American_table_EUR[1,6]<-summary(Central_American_fit_EUR)$coeff[2,2]
+Central_American_table_EUR[1,7]<-summary(Central_American_fit_EUR)$coeff[2,4]
+
+all_Central_Americans_table<-rbind(Central_American_table_NAM,Central_American_table_AFR,Central_American_table_EUR)
+
+```
+
+
+```{r}
+########
+#South American 
+
+South_American_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = South_American_reclassified)
+South_American_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = South_American_reclassified)
+South_American_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = South_American_reclassified)
+
+##Creating the different rows of each table.
+
+South_American_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+South_American_table_NAM[1,1]<-"South_American"
+South_American_table_NAM[1,2]<-"NAM"
+South_American_table_NAM[1,3]<-dim(South_American_reclassified)[1]
+South_American_table_NAM[1,4]<-summary(South_American_fit_NAM)$r.squared
+South_American_table_NAM[1,5]<-summary(South_American_fit_NAM)$coeff[2,1]
+South_American_table_NAM[1,6]<-summary(South_American_fit_NAM)$coeff[2,2]
+South_American_table_NAM[1,7]<-summary(South_American_fit_NAM)$coeff[2,4]
+
+South_American_table_AFR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+South_American_table_AFR[1,1]<-"South_American"
+South_American_table_AFR[1,2]<-"AFR"
+South_American_table_AFR[1,3]<-dim(South_American_reclassified)[1]
+South_American_table_AFR[1,4]<-summary(South_American_fit_AFR)$r.squared
+South_American_table_AFR[1,5]<-summary(South_American_fit_AFR)$coeff[2,1]
+South_American_table_AFR[1,6]<-summary(South_American_fit_AFR)$coeff[2,2]
+South_American_table_AFR[1,7]<-summary(South_American_fit_AFR)$coeff[2,4]
+
+South_American_table_EUR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+South_American_table_EUR[1,1]<-"South_American"
+South_American_table_EUR[1,2]<-"EUR"
+South_American_table_EUR[1,3]<-dim(South_American_reclassified)[1]
+South_American_table_EUR[1,4]<-summary(South_American_fit_EUR)$r.squared
+South_American_table_EUR[1,5]<-summary(South_American_fit_EUR)$coeff[2,1]
+South_American_table_EUR[1,6]<-summary(South_American_fit_EUR)$coeff[2,2]
+South_American_table_EUR[1,7]<-summary(South_American_fit_EUR)$coeff[2,4]
+
+all_South_Americans_table<-rbind(South_American_table_NAM,South_American_table_AFR,South_American_table_EUR)
+
+
+```
+
+```{r}
+#########
+#Puerto Rican
+
+Puerto_Rican_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Puerto_Rican_reclassified)
+Puerto_Rican_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Puerto_Rican_reclassified)
+Puerto_Rican_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Puerto_Rican_reclassified)
+
+##Creating the different rows of each table.
+
+Puerto_Rican_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Puerto_Rican_table_NAM[1,1]<-"Puerto_Rican"
+Puerto_Rican_table_NAM[1,2]<-"NAM"
+Puerto_Rican_table_NAM[1,3]<-dim(Puerto_Rican_reclassified)[1]
+Puerto_Rican_table_NAM[1,4]<-summary(Puerto_Rican_fit_NAM)$r.squared
+Puerto_Rican_table_NAM[1,5]<-summary(Puerto_Rican_fit_NAM)$coeff[2,1]
+Puerto_Rican_table_NAM[1,6]<-summary(Puerto_Rican_fit_NAM)$coeff[2,2]
+Puerto_Rican_table_NAM[1,7]<-summary(Puerto_Rican_fit_NAM)$coeff[2,4]
+
+Puerto_Rican_table_AFR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Puerto_Rican_table_AFR[1,1]<-"Puerto_Rican"
+Puerto_Rican_table_AFR[1,2]<-"AFR"
+Puerto_Rican_table_AFR[1,3]<-dim(Puerto_Rican_reclassified)[1]
+Puerto_Rican_table_AFR[1,4]<-summary(Puerto_Rican_fit_AFR)$r.squared
+Puerto_Rican_table_AFR[1,5]<-summary(Puerto_Rican_fit_AFR)$coeff[2,1]
+Puerto_Rican_table_AFR[1,6]<-summary(Puerto_Rican_fit_AFR)$coeff[2,2]
+Puerto_Rican_table_AFR[1,7]<-summary(Puerto_Rican_fit_AFR)$coeff[2,4]
+
+Puerto_Rican_table_EUR<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Population","Ancestry","N","R2","Effect","Std.Err","P"))
+Puerto_Rican_table_EUR[1,1]<-"Puerto_Rican"
+Puerto_Rican_table_EUR[1,2]<-"EUR"
+Puerto_Rican_table_EUR[1,3]<-dim(Puerto_Rican_reclassified)[1]
+Puerto_Rican_table_EUR[1,4]<-summary(Puerto_Rican_fit_EUR)$r.squared
+Puerto_Rican_table_EUR[1,5]<-summary(Puerto_Rican_fit_EUR)$coeff[2,1]
+Puerto_Rican_table_EUR[1,6]<-summary(Puerto_Rican_fit_EUR)$coeff[2,2]
+Puerto_Rican_table_EUR[1,7]<-summary(Puerto_Rican_fit_EUR)$coeff[2,4]
+
+all_Puerto_Ricans_table<-rbind(Puerto_Rican_table_NAM,Puerto_Rican_table_AFR,Puerto_Rican_table_EUR)
+
+```
+
+```{r}
+##################################
+#combining all the populations 
+all_populations_table<-rbind(all_Central_Americans_table,all_Cubans_table,all_Dominicans_table,all_mexicans_table,all_Puerto_Ricans_table,all_South_Americans_table)
+
+
+write.table(all_populations_table,"global_ancestry_assocations_all_HCHS_SOL_pops_Supp_Table1.txt", row.names=F,col.names=T,sep="\t",quote=F)
+
+```
+
