@@ -5,14 +5,10 @@ date: "15/05/2020"
 output: html_document
 ---
 
+The following scripts create the supplementary table of results for the other HCHS/SOL populations
+all three ancestries 
 
 ```{r}
-##########
-#
-# The following scripts create the supplementary table of results for the other HCHS/SOL populations
-# all three ancestries 
-#
-##########
 setwd("/Users/melissaleespear/Dropbox/HCHS_SOL/paper/tables")
 
 #Read in the admixture file estimates file 
@@ -25,9 +21,6 @@ fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
 
 ##Pulling out only the 95% admixed samples from the previous analysis I used to fit a line to 
 admixed_95 <- fam_file_with_IDs[which(fam_file_with_IDs$CEU <= 0.95 & fam_file_with_IDs$YRI <=0.95 & fam_file_with_IDs$NAM <=0.95),]
-#> dim(admixed_95)
-#[1] 9913    9
-#Read in the phenotype file 
 
 HCHS_SOL_pheno<-read.table("/Users/melissaleespear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
 
@@ -36,8 +29,6 @@ admixed_with_pheno = merge(admixed_95, HCHS_SOL_pheno, by.x =c("V1"), by.y=c("SU
 
 # removing all the "Other" samples 
 no_mixed_heritage = admixed_with_pheno[which(admixed_with_pheno$BKGRD1_C7 != '6'),]
-
-################################################
 
 #subsetting of pops
 Dominican_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C7 == "0"),]
@@ -54,11 +45,10 @@ South_American_reclassified = no_mixed_heritage[which(no_mixed_heritage$BKGRD1_C
 
 ```
 
-```{r}
-########################################3
-#Linear Regression 
+Linear regression for each of the populations 
 
-#Mexicans
+Mexicans 
+```{r}
 Mexican_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_reclassified)
 Mexican_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_reclassified)
 Mexican_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Mexican_reclassified)
@@ -93,12 +83,11 @@ Mexican_table_EUR[1,6]<-summary(Mexican_fit_EUR)$coeff[2,2]
 Mexican_table_EUR[1,7]<-summary(Mexican_fit_EUR)$coeff[2,4]
 
 all_mexicans_table<-rbind(Mexican_table_NAM,Mexican_table_AFR,Mexican_table_EUR)
-
 ```
 
-```{r}
-####Cubans
 
+Cubans 
+```{r}
 Cuban_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Cuban_reclassified)
 Cuban_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Cuban_reclassified)
 Cuban_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Cuban_reclassified)
@@ -135,10 +124,9 @@ Cuban_table_EUR[1,7]<-summary(Cuban_fit_EUR)$coeff[2,4]
 all_Cubans_table<-rbind(Cuban_table_NAM,Cuban_table_AFR,Cuban_table_EUR)
 ```
 
-```{r}
-#########
-#Dominican 
 
+Dominican
+```{r}
 Dominican_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Dominican_reclassified)
 Dominican_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Dominican_reclassified)
 Dominican_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Dominican_reclassified)
@@ -173,13 +161,11 @@ Dominican_table_EUR[1,6]<-summary(Dominican_fit_EUR)$coeff[2,2]
 Dominican_table_EUR[1,7]<-summary(Dominican_fit_EUR)$coeff[2,4]
 
 all_Dominicans_table<-rbind(Dominican_table_NAM,Dominican_table_AFR,Dominican_table_EUR)
-
 ```
 
-```{r}
-#######
-#Central Americans
 
+Central American
+```{r}
 Central_American_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Central_American_reclassified)
 Central_American_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Central_American_reclassified)
 Central_American_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Central_American_reclassified)
@@ -214,14 +200,10 @@ Central_American_table_EUR[1,6]<-summary(Central_American_fit_EUR)$coeff[2,2]
 Central_American_table_EUR[1,7]<-summary(Central_American_fit_EUR)$coeff[2,4]
 
 all_Central_Americans_table<-rbind(Central_American_table_NAM,Central_American_table_AFR,Central_American_table_EUR)
-
 ```
 
-
+South American
 ```{r}
-########
-#South American 
-
 South_American_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = South_American_reclassified)
 South_American_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = South_American_reclassified)
 South_American_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = South_American_reclassified)
@@ -256,14 +238,11 @@ South_American_table_EUR[1,6]<-summary(South_American_fit_EUR)$coeff[2,2]
 South_American_table_EUR[1,7]<-summary(South_American_fit_EUR)$coeff[2,4]
 
 all_South_Americans_table<-rbind(South_American_table_NAM,South_American_table_AFR,South_American_table_EUR)
-
-
 ```
 
-```{r}
-#########
-#Puerto Rican
 
+Puerto Rican
+```{r}
 Puerto_Rican_fit_NAM<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Puerto_Rican_reclassified)
 Puerto_Rican_fit_AFR<-lm(YRI ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Puerto_Rican_reclassified)
 Puerto_Rican_fit_EUR<-lm(CEU ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = Puerto_Rican_reclassified)
@@ -301,11 +280,11 @@ all_Puerto_Ricans_table<-rbind(Puerto_Rican_table_NAM,Puerto_Rican_table_AFR,Pue
 
 ```
 
-```{r}
-##################################
-#combining all the populations 
-all_populations_table<-rbind(all_Central_Americans_table,all_Cubans_table,all_Dominicans_table,all_mexicans_table,all_Puerto_Ricans_table,all_South_Americans_table)
 
+Combining all populations into one table 
+```{r}
+
+all_populations_table<-rbind(all_Central_Americans_table,all_Cubans_table,all_Dominicans_table,all_mexicans_table,all_Puerto_Ricans_table,all_South_Americans_table)
 
 write.table(all_populations_table,"global_ancestry_assocations_all_HCHS_SOL_pops_Supp_Table1.txt", row.names=F,col.names=T,sep="\t",quote=F)
 
