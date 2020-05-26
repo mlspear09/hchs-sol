@@ -49,8 +49,17 @@ ai_roh_with_pheno_admixture$AI_both_haps_length<- (ai_roh_with_pheno_admixture$A
 #creating new variable summing three ROH columns 
 ai_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ai_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
 
-#normalizing ROH by global ancestry 
+#normalizing ALL ROH by global ancestry 
 ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing short ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_A_NORM<-(ai_roh_with_pheno_admixture$ROH_A)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing medium ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_B_NORM<-(ai_roh_with_pheno_admixture$ROH_B)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing long ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_C_NORM<-(ai_roh_with_pheno_admixture$ROH_C)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
 
 #proportion of genome covered in ROH 
 ai_roh_with_pheno_admixture$prop_genome_AI_ROH<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
@@ -83,15 +92,56 @@ ceu_roh_with_pheno_admixture$CEU_both_haps_length<- (ceu_roh_with_pheno_admixtur
 #creating new variable summing three ROH columns 
 ceu_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ceu_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
 
-#normalizing ROH by global ancestry 
+#normalizing ALL ROH by global ancestry 
 ceu_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ceu_roh_with_pheno_admixture$ROH_allclasses_sums)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
 
-#proportion of genome covered in ROH 
+#normalizing short ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_A_NORM<-(ceu_roh_with_pheno_admixture$ROH_A)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#normalizing medium ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_B_NORM<-(ceu_roh_with_pheno_admixture$ROH_B)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#normalizing long ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_C_NORM<-(ceu_roh_with_pheno_admixture$ROH_C)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#proportion of genome covered in ROH -- following normalization? actual BP 
 ceu_roh_with_pheno_admixture$prop_genome_CEU_ROH<-(ceu_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
 ```
 
 
 #
+```{r}
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_ROH_All_NAM_short_medium_tracts_072619.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=c(1934, 1993),ylim=c(0,0.04),xlab="",ylab="",xaxt='n',yaxt='n')
+#abline(h=seq(5,7,by=0.5),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90)
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Birth year",line=1.1)
+mtext(side=2,"Proportion of genome with ROH",line=1.0,cex.lab=0.8)
+#legend("bottomright",legend=c("All ROH","All NAM ROH","All Short ROH","All Short NAM ROH","All Medium ROH","All Medium NAM ROH"),col=c("black","black","#D95F02","#D95F02","#7570B3","#7570B3"),lty=c(1,3,1,3,1,3),cex=0.5,bg="white")
+#CEU all ROH 
+lw1 <- loess(ROH_allclasses_sums_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j1 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j1],lw1$fitted[j1],col="black",lwd=1)
+#AI all
+lw1_ai <- loess(ROH_allclasses_sums_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j1_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j1_ai],lw1_ai$fitted[j1_ai],col="black",lwd=1,lty=3)
+#CEU medium ROH 
+lw3 <- loess(log(ROH_B_Mb) ~ estimated_birth_year,data=roh_with_pheno)
+j3 <- order(roh_with_pheno$estimated_birth_year)
+lines(roh_with_pheno$estimated_birth_year[j3],lw3$fitted[j3],col="#7570B3",lwd=1)
+#AI medium roh
+lw3_ai <- loess(log(ROH_B_Mb) ~ estimated_birth_year,data=roh_with_pheno_nam)
+j3_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j3_ai],lw3_ai$fitted[j3_ai],col="#7570B3",lwd=1,lty=3)
+
+#dev.off()
+
+```
+
 
 
 
