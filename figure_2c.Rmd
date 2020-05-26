@@ -5,18 +5,15 @@ date: "15/05/2020"
 output: html_document
 ---
 
+The following code plots AI and CEU tracts 
 
+AI tracts 
 ```{r}
 #read in summed ROH calls 
-nam_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/NAM_ROH_segments/reclassified_classes/summed_calls2/HCHS_SOL_Mexicans_alldecades_summed_NAM_ROH_calls_newclasses_080519.txt",header=F,sep='\t')
+ai_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/NAM_ROH_segments/reclassified_classes/summed_calls2/HCHS_SOL_Mexicans_alldecades_summed_NAM_ROH_calls_newclasses_080519.txt",header=F,sep='\t')
 
 #adding column titles 
-names(nam_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
-
-#New column of bp to Mbp
-#nam_roh_calls$ROH_A_Mb = nam_roh_calls$ROH_A/1000000
-#nam_roh_calls$ROH_B_Mb = nam_roh_calls$ROH_B/1000000
-#nam_roh_calls$ROH_C_Mb = nam_roh_calls$ROH_C/1000000
+names(ai_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
 
 #3570 samples made the cut - some samples do not have NAM roh. 
 
@@ -27,8 +24,9 @@ d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_9
 pheno_subsetted<-subset(d,select=c("V1","V2","US_BORN","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL"))
 
 #merge with pheno file 
-roh_with_pheno<-merge(nam_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+ai_roh_with_pheno<-merge(ai_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
 ```
+
 
 ```{r}
 #Read in the admixture file estimates file 
@@ -41,53 +39,65 @@ names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
 fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
 
 ##merge with admixture estimates 
-roh_with_pheno_admixture<-merge(roh_with_pheno,fam_file_with_IDs, by.x=c("IID"),by.y=c("IID"))
+ai_roh_with_pheno_admixture<-merge(ai_roh_with_pheno,fam_file_with_IDs, by.x=c("IID"),by.y=c("IID"))
 
 #Calcualting AI genome length 
-roh_with_pheno_admixture$AI_both_haps_length<- (roh_with_pheno_admixture$AI * 5563642548)
+ai_roh_with_pheno_admixture$AI_both_haps_length<- (ai_roh_with_pheno_admixture$AI * 5563642548)
 ```
 
 ```{r}
 #creating new variable summing three ROH columns 
-roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
+ai_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ai_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
 
 #normalizing ROH by global ancestry 
-roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(roh_with_pheno_admixture$ROH_allclasses_sums)/((roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
 
 #proportion of genome covered in ROH 
-roh_with_pheno_admixture$prop_genome_AI_ROH<-(roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
+ai_roh_with_pheno_admixture$prop_genome_AI_ROH<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
 ```
 
+
+CEU tracts 
+
+```{r}
+#read in summed ROH calls 
+ceu_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/CEU_ROH_segments/reclassified_classes/summed_calls/HCHS_SOL_Mexicans_alldecades_summed_CEU_ROH_calls_newclasses_051520.txt",header=F,sep='\t')
+
+#adding column titles 
+names(ceu_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
+
+#merge with pheno file 
+ceu_roh_with_pheno<-merge(ceu_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+```
 
 
 ```{r}
-#######Adding a "Decade" variable in orde to group the birth years in the plots 
-mexicans_1930s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year<1940),]
-mexicans_1930s$Decade ="1930s"
+#merge with admixture estimates 
+ceu_roh_with_pheno_admixture<-merge(ceu_roh_with_pheno,fam_file_with_IDs, by.x=c("IID"),by.y=c("IID"))
 
-mexicans_1940s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1940 & roh_with_pheno_admixture$estimated_birth_year<1950),]
-mexicans_1940s$Decade ="1940s"
-
-mexicans_1950s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1950 & roh_with_pheno_admixture$estimated_birth_year<1960),]
-mexicans_1950s$Decade ="1950s"
-
-mexicans_1960s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1960 & roh_with_pheno_admixture$estimated_birth_year<1970),]
-mexicans_1960s$Decade ="1960s"
-
-mexicans_1970s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1970 & roh_with_pheno_admixture$estimated_birth_year<1980),]
-mexicans_1970s$Decade ="1970s"
-
-mexicans_1980s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1980 & roh_with_pheno_admixture$estimated_birth_year<1990),]
-mexicans_1980s$Decade ="1980s"
-
-mexicans_1990s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1990),]
-mexicans_1990s$Decade ="1990s"
-
-mexicans_with_decades<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
-
-
-
+#Calcualting AI genome length 
+ceu_roh_with_pheno_admixture$CEU_both_haps_length<- (ceu_roh_with_pheno_admixture$CEU * 5563642548)
 ```
+
+```{r}
+#creating new variable summing three ROH columns 
+ceu_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ceu_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
+
+#normalizing ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ceu_roh_with_pheno_admixture$ROH_allclasses_sums)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#proportion of genome covered in ROH 
+ceu_roh_with_pheno_admixture$prop_genome_CEU_ROH<-(ceu_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
+```
+
+
+#
+
+
+
+
+
+
 
 ```{r}
 library(vioplot)
@@ -156,6 +166,36 @@ abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
 #dev.off()
 #Two four panel figures, 1 is ROH across all ancestries, the other just focusing on the Native American segments. But how to really label the axes for this...
 #Just because a segment is medium, dowesnt mean the whole thing falls in an ROH region. Could have been an ROH of Native plus Euro/african 
+
+
+```
+
+
+```{r}
+#######Adding a "Decade" variable in orde to group the birth years in the plots 
+mexicans_1930s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year<1940),]
+mexicans_1930s$Decade ="1930s"
+
+mexicans_1940s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1940 & roh_with_pheno_admixture$estimated_birth_year<1950),]
+mexicans_1940s$Decade ="1940s"
+
+mexicans_1950s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1950 & roh_with_pheno_admixture$estimated_birth_year<1960),]
+mexicans_1950s$Decade ="1950s"
+
+mexicans_1960s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1960 & roh_with_pheno_admixture$estimated_birth_year<1970),]
+mexicans_1960s$Decade ="1960s"
+
+mexicans_1970s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1970 & roh_with_pheno_admixture$estimated_birth_year<1980),]
+mexicans_1970s$Decade ="1970s"
+
+mexicans_1980s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1980 & roh_with_pheno_admixture$estimated_birth_year<1990),]
+mexicans_1980s$Decade ="1980s"
+
+mexicans_1990s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1990),]
+mexicans_1990s$Decade ="1990s"
+
+mexicans_with_decades<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
+
 
 
 ```
