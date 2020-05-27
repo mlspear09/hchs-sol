@@ -1,0 +1,136 @@
+---
+title: "ROH bootsrap"
+author: "Melissa Spear"
+date: "27/05/2020"
+output: html_document
+---
+
+
+Bootstrap resampling of ROH proportions - Supplementary Figure 8
+
+
+#90s
+all_90s_pi = fst[which(fst$Decade_initial=="1990s"),]
+means_90s = aggregate(all_90s_pi[,3], list(all_90s_pi$gen_back), mean)
+means_90s_dataframe = c(means_90s$x)
+
+all_90s_pi_0 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="0"),]
+mean_90s_0<-mean(all_90s_pi_0$pi)
+
+all_90s_pi_1 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="1"),]
+mean_90s_1<-mean(all_90s_pi_1$pi)
+
+all_90s_pi_2 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="2"),]
+mean_90s_2<-mean(all_90s_pi_2$pi)
+
+all_90s_pi_3 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="3"),]
+mean_90s_3<-mean(all_90s_pi_3$pi)
+
+all_90s_pi_4 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="4"),]
+mean_90s_4<-mean(all_90s_pi_4$pi)
+
+all_90s_pi_5 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="5"),]
+mean_90s_5<-mean(all_90s_pi_5$pi)
+
+all_90s_pi_6 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="6"),]
+mean_90s_6<-mean(all_90s_pi_6$pi)
+
+
+```{r}
+###################################################
+# Bootstrap resampling of AI normalized ROH proprotions to get the 95% confidence interval 
+###################################################
+#because of the large dataset, stored outputs to variables and and reran
+
+#30s 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(all_30s_pi_0$pi,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_30_0_bound<-quantile(bstrap,.025)
+upper_30_0_bound<-quantile(bstrap,.975)
+
+#40s 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(all_40s_pi_0$pi,replace=T)
+  #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_40_0_bound<-quantile(bstrap,.025)
+upper_40_0_bound<-quantile(bstrap,.975)
+
+#50s 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(all_50s_pi_0$pi,replace=T)
+  #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_50_0_bound<-quantile(bstrap,.025)
+upper_50_0_bound<-quantile(bstrap,.975)
+
+#60s 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(all_60s_pi_0$pi,replace=T)
+  #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_60_0_bound<-quantile(bstrap,.025)
+upper_60_0_bound<-quantile(bstrap,.975)
+
+#70s 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(all_70s_pi_0$pi,replace=T)
+  #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_70_0_bound<-quantile(bstrap,.025)
+upper_70_0_bound<-quantile(bstrap,.975)
+
+#80s 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(all_80s_pi_0$pi,replace=T)
+  #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_80_0_bound<-quantile(bstrap,.025)
+upper_80_0_bound<-quantile(bstrap,.975)
+
+#90s
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(all_90s_pi_0$pi,replace=T)
+  #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_90_0_bound<-quantile(bstrap,.025)
+upper_90_0_bound<-quantile(bstrap,.975)
+
+```
