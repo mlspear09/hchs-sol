@@ -525,4 +525,73 @@ upper_30_C_bound<-quantile(bstrap,.975)
 
 ```
 
+```{r}
+#All ROH 
+###combining all the upper bounds for all ROH  
+ai_ROH_total_all_upper_bounds<-rbind(upper_30_total_bound[[1]],upper_40_total_bound[[1]],upper_50_total_bound[[1]],upper_60_total_bound[[1]],upper_70_total_bound[[1]],upper_80_total_bound[[1]],upper_90_total_bound[[1]])
+
+###combining all the lower bounds for all ROH  
+ai_ROH_total_all_lower_bounds<-rbind(lower_30_total_bound[[1]],lower_40_total_bound[[1]],lower_50_total_bound[[1]],lower_60_total_bound[[1]],lower_70_total_bound[[1]],lower_80_total_bound[[1]],lower_90_total_bound[[1]])
+
+#ROH A 
+###combining all the upper bounds for A ROH  
+ai_ROH_A_all_upper_bounds<-rbind(upper_30_A_bound[[1]],upper_40_A_bound[[1]],upper_50_A_bound[[1]],upper_60_A_bound[[1]],upper_70_A_bound[[1]],upper_80_A_bound[[1]],upper_90_A_bound[[1]])
+
+###combining all the lower bounds for A ROH  
+ai_ROH_A_all_lower_bounds<-rbind(lower_30_A_bound[[1]],lower_40_A_bound[[1]],lower_50_A_bound[[1]],lower_60_A_bound[[1]],lower_70_A_bound[[1]],lower_80_A_bound[[1]],lower_90_A_bound[[1]])
+
+#ROH B 
+###combining all the upper bounds for B ROH  
+ai_ROH_B_all_upper_bounds<-rbind(upper_30_B_bound[[1]],upper_40_B_bound[[1]],upper_50_B_bound[[1]],upper_60_B_bound[[1]],upper_70_B_bound[[1]],upper_80_B_bound[[1]],upper_90_B_bound[[1]])
+
+###combining all the lower bounds for B ROH  
+ai_ROH_B_all_lower_bounds<-rbind(lower_30_B_bound[[1]],lower_40_B_bound[[1]],lower_50_B_bound[[1]],lower_60_B_bound[[1]],lower_70_B_bound[[1]],lower_80_B_bound[[1]],lower_90_B_bound[[1]])
+
+#ROH C 
+###combining all the upper bounds for C ROH  
+ai_ROH_C_all_upper_bounds<-rbind(upper_30_C_bound[[1]],upper_40_C_bound[[1]],upper_50_C_bound[[1]],upper_60_C_bound[[1]],upper_70_C_bound[[1]],upper_80_C_bound[[1]],upper_90_C_bound[[1]])
+
+###combining all the lower bounds for C ROH  
+ai_ROH_C_all_lower_bounds<-rbind(lower_30_C_bound[[1]],lower_40_C_bound[[1]],lower_50_C_bound[[1]],lower_60_C_bound[[1]],lower_70_C_bound[[1]],lower_80_C_bound[[1]],lower_90_C_bound[[1]])
+
+```
+
+
+
+
+```{r}
+#merging info together for all ROH classes 
+ai_total_roh_dataframe=data.frame(c(1,2,3,4,5,6,7),c(ai_mean_30s_ROH_total,ai_mean_40s_ROH_total,ai_mean_50s_ROH_total,ai_mean_60s_ROH_total,ai_mean_70s_ROH_total,ai_mean_80s_ROH_total,ai_mean_90s_ROH_total),c(lower_30_total_bound[[1]],lower_40_total_bound[[1]],lower_50_total_bound[[1]],lower_60_total_bound[[1]],lower_70_total_bound[[1]],lower_80_total_bound[[1]],lower_90_total_bound[[1]]),c(upper_30_total_bound[[1]],upper_40_total_bound[[1]],upper_50_total_bound[[1]],upper_60_total_bound[[1]],upper_70_total_bound[[1]],upper_80_total_bound[[1]],upper_90_total_bound[[1]]))
+
+names(ai_total_roh_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
+
+means_ai_total_roh_dataframe=c(ai_mean_30s_ROH_total,ai_mean_40s_ROH_total,ai_mean_50s_ROH_total,ai_mean_60s_ROH_total,ai_mean_70s_ROH_total,ai_mean_80s_ROH_total,ai_mean_90s_ROH_total)
+```
+
+```{r}
+###################
+
+require(RColorBrewer)
+mycolors2=brewer.pal(11, "Spectral")
+####plotting all individuals 
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_PI_NAM_ancestry_migrant_us_born_within_gens_ALL_with_CI_072219_new_figure3a.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.3,0.1))
+plot(1,1,type='n',xlim=c(1,7),ylim=c(0,0.04),xlab="",ylab="",xaxt='n',yaxt='n')
+axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s")) 
+axis(side=2,padj=1.5,cex.axis=0.7)
+mtext(side=1,"Decades",line=1.1)
+mtext(side=2,"Proportion of genome with ROH",line=1.1)
+#abline(h=seq(0.295,0.31,by=0.0025),col=rgb(0,0,0,0.1))
+abline(v=seq(0,6,by=1),col=rgb(0,0,0,0.1))
+#legend("bottomleft",legend=c("All","US born-US born","US born-Not US born","Not US born-Not US born"), col=c(mycolors2[11],mycolors2[1],mycolors2[10],mycolors2[8]),lty=1,lwd=1,bg="white",cex=0.5)
+
+#all samples 
+points(ai_total_roh_dataframe$mean,pch=19,type="b",col=mycolors2[11])
+polygon(c(ai_total_roh_dataframe$decade_order,rev(ai_total_roh_dataframe$decade_order)),c(ai_total_roh_dataframe$upper_CI,rev(ai_total_roh_dataframe$lower_CI)),col=adjustcolor(mycolors2[11], alpha.f = 0.20), border = NA)
+
+#dev.off()
+
+```
+
+
 
