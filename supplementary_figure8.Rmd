@@ -5,132 +5,524 @@ date: "27/05/2020"
 output: html_document
 ---
 
-
 Bootstrap resampling of ROH proportions - Supplementary Figure 8
 
+AI tracts 
+```{r}
+#read in summed ROH calls 
+ai_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/NAM_ROH_segments/reclassified_classes/summed_calls2/HCHS_SOL_Mexicans_alldecades_summed_NAM_ROH_calls_newclasses_080519.txt",header=F,sep='\t')
 
-#90s
-all_90s_pi = fst[which(fst$Decade_initial=="1990s"),]
-means_90s = aggregate(all_90s_pi[,3], list(all_90s_pi$gen_back), mean)
-means_90s_dataframe = c(means_90s$x)
+#adding column titles 
+names(ai_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
 
-all_90s_pi_0 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="0"),]
-mean_90s_0<-mean(all_90s_pi_0$pi)
+#3570 samples made the cut - some samples do not have NAM roh. 
 
-all_90s_pi_1 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="1"),]
-mean_90s_1<-mean(all_90s_pi_1$pi)
+#read in pheno file 
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
 
-all_90s_pi_2 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="2"),]
-mean_90s_2<-mean(all_90s_pi_2$pi)
+#subset for needed variables
+pheno_subsetted<-subset(d,select=c("V1","V2","US_BORN","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL"))
 
-all_90s_pi_3 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="3"),]
-mean_90s_3<-mean(all_90s_pi_3$pi)
-
-all_90s_pi_4 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="4"),]
-mean_90s_4<-mean(all_90s_pi_4$pi)
-
-all_90s_pi_5 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="5"),]
-mean_90s_5<-mean(all_90s_pi_5$pi)
-
-all_90s_pi_6 = fst[which(fst$Decade_initial=="1990s" & fst$gen_back=="6"),]
-mean_90s_6<-mean(all_90s_pi_6$pi)
+#merge with pheno file 
+ai_roh_with_pheno<-merge(ai_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+```
 
 
 ```{r}
-###################################################
-# Bootstrap resampling of AI normalized ROH proprotions to get the 95% confidence interval 
-###################################################
-#because of the large dataset, stored outputs to variables and and reran
+#Read in the admixture file estimates file 
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+names(HCHS_SOL_admixture_file) <- c("YRI","CEU","AI")
 
-#30s 
+#Reading in the fam file accompaniment of the .bed file called for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+##merge with admixture estimates 
+ai_roh_with_pheno_admixture<-merge(ai_roh_with_pheno,fam_file_with_IDs, by.x=c("IID"),by.y=c("IID"))
+
+#Calcualting AI genome length 
+ai_roh_with_pheno_admixture$AI_both_haps_length<- (ai_roh_with_pheno_admixture$AI * 5563642548)
+```
+
+```{r}
+#some samples do not have roh in some classes and will cause errors in the analysis pipeline so added roh of 1 BP long to all samples to fill in 0s.  
+ai_roh_with_pheno_admixture$ROH_A<-ai_roh_with_pheno_admixture$ROH_A+1
+ai_roh_with_pheno_admixture$ROH_B<-ai_roh_with_pheno_admixture$ROH_B+1
+ai_roh_with_pheno_admixture$ROH_C<-ai_roh_with_pheno_admixture$ROH_C+1
+
+#creating new variable summing three ROH columns 
+ai_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ai_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
+
+#normalizing ALL ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing short ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_A_NORM<-(ai_roh_with_pheno_admixture$ROH_A)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing medium ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_B_NORM<-(ai_roh_with_pheno_admixture$ROH_B)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing long ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_C_NORM<-(ai_roh_with_pheno_admixture$ROH_C)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#adjusted BP genome covered in ROH???
+#2781821274 BP when looking at only one haplotype
+ai_roh_with_pheno_admixture$prop_genome_AI_ROH<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
+```
+
+#calculating the mean for each of the groups 
+```{r}
+#90s
+ai_all_90s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1990),]
+ai_mean_90s_ROH_total<-mean(ai_all_90s$ROH_allclasses_sums_NORM)
+ai_mean_90s_ROH_A<-mean(ai_all_90s$ROH_A_NORM)
+ai_mean_90s_ROH_B<-mean(ai_all_90s$ROH_B_NORM)
+ai_mean_90s_ROH_C<-mean(ai_all_90s$ROH_C_NORM)
+
+#80s
+ai_all_80s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1980 & ai_roh_with_pheno_admixture$estimated_birth_year<1990),]
+ai_mean_80s_ROH_total<-mean(ai_all_80s$ROH_allclasses_sums_NORM)
+ai_mean_80s_ROH_A<-mean(ai_all_80s$ROH_A_NORM)
+ai_mean_80s_ROH_B<-mean(ai_all_80s$ROH_B_NORM)
+ai_mean_80s_ROH_C<-mean(ai_all_80s$ROH_C_NORM)
+
+#70s
+ai_all_70s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1970 & ai_roh_with_pheno_admixture$estimated_birth_year<1980),]
+ai_mean_70s_ROH_total<-mean(ai_all_70s$ROH_allclasses_sums_NORM)
+ai_mean_70s_ROH_A<-mean(ai_all_70s$ROH_A_NORM)
+ai_mean_70s_ROH_B<-mean(ai_all_70s$ROH_B_NORM)
+ai_mean_70s_ROH_C<-mean(ai_all_70s$ROH_C_NORM)
+
+#60s
+ai_all_60s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1960 & ai_roh_with_pheno_admixture$estimated_birth_year<1970),]
+ai_mean_60s_ROH_total<-mean(ai_all_60s$ROH_allclasses_sums_NORM)
+ai_mean_60s_ROH_A<-mean(ai_all_60s$ROH_A_NORM)
+ai_mean_60s_ROH_B<-mean(ai_all_60s$ROH_B_NORM)
+ai_mean_60s_ROH_C<-mean(ai_all_60s$ROH_C_NORM)
+
+#50s
+ai_all_50s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1950 & ai_roh_with_pheno_admixture$estimated_birth_year<1960),]
+ai_mean_50s_ROH_total<-mean(ai_all_50s$ROH_allclasses_sums_NORM)
+ai_mean_50s_ROH_A<-mean(ai_all_50s$ROH_A_NORM)
+ai_mean_50s_ROH_B<-mean(ai_all_50s$ROH_B_NORM)
+ai_mean_50s_ROH_C<-mean(ai_all_50s$ROH_C_NORM)
+
+#40s
+ai_all_40s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1940 & ai_roh_with_pheno_admixture$estimated_birth_year<1950),]
+ai_mean_40s_ROH_total<-mean(ai_all_40s$ROH_allclasses_sums_NORM)
+ai_mean_40s_ROH_A<-mean(ai_all_40s$ROH_A_NORM)
+ai_mean_40s_ROH_B<-mean(ai_all_40s$ROH_B_NORM)
+ai_mean_40s_ROH_C<-mean(ai_all_40s$ROH_C_NORM)
+
+#30s
+ai_all_30s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year<1940),]
+ai_mean_30s_ROH_total<-mean(ai_all_30s$ROH_allclasses_sums_NORM)
+ai_mean_30s_ROH_A<-mean(ai_all_30s$ROH_A_NORM)
+ai_mean_30s_ROH_B<-mean(ai_all_30s$ROH_B_NORM)
+ai_mean_30s_ROH_C<-mean(ai_all_30s$ROH_C_NORM)
+```
+
+
+90s AI 
+```{r}
+#90s ROH classes total 
 set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
-  bsample <- sample(all_30s_pi_0$pi,replace=T)
+  bsample <- sample(ai_all_90s$ROH_allclasses_sums_NORM,replace=T)
     #now calculate the bootstrap estimate + 
   bestimate <- mean(bsample)
   bstrap <- c(bstrap,bestimate)}
 
-lower_30_0_bound<-quantile(bstrap,.025)
-upper_30_0_bound<-quantile(bstrap,.975)
+lower_90_total_bound<-quantile(bstrap,.025)
+upper_90_total_bound<-quantile(bstrap,.975)
 
-#40s 
+#90s ROH A total 
 set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
-  bsample <- sample(all_40s_pi_0$pi,replace=T)
-  #now calculate the bootstrap estimate + 
+  bsample <- sample(ai_all_90s$ROH_A_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
   bestimate <- mean(bsample)
   bstrap <- c(bstrap,bestimate)}
 
-lower_40_0_bound<-quantile(bstrap,.025)
-upper_40_0_bound<-quantile(bstrap,.975)
+lower_90_A_bound<-quantile(bstrap,.025)
+upper_90_A_bound<-quantile(bstrap,.975)
 
-#50s 
+#90s ROH B total 
 set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
-  bsample <- sample(all_50s_pi_0$pi,replace=T)
-  #now calculate the bootstrap estimate + 
+  bsample <- sample(ai_all_90s$ROH_B_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
   bestimate <- mean(bsample)
   bstrap <- c(bstrap,bestimate)}
 
-lower_50_0_bound<-quantile(bstrap,.025)
-upper_50_0_bound<-quantile(bstrap,.975)
+lower_90_B_bound<-quantile(bstrap,.025)
+upper_90_B_bound<-quantile(bstrap,.975)
 
-#60s 
+#90s ROH C total 
 set.seed(1234)
 bstrap <- c()
 for (i in 1:1000){
   # First take the sample
-  bsample <- sample(all_60s_pi_0$pi,replace=T)
-  #now calculate the bootstrap estimate + 
+  bsample <- sample(ai_all_90s$ROH_C_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
   bestimate <- mean(bsample)
   bstrap <- c(bstrap,bestimate)}
 
-lower_60_0_bound<-quantile(bstrap,.025)
-upper_60_0_bound<-quantile(bstrap,.975)
-
-#70s 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(all_70s_pi_0$pi,replace=T)
-  #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_70_0_bound<-quantile(bstrap,.025)
-upper_70_0_bound<-quantile(bstrap,.975)
-
-#80s 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(all_80s_pi_0$pi,replace=T)
-  #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_80_0_bound<-quantile(bstrap,.025)
-upper_80_0_bound<-quantile(bstrap,.975)
-
-#90s
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(all_90s_pi_0$pi,replace=T)
-  #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_90_0_bound<-quantile(bstrap,.025)
-upper_90_0_bound<-quantile(bstrap,.975)
+lower_90_C_bound<-quantile(bstrap,.025)
+upper_90_C_bound<-quantile(bstrap,.975)
 
 ```
+
+
+
+80s AI
+```{r}
+#80s ROH classes total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_80s$ROH_allclasses_sums_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_80_total_bound<-quantile(bstrap,.025)
+upper_80_total_bound<-quantile(bstrap,.975)
+
+#80s ROH A total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_80s$ROH_A_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_80_A_bound<-quantile(bstrap,.025)
+upper_80_A_bound<-quantile(bstrap,.975)
+
+#80s ROH B total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_80s$ROH_B_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_80_B_bound<-quantile(bstrap,.025)
+upper_80_B_bound<-quantile(bstrap,.975)
+
+#80s ROH C total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_80s$ROH_C_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_80_C_bound<-quantile(bstrap,.025)
+upper_80_C_bound<-quantile(bstrap,.975)
+
+```
+
+
+70s AI
+```{r}
+#70s ROH classes total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_70s$ROH_allclasses_sums_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_70_total_bound<-quantile(bstrap,.025)
+upper_70_total_bound<-quantile(bstrap,.975)
+
+#70s ROH A total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_70s$ROH_A_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_70_A_bound<-quantile(bstrap,.025)
+upper_70_A_bound<-quantile(bstrap,.975)
+
+#70s ROH B total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_70s$ROH_B_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_70_B_bound<-quantile(bstrap,.025)
+upper_70_B_bound<-quantile(bstrap,.975)
+
+#70s ROH C total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_70s$ROH_C_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_70_C_bound<-quantile(bstrap,.025)
+upper_70_C_bound<-quantile(bstrap,.975)
+
+```
+
+
+60s AI
+```{r}
+#60s ROH classes total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_60s$ROH_allclasses_sums_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_60_total_bound<-quantile(bstrap,.025)
+upper_60_total_bound<-quantile(bstrap,.975)
+
+#60s ROH A total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_60s$ROH_A_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_60_A_bound<-quantile(bstrap,.025)
+upper_60_A_bound<-quantile(bstrap,.975)
+
+#60s ROH B total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_60s$ROH_B_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_60_B_bound<-quantile(bstrap,.025)
+upper_60_B_bound<-quantile(bstrap,.975)
+
+#60s ROH C total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_60s$ROH_C_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_60_C_bound<-quantile(bstrap,.025)
+upper_60_C_bound<-quantile(bstrap,.975)
+
+```
+
+
+
+50s AI
+```{r}
+#50s ROH classes total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_50s$ROH_allclasses_sums_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_50_total_bound<-quantile(bstrap,.025)
+upper_50_total_bound<-quantile(bstrap,.975)
+
+#50s ROH A total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_50s$ROH_A_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_50_A_bound<-quantile(bstrap,.025)
+upper_50_A_bound<-quantile(bstrap,.975)
+
+#50s ROH B total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_50s$ROH_B_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_50_B_bound<-quantile(bstrap,.025)
+upper_50_B_bound<-quantile(bstrap,.975)
+
+#50s ROH C total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_50s$ROH_C_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_50_C_bound<-quantile(bstrap,.025)
+upper_50_C_bound<-quantile(bstrap,.975)
+
+```
+
+
+
+40s AI
+```{r}
+#40s ROH classes total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_40s$ROH_allclasses_sums_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_40_total_bound<-quantile(bstrap,.025)
+upper_40_total_bound<-quantile(bstrap,.975)
+
+#40s ROH A total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_40s$ROH_A_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_40_A_bound<-quantile(bstrap,.025)
+upper_40_A_bound<-quantile(bstrap,.975)
+
+#40s ROH B total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_40s$ROH_B_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_40_B_bound<-quantile(bstrap,.025)
+upper_40_B_bound<-quantile(bstrap,.975)
+
+#40s ROH C total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_40s$ROH_C_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_40_C_bound<-quantile(bstrap,.025)
+upper_40_C_bound<-quantile(bstrap,.975)
+
+```
+
+
+30s AI
+```{r}
+#30s ROH classes total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_30s$ROH_allclasses_sums_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_30_total_bound<-quantile(bstrap,.025)
+upper_30_total_bound<-quantile(bstrap,.975)
+
+#30s ROH A total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_30s$ROH_A_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_30_A_bound<-quantile(bstrap,.025)
+upper_30_A_bound<-quantile(bstrap,.975)
+
+#30s ROH B total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_30s$ROH_B_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_30_B_bound<-quantile(bstrap,.025)
+upper_30_B_bound<-quantile(bstrap,.975)
+
+#30s ROH C total 
+set.seed(1234)
+bstrap <- c()
+for (i in 1:1000){
+  # First take the sample
+  bsample <- sample(ai_all_30s$ROH_C_NORM,replace=T)
+    #now calculate the bootstrap estimate + 
+  bestimate <- mean(bsample)
+  bstrap <- c(bstrap,bestimate)}
+
+lower_30_C_bound<-quantile(bstrap,.025)
+upper_30_C_bound<-quantile(bstrap,.975)
+
+```
+
+
