@@ -1,0 +1,449 @@
+---
+title: "HCHS/SOL ROH analyses"
+author: "Melissa Spear"
+date: "15/05/2020"
+output: html_document
+---
+
+The following code plots AI and CEU tracts 
+
+AI tracts 
+```{r}
+#read in summed ROH calls 
+ai_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/NAM_ROH_segments/reclassified_classes/summed_calls2/HCHS_SOL_Mexicans_alldecades_summed_NAM_ROH_calls_newclasses_080519.txt",header=F,sep='\t')
+
+#adding column titles 
+names(ai_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
+
+#3570 samples made the cut - some samples do not have NAM roh. 
+
+#read in pheno file 
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+#subset for needed variables
+pheno_subsetted<-subset(d,select=c("V1","V2","US_BORN","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL"))
+
+#merge with pheno file 
+ai_roh_with_pheno<-merge(ai_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+```
+
+
+```{r}
+#Read in the admixture file estimates file 
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+names(HCHS_SOL_admixture_file) <- c("YRI","CEU","AI")
+
+#Reading in the fam file accompaniment of the .bed file called for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+##merge with admixture estimates 
+ai_roh_with_pheno_admixture<-merge(ai_roh_with_pheno,fam_file_with_IDs, by.x=c("IID"),by.y=c("IID"))
+
+#Calcualting AI genome length 
+ai_roh_with_pheno_admixture$AI_both_haps_length<- (ai_roh_with_pheno_admixture$AI * 5563642548)
+```
+
+```{r}
+#some samples do not have roh in some classes and will cause errors in the analysis pipeline so added roh of 1 BP long to all samples to fill in 0s.  
+ai_roh_with_pheno_admixture$ROH_A<-ai_roh_with_pheno_admixture$ROH_A+1
+ai_roh_with_pheno_admixture$ROH_B<-ai_roh_with_pheno_admixture$ROH_B+1
+ai_roh_with_pheno_admixture$ROH_C<-ai_roh_with_pheno_admixture$ROH_C+1
+
+#creating new variable summing three ROH columns 
+ai_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ai_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
+
+#normalizing ALL ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing short ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_A_NORM<-(ai_roh_with_pheno_admixture$ROH_A)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing medium ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_B_NORM<-(ai_roh_with_pheno_admixture$ROH_B)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing long ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_C_NORM<-(ai_roh_with_pheno_admixture$ROH_C)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#proportion of genome covered in ROH 
+ai_roh_with_pheno_admixture$prop_genome_AI_ROH<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
+```
+
+
+CEU tracts 
+
+```{r}
+#read in summed ROH calls 
+ceu_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/CEU_ROH_segments/reclassified_classes/summed_calls/HCHS_SOL_Mexicans_alldecades_summed_CEU_ROH_calls_newclasses_051520.txt",header=F,sep='\t')
+
+#adding column titles 
+names(ceu_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
+
+#merge with pheno file 
+ceu_roh_with_pheno<-merge(ceu_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+```
+
+
+```{r}
+#merge with admixture estimates 
+ceu_roh_with_pheno_admixture<-merge(ceu_roh_with_pheno,fam_file_with_IDs, by.x=c("IID"),by.y=c("IID"))
+
+#Calcualting AI genome length 
+ceu_roh_with_pheno_admixture$CEU_both_haps_length<- (ceu_roh_with_pheno_admixture$CEU * 5563642548)
+```
+
+```{r}
+#some samples do not have roh in some classes and will cause errors in the analysis pipeline so added roh of 1 BP long to all samples to fill in 0s.  
+ceu_roh_with_pheno_admixture$ROH_A<-ceu_roh_with_pheno_admixture$ROH_A+1
+ceu_roh_with_pheno_admixture$ROH_B<-ceu_roh_with_pheno_admixture$ROH_B+1
+ceu_roh_with_pheno_admixture$ROH_C<-ceu_roh_with_pheno_admixture$ROH_C+1
+
+
+#creating new variable summing three ROH columns 
+ceu_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ceu_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
+
+#normalizing ALL ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ceu_roh_with_pheno_admixture$ROH_allclasses_sums)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#normalizing short ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_A_NORM<-(ceu_roh_with_pheno_admixture$ROH_A)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#normalizing medium ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_B_NORM<-(ceu_roh_with_pheno_admixture$ROH_B)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#normalizing long ROH by global ancestry 
+ceu_roh_with_pheno_admixture$ROH_C_NORM<-(ceu_roh_with_pheno_admixture$ROH_C)/((ceu_roh_with_pheno_admixture$CEU_both_haps_length)/(2)) 
+
+#proportion of genome covered in ROH -- following normalization? actual BP 
+ceu_roh_with_pheno_admixture$prop_genome_CEU_ROH<-(ceu_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
+```
+
+
+#
+```{r}
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_norm_ROH_CEU_AI_alltracts_032620.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.3,0.1))
+plot(1,1,type='n',xlim=c(1934, 1993),ylim=c(0,0.06),xlab="",ylab="",xaxt='n',yaxt='n')
+#abline(h=seq(5,7,by=0.5),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90)
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Birth year",line=1.1)
+mtext(side=2,"Proportion of genome with ROH",line=1.0,cex.lab=0.6)
+legend("topleft",legend=c("All CEU ROH","All AI ROH","All Short CEU ROH","All Short AI ROH","All Medium ROH","All Medium AI ROH", "All Long CEU ROH",  "All Long AI ROH"), col=c("black","black","#D95F02","#D95F02","#7570B3","#7570B3","#E7298A","#E7298A"),lty=c(1,3,1,3,1,3,1,3),cex=0.4,bg="white")
+#CEU all ROH 
+lw1 <- loess(ROH_allclasses_sums_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j1 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j1],lw1$fitted[j1],col="black",lwd=1)
+#AI all
+lw1_ai <- loess(ROH_allclasses_sums_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j1_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j1_ai],lw1_ai$fitted[j1_ai],col="black",lwd=1,lty=3)
+#CEU long ROH 
+lw2 <- loess(ROH_C_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j2 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j2],lw2$fitted[j2],col="#E7298A",lwd=1)
+#AI long roh
+lw2_ai <- loess(ROH_C_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j2_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j2_ai],lw2_ai$fitted[j2_ai],col="#E7298A",lwd=1,lty=3)
+#CEU medium ROH 
+lw3 <- loess(ROH_B_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j3 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j3],lw3$fitted[j3],col="#7570B3",lwd=1)
+#AI medium roh
+lw3_ai <- loess(ROH_B_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j3_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j3_ai],lw3_ai$fitted[j3_ai],col="#7570B3",lwd=1,lty=3)
+#all short ROH 
+lw4 <- loess(ROH_A_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j4 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j4],lw4$fitted[j4],col="#D95F02",lwd=1)
+#all short ROH -nam 
+lw4_ai <- loess(ROH_A_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j4_ai<- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j4_ai],lw4_ai$fitted[j4_ai],col="#D95F02",lwd=1,lty=3)
+
+dev.off()
+
+```
+
+
+```{r}
+#Log scale 
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_normROH_ceu_ai_short_medium_tracts_032620_logscale.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=c(1934, 1993),ylim=c(-10,0),xlab="",ylab="",xaxt='n',yaxt='n')
+#abline(h=seq(5,7,by=0.5),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60)
+axis(side=2,padj=1.5,cex.axis=0.60)
+mtext(side=1,"Birth year",line=1.1,cex=0.8)
+mtext(side=2,expression(log[10]("Proportion of genome with ROH")),line=1.0,cex=0.8)
+legend("topleft",legend=c("All CEU ROH","All AI ROH","All Short CEU ROH","All Short AI ROH","All Medium ROH","All Medium AI ROH"), col=c("black","black","#D95F02","#D95F02","#7570B3","#7570B3"),lty=c(1,3,1,3,1,3),cex=0.4,bg="white")
+#CEU all ROH 
+lw1 <- loess(log(ROH_allclasses_sums_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j1 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j1],lw1$fitted[j1],col="black",lwd=1)
+#AI all
+lw1_ai <- loess(log(ROH_allclasses_sums_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j1_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j1_ai],lw1_ai$fitted[j1_ai],col="black",lwd=1,lty=3)
+##CEU long ROH 
+#lw2 <- loess(log(ROH_C_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+#j2 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+#lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j2],lw2$fitted[j2],col="#E7298A",lwd=1)
+#AI long roh
+#lw2_ai <- loess(log(ROH_C_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+#j2_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+#lines(ai_roh_with_pheno_admixture$estimated_birth_year[j2_ai],lw2_ai$fitted[j2_ai],col="#E7298A",lwd=1,lty=3)
+#CEU medium ROH 
+lw3 <- loess(log(ROH_B_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j3 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j3],lw3$fitted[j3],col="#7570B3",lwd=1)
+#AI medium roh
+lw3_ai <- loess(log(ROH_B_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j3_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j3_ai],lw3_ai$fitted[j3_ai],col="#7570B3",lwd=1,lty=3)
+#all short ROH 
+lw4 <- loess(log(ROH_A_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
+j4 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j4],lw4$fitted[j4],col="#D95F02",lwd=1)
+#all short ROH -nam 
+lw4_ai <- loess(log(ROH_A_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
+j4_ai<- order(ai_roh_with_pheno_admixture$estimated_birth_year)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j4_ai],lw4_ai$fitted[j4_ai],col="#D95F02",lwd=1,lty=3)
+
+dev.off()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}```
+
+
+
+```{r}
+library(vioplot)
+
+###
+#Plot the ROH per decade 
+require(RColorBrewer)
+pcol=brewer.pal(9, "Set1")
+
+pcol2=brewer.pal(8, "Dark2")
+###plotting the plots for the paper. 
+#regular aesthetics wont work with vioplot package 
+
+#par(mar=c(2.1,2.1,0.1,0.1))
+#plot(1,1,type='n',xlim=range(d[,284]),ylim=c(0.35,0.6),xlab="",ylab="",xaxt='n',yaxt='n')
+#abline(h=seq(0.35,0.6,by=0.05),col=rgb(0,0,0,0.1))
+#abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+#mtext(side=1,"Birth year",line=1.1)
+#mtext(side=2,"Native American ancestry (%)",line=1.1)
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexicans_ROH_overlap_NAM_ancestry_070919.pdf",height=6.00,width=6.0,pointsize=10)
+#par(mfrow=c(2,2), mai = c(0.4, 0.4, 0.2, 0.3))
+par(mfrow=c(1,1), mai = c(0.4, 0.4, 0.2, 0.3))
+
+vioplot(mexicans_1930s$ROH_allclasses_sums_NORM,mexicans_1940s$ROH_allclasses_sums_NORM,mexicans_1950s$ROH_allclasses_sums_NORM,mexicans_1960s$ROH_allclasses_sums_NORM,mexicans_1970s$ROH_allclasses_sums_NORM,mexicans_1980s$ROH_allclasses_sums_NORM,mexicans_1990s$ROH_allclasses_sums_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#1B9E77",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.1)
+mtext(side=2,"Proportion of genome covered by ROH length",line=1.1)
+abline(h=seq(0,9000,by=1000),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+
+```
+
+
+#Small ROH 
+vioplot(mexicans_1930s$ROH_A_Mb_norm,mexicans_1940s$ROH_A_Mb_norm,mexicans_1950s$ROH_A_Mb_norm,mexicans_1960s$ROH_A_Mb_norm,mexicans_1970s$ROH_A_Mb_norm,mexicans_1980s$ROH_A_Mb_norm,mexicans_1990s$ROH_A_Mb_norm,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#D95F02",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,120))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.1)
+mtext(side=2,"Total small ROH length (Mbps)",line=1.1)
+abline(h=seq(0,900,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Medium ROH
+vioplot(mexicans_1930s$ROH_B_Mb_norm,mexicans_1940s$ROH_B_Mb_norm,mexicans_1950s$ROH_B_Mb_norm,mexicans_1960s$ROH_B_Mb_norm,mexicans_1970s$ROH_B_Mb_norm,mexicans_1980s$ROH_B_Mb_norm,mexicans_1990s$ROH_B_Mb_norm,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#7570B3",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.1)
+mtext(side=2,"Total medium ROH length (Mbps)",line=1.1)
+abline(h=seq(0,1100,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Long ROH
+vioplot(mexicans_1930s$ROH_C_Mb_norm,mexicans_1940s$ROH_C_Mb_norm,mexicans_1950s$ROH_C_Mb_norm,mexicans_1960s$ROH_C_Mb_norm,mexicans_1970s$ROH_C_Mb_norm,mexicans_1980s$ROH_C_Mb_norm,mexicans_1990s$ROH_C_Mb_norm,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#E7298A",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,1000))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.1)
+mtext(side=2,"Total long ROH length (Mbps)",line=1.1)
+abline(h=seq(0,8000,by=1000),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+#dev.off()
+#Two four panel figures, 1 is ROH across all ancestries, the other just focusing on the Native American segments. But how to really label the axes for this...
+#Just because a segment is medium, dowesnt mean the whole thing falls in an ROH region. Could have been an ROH of Native plus Euro/african 
+
+
+```
+
+
+```{r}
+#######Adding a "Decade" variable in orde to group the birth years in the plots 
+mexicans_1930s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year<1940),]
+mexicans_1930s$Decade ="1930s"
+
+mexicans_1940s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1940 & roh_with_pheno_admixture$estimated_birth_year<1950),]
+mexicans_1940s$Decade ="1940s"
+
+mexicans_1950s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1950 & roh_with_pheno_admixture$estimated_birth_year<1960),]
+mexicans_1950s$Decade ="1950s"
+
+mexicans_1960s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1960 & roh_with_pheno_admixture$estimated_birth_year<1970),]
+mexicans_1960s$Decade ="1960s"
+
+mexicans_1970s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1970 & roh_with_pheno_admixture$estimated_birth_year<1980),]
+mexicans_1970s$Decade ="1970s"
+
+mexicans_1980s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1980 & roh_with_pheno_admixture$estimated_birth_year<1990),]
+mexicans_1980s$Decade ="1980s"
+
+mexicans_1990s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1990),]
+mexicans_1990s$Decade ="1990s"
+
+mexicans_with_decades<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
+
+
+
+```
+
+
+#########Running the cor.test, kendal tau, 
+
+#Total 
+cor.test(roh_with_pheno$ROH_sums,roh_with_pheno$estimated_birth_year,method="kendall")
+> cor.test(roh_with_pheno$ROH_sums,roh_with_pheno$estimated_birth_year,method="kendall")
+
+#Kendall's rank correlation tau
+data:  roh_with_pheno$ROH_sums and roh_with_pheno$estimated_birth_year
+z = 7.7464, p-value = 9.457e-15
+alternative hypothesis: true tau is not equal to 0
+sample estimates:
+tau 
+#0.08735064 
+##
+
+########short
+
+cor.test(roh_with_pheno$ROH_A_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
+
+#Kendall's rank correlation tau
+
+data:  roh_with_pheno$ROH_A_Mb and roh_with_pheno$estimated_birth_year
+z = 9.4713, p-value < 2.2e-16
+alternative hypothesis: true tau is not equal to 0
+sample estimates:
+tau 
+0.106802 
+
+cor.test(roh_with_pheno$ROH_A_Mb,roh_with_pheno$estimated_birth_year)
+> cor.test(roh_with_pheno$ROH_A_Mb,roh_with_pheno$estimated_birth_year)
+
+#Pearson's product-moment correlation
+
+data:  roh_with_pheno$ROH_A_Mb and roh_with_pheno$estimated_birth_year
+t = 9.1444, df = 3568, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+0.1191123 0.1832215
+sample estimates:
+cor 
+0.151326 
+
+
+#####medium
+cor.test(roh_with_pheno$ROH_B_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
+
+#Kendall's rank correlation tau
+
+data:  roh_with_pheno$ROH_B_Mb and roh_with_pheno$estimated_birth_year
+z = 8.8953, p-value < 2.2e-16
+alternative hypothesis: true tau is not equal to 0
+sample estimates:
+tau 
+0.1003128 
+
+cor.test(roh_with_pheno$ROH_B_Mb,roh_with_pheno$estimated_birth_year)
+
+> cor.test(roh_with_pheno$ROH_B_Mb,roh_with_pheno$estimated_birth_year)
+
+#Pearson's product-moment correlation
+
+data:  roh_with_pheno$ROH_B_Mb and roh_with_pheno$estimated_birth_year
+t = 8.4189, df = 3568, p-value < 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+0.1072500 0.1715835
+sample estimates:
+cor 
+0.139564 
+
+#######long 
+cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
+
+> cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
+
+#Kendall's rank correlation tau
+
+data:  roh_with_pheno$ROH_C_Mb and roh_with_pheno$estimated_birth_year
+z = 0.61369, p-value = 0.5394
+alternative hypothesis: true tau is not equal to 0
+sample estimates:
+        tau 
+0.007576936 
+
+
+cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year)
+
+> cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year)
+
+#Pearson's product-moment correlation
+
+data:  roh_with_pheno$ROH_C_Mb and roh_with_pheno$estimated_birth_year
+t = -0.4486, df = 3568, p-value = 0.6537
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.04030506  0.02530134
+sample estimates:
+         cor 
+-0.007509945 
+
+
