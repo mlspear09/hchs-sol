@@ -1,0 +1,73 @@
+---
+title: "New supplementary figure 8"
+author: "Melissa Spear"
+date: "04/06/2020"
+output: html_document
+---
+
+Plotting supplementary figure 8
+
+
+AI tracts 
+```{r}
+#read in summed ROH calls 
+ai_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/NAM_ROH_segments/reclassified_classes/summed_calls2/HCHS_SOL_Mexicans_alldecades_summed_NAM_ROH_calls_newclasses_080519.txt",header=F,sep='\t')
+
+#adding column titles 
+names(ai_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
+
+#3570 samples made the cut - some samples do not have NAM roh. 
+
+#read in pheno file 
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+#subset for needed variables
+pheno_subsetted<-subset(d,select=c("V1","V2","US_BORN","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL"))
+
+#merge with pheno file 
+ai_roh_with_pheno<-merge(ai_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+```
+
+
+```{r}
+#Read in the admixture file estimates file 
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+names(HCHS_SOL_admixture_file) <- c("YRI","CEU","AI")
+
+#Reading in the fam file accompaniment of the .bed file called for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+##merge with admixture estimates 
+ai_roh_with_pheno_admixture<-merge(ai_roh_with_pheno,fam_file_with_IDs, by.x=c("IID"),by.y=c("IID"))
+
+#Calcualting AI genome length 
+ai_roh_with_pheno_admixture$AI_both_haps_length<- (ai_roh_with_pheno_admixture$AI * 5563642548)
+```
+
+```{r}
+#some samples do not have roh in some classes and will cause errors in the analysis pipeline so added roh of 1 BP long to all samples to fill in 0s.  
+ai_roh_with_pheno_admixture$ROH_A<-ai_roh_with_pheno_admixture$ROH_A+1
+ai_roh_with_pheno_admixture$ROH_B<-ai_roh_with_pheno_admixture$ROH_B+1
+ai_roh_with_pheno_admixture$ROH_C<-ai_roh_with_pheno_admixture$ROH_C+1
+
+#creating new variable summing three ROH columns 
+ai_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ai_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
+
+#normalizing ALL ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing short ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_A_NORM<-(ai_roh_with_pheno_admixture$ROH_A)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing medium ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_B_NORM<-(ai_roh_with_pheno_admixture$ROH_B)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#normalizing long ROH by global ancestry 
+ai_roh_with_pheno_admixture$ROH_C_NORM<-(ai_roh_with_pheno_admixture$ROH_C)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
+#adjusted BP genome covered in ROH???
+#2781821274 BP when looking at only one haplotype
+ai_roh_with_pheno_admixture$prop_genome_AI_ROH<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
+```
