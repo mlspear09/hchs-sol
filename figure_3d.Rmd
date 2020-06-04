@@ -1,0 +1,54 @@
+---
+title: "figure 3d"
+author: "Melissa Spear"
+date: "04/06/2020"
+output: html_document
+---
+
+Read in data and add new decade variable 
+
+```{r}
+Mexican_reclassified<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+#break up by decades 
+mexicans_1930s<-Mexican_reclassified[which(Mexican_reclassified$estimated_birth_year<1940),]
+mexicans_1930s$Decade ="1930"
+
+mexicans_1940s<-Mexican_reclassified[which(Mexican_reclassified$estimated_birth_year>=1940 & Mexican_reclassified$estimated_birth_year<1950),]
+mexicans_1940s$Decade ="1940"
+
+mexicans_1950s<-Mexican_reclassified[which(Mexican_reclassified$estimated_birth_year>=1950 & Mexican_reclassified$estimated_birth_year<1960),]
+mexicans_1950s$Decade ="1950"
+
+mexicans_1960s<-Mexican_reclassified[which(Mexican_reclassified$estimated_birth_year>=1960 & Mexican_reclassified$estimated_birth_year<1970),]
+mexicans_1960s$Decade ="1960"
+
+mexicans_1970s<-Mexican_reclassified[which(Mexican_reclassified$estimated_birth_year>=1970 & Mexican_reclassified$estimated_birth_year<1980),]
+mexicans_1970s$Decade ="1970"
+
+mexicans_1980s<-Mexican_reclassified[which(Mexican_reclassified$estimated_birth_year>=1980 & Mexican_reclassified$estimated_birth_year<1990),]
+mexicans_1980s$Decade ="1980"
+
+mexicans_1990s<-Mexican_reclassified[which(Mexican_reclassified$estimated_birth_year>=1990),]
+mexicans_1990s$Decade ="1990"
+
+mexicans_all<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
+
+mexicans_all_subset<-subset(mexicans_all,select=c("V1","V2","NAM","US_BORN","estimated_birth_year","Decade"))
+```
+
+Read in assortative mating data 
+```{r}
+assor_mating=read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_with_parents_global_ancestry_estimates.txt",header=T,sep='\t')
+
+assor_mating_subset<-subset(assor_mating,select=c("IID","NAM","Parent1_NAM","Parent2_NAM"))
+
+```
+
+Merge data and rename variables 
+```{r}
+mexicans_sims_data<-merge(mexicans_all_subset,assor_mating_subset,by.x=c("V2"),by.y=c("IID"))
+
+mexicans_sims_data_subset=subset(mexicans_sims_data,select=c("V2","NAM.x","estimated_birth_year","Decade","US_BORN","Parent1_NAM","Parent2_NAM"))
+names(mexicans_sims_data_subset)=c("IID","AI","Birth_year","Decade","US_BORN","Parent1_AI","Parent2_AI")
+```
