@@ -122,48 +122,51 @@ ceu_roh_with_pheno_admixture$prop_genome_CEU_ROH<-(ceu_roh_with_pheno_admixture$
 
 #
 ```{r}
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_norm_ROH_CEU_AI_alltracts_032620.pdf",height=2.25,width=2.375,pointsize=10)
-par(mar=c(2.1,2.1,0.3,0.1))
-plot(1,1,type='n',xlim=c(1934, 1993),ylim=c(0,0.06),xlab="",ylab="",xaxt='n',yaxt='n')
-#abline(h=seq(5,7,by=0.5),col=rgb(0,0,0,0.1))
-abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_norm_ROH_CEU_AI_alltracts_052620_new_figure3C.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.3,0.25))
+plot(1,1,type='n',xlim=c(1934, 1993),ylim=c(0,0.04),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,0.04,by=0.01),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=10),col=rgb(0,0,0,0.1))
 axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90)
 axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
 mtext(side=1,"Birth year",line=1.1)
 mtext(side=2,"Proportion of genome with ROH",line=1.0,cex.lab=0.6)
-legend("topleft",legend=c("All CEU ROH","All AI ROH","All Short CEU ROH","All Short AI ROH","All Medium ROH","All Medium AI ROH", "All Long CEU ROH",  "All Long AI ROH"), col=c("black","black","#D95F02","#D95F02","#7570B3","#7570B3","#E7298A","#E7298A"),lty=c(1,3,1,3,1,3,1,3),cex=0.4,bg="white")
+
+legend("topleft",ncol=2,legend=c("All AI ROH","All Short AI ROH","All Medium AI ROH", "All Long AI ROH", "All CEU ROH","All Short CEU ROH","All Medium CEU ROH","All Long CEU ROH"), col=c("black","#D95F02","#7570B3","#E7298A","black","#D95F02","#7570B3","#E7298A"),lty=c(1,1,1,1,3,3,3,3),cex=0.4,bg="white")
+
+
 #CEU all ROH 
 lw1 <- loess(ROH_allclasses_sums_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
 j1 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j1],lw1$fitted[j1],col="black",lwd=1)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j1],lw1$fitted[j1],col="black",lwd=1,lty=3)
 #AI all
 lw1_ai <- loess(ROH_allclasses_sums_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
 j1_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-lines(ai_roh_with_pheno_admixture$estimated_birth_year[j1_ai],lw1_ai$fitted[j1_ai],col="black",lwd=1,lty=3)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j1_ai],lw1_ai$fitted[j1_ai],col="black",lwd=1)
 #CEU long ROH 
 lw2 <- loess(ROH_C_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
 j2 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j2],lw2$fitted[j2],col="#E7298A",lwd=1)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j2],lw2$fitted[j2],col="#E7298A",lwd=1,lty=3)
 #AI long roh
 lw2_ai <- loess(ROH_C_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
 j2_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-lines(ai_roh_with_pheno_admixture$estimated_birth_year[j2_ai],lw2_ai$fitted[j2_ai],col="#E7298A",lwd=1,lty=3)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j2_ai],lw2_ai$fitted[j2_ai],col="#E7298A",lwd=1)
 #CEU medium ROH 
 lw3 <- loess(ROH_B_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
 j3 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j3],lw3$fitted[j3],col="#7570B3",lwd=1)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j3],lw3$fitted[j3],col="#7570B3",lwd=1,lty=3)
 #AI medium roh
 lw3_ai <- loess(ROH_B_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
 j3_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-lines(ai_roh_with_pheno_admixture$estimated_birth_year[j3_ai],lw3_ai$fitted[j3_ai],col="#7570B3",lwd=1,lty=3)
-#all short ROH 
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j3_ai],lw3_ai$fitted[j3_ai],col="#7570B3",lwd=1)
+#all CEU short ROH 
 lw4 <- loess(ROH_A_NORM ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
 j4 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j4],lw4$fitted[j4],col="#D95F02",lwd=1)
+lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j4],lw4$fitted[j4],col="#D95F02",lwd=1,lty=3)
 #all short ROH -nam 
 lw4_ai <- loess(ROH_A_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
 j4_ai<- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-lines(ai_roh_with_pheno_admixture$estimated_birth_year[j4_ai],lw4_ai$fitted[j4_ai],col="#D95F02",lwd=1,lty=3)
+lines(ai_roh_with_pheno_admixture$estimated_birth_year[j4_ai],lw4_ai$fitted[j4_ai],col="#D95F02",lwd=1)
 
 dev.off()
 
@@ -313,8 +316,6 @@ abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
 #Just because a segment is medium, dowesnt mean the whole thing falls in an ROH region. Could have been an ROH of Native plus Euro/african 
 
 
-```
-
 
 ```{r}
 #######Adding a "Decade" variable in orde to group the birth years in the plots 
@@ -345,21 +346,26 @@ mexicans_with_decades<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexica
 
 ```
 
+Kendal tau correlation on AI tracts 
+```{r}
+#all tracts 
+cor.test(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
+```
 
-#########Running the cor.test, kendal tau, 
+```{r}
+#short tracts 
+cor.test(ai_roh_with_pheno_admixture$ROH_A_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
+```
 
-#Total 
-cor.test(roh_with_pheno$ROH_sums,roh_with_pheno$estimated_birth_year,method="kendall")
-> cor.test(roh_with_pheno$ROH_sums,roh_with_pheno$estimated_birth_year,method="kendall")
+```{r}
+#medium 
 
-#Kendall's rank correlation tau
-data:  roh_with_pheno$ROH_sums and roh_with_pheno$estimated_birth_year
-z = 7.7464, p-value = 9.457e-15
-alternative hypothesis: true tau is not equal to 0
-sample estimates:
-tau 
-#0.08735064 
-##
+cor.test(ai_roh_with_pheno_admixture$ROH_B_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
+```
+
+```{r}
+cor.test(ai_roh_with_pheno_admixture$ROH_C_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
+```
 
 ########short
 
