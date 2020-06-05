@@ -174,80 +174,6 @@ dev.off()
 
 
 ```{r}
-#Log scale 
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_normROH_ceu_ai_short_medium_tracts_032620_logscale.pdf",height=2.25,width=2.375,pointsize=10)
-par(mar=c(2.1,2.1,0.1,0.1))
-plot(1,1,type='n',xlim=c(1934, 1993),ylim=c(-10,0),xlab="",ylab="",xaxt='n',yaxt='n')
-#abline(h=seq(5,7,by=0.5),col=rgb(0,0,0,0.1))
-abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
-axis(side=1,padj=-2,cex.axis=0.60)
-axis(side=2,padj=1.5,cex.axis=0.60)
-mtext(side=1,"Birth year",line=1.1,cex=0.8)
-mtext(side=2,expression(log[10]("Proportion of genome with ROH")),line=1.0,cex=0.8)
-legend("topleft",legend=c("All CEU ROH","All AI ROH","All Short CEU ROH","All Short AI ROH","All Medium ROH","All Medium AI ROH"), col=c("black","black","#D95F02","#D95F02","#7570B3","#7570B3"),lty=c(1,3,1,3,1,3),cex=0.4,bg="white")
-#CEU all ROH 
-lw1 <- loess(log(ROH_allclasses_sums_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
-j1 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j1],lw1$fitted[j1],col="black",lwd=1)
-#AI all
-lw1_ai <- loess(log(ROH_allclasses_sums_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
-j1_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-lines(ai_roh_with_pheno_admixture$estimated_birth_year[j1_ai],lw1_ai$fitted[j1_ai],col="black",lwd=1,lty=3)
-##CEU long ROH 
-#lw2 <- loess(log(ROH_C_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
-#j2 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-#lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j2],lw2$fitted[j2],col="#E7298A",lwd=1)
-#AI long roh
-#lw2_ai <- loess(log(ROH_C_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
-#j2_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-#lines(ai_roh_with_pheno_admixture$estimated_birth_year[j2_ai],lw2_ai$fitted[j2_ai],col="#E7298A",lwd=1,lty=3)
-#CEU medium ROH 
-lw3 <- loess(log(ROH_B_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
-j3 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j3],lw3$fitted[j3],col="#7570B3",lwd=1)
-#AI medium roh
-lw3_ai <- loess(log(ROH_B_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
-j3_ai <- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-lines(ai_roh_with_pheno_admixture$estimated_birth_year[j3_ai],lw3_ai$fitted[j3_ai],col="#7570B3",lwd=1,lty=3)
-#all short ROH 
-lw4 <- loess(log(ROH_A_NORM) ~ estimated_birth_year,data=ceu_roh_with_pheno_admixture)
-j4 <- order(ceu_roh_with_pheno_admixture$estimated_birth_year)
-lines(ceu_roh_with_pheno_admixture$estimated_birth_year[j4],lw4$fitted[j4],col="#D95F02",lwd=1)
-#all short ROH -nam 
-lw4_ai <- loess(log(ROH_A_NORM) ~ estimated_birth_year,data=ai_roh_with_pheno_admixture)
-j4_ai<- order(ai_roh_with_pheno_admixture$estimated_birth_year)
-lines(ai_roh_with_pheno_admixture$estimated_birth_year[j4_ai],lw4_ai$fitted[j4_ai],col="#D95F02",lwd=1,lty=3)
-
-dev.off()
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r}```
-
-
-
-```{r}
 library(vioplot)
 
 ###
@@ -312,8 +238,7 @@ mtext(side=2,"Total long ROH length (Mbps)",line=1.1)
 abline(h=seq(0,8000,by=1000),col=rgb(0,0,0,0.1))
 abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
 #dev.off()
-#Two four panel figures, 1 is ROH across all ancestries, the other just focusing on the Native American segments. But how to really label the axes for this...
-#Just because a segment is medium, dowesnt mean the whole thing falls in an ROH region. Could have been an ROH of Native plus Euro/african 
+
 
 
 
