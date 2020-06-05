@@ -636,13 +636,13 @@ names(all_samples_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
 ###################
 mycolors2=brewer.pal(11, "Spectral")
 ####plotting all individuals 
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_PI_NAM_ancestry_migrant_us_born_within_gens_ALL_with_CI_072219_new_figure3a.pdf",height=2.25,width=2.375,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_PI_NAM_ancestry_migrant_us_born_within_gens_ALL_with_CI_072219_new_figure3a.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.3,0.1))
 plot(1,1,type='n',xlim=c(1,7),ylim=c(0.295,0.31),xlab="",ylab="",xaxt='n',yaxt='n')
 axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s")) 
 axis(side=2,padj=1.5,cex.axis=0.7)
 mtext(side=1,"Decades",line=1.1)
-mtext(side=2,expression(pi~"of Amerindigenous ancestry"),line=1.1)
+mtext(side=2,expression(pi~"of AI ancestry"),line=1.1)
 abline(h=seq(0.295,0.31,by=0.0025),col=rgb(0,0,0,0.1))
 abline(v=seq(0,6,by=1),col=rgb(0,0,0,0.1))
 legend("bottomleft",legend=c("All","US born-US born","US born-Not US born","Not US born-Not US born"), col=c(mycolors2[11],mycolors2[1],mycolors2[10],mycolors2[8]),lty=1,lwd=1,bg="white",cex=0.5)
@@ -658,6 +658,6 @@ polygon(c(migrant_migrant_dataframe$decade_order,rev(migrant_migrant_dataframe$d
 #us born us born
 points(means_all_us_born_us_born_within_gens,pch=19,type="b",col=mycolors2[1])
 polygon(c(us_born_us_born_dataframe$decade_order,rev(us_born_us_born_dataframe$decade_order)),c(us_born_us_born_dataframe$upper_CI,rev(us_born_us_born_dataframe$lower_CI)),col=adjustcolor(mycolors2[1], alpha.f = 0.20), border = NA)
-#dev.off()
+dev.off()
 
 ```
