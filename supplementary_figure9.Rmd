@@ -1,0 +1,80 @@
+---
+title: "supplementary figure 9"
+author: "Melissa Spear"
+date: "09/06/2020"
+output: html_document
+---
+Read in data and add new decade variable 
+
+```{r}
+Mexican_reclassified<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+```
+
+Read in assortative mating data 
+```{r}
+assor_mating=read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_with_parents_global_ancestry_estimates.txt",header=T,sep='\t')
+
+assor_mating_subset<-subset(assor_mating,select=c("IID","NAM","Parent1_NAM","Parent2_NAM"))
+```
+
+Merge data and rename variables 
+```{r}
+mexicans_assor_data<-merge(Mexican_reclassified,assor_mating_subset,by.x=c("V2"),by.y=c("IID"))
+
+mexicans_assor_data_subset=subset(mexicans_assor_data,select=c("V2","NAM.x","estimated_birth_year","US_BORN","Parent1_NAM","Parent2_NAM"))
+
+names(mexicans_assor_data_subset)=c("IID","AI","estimated_birth_year","US_BORN","Parent1_AI","Parent2_AI")
+```
+
+Finding absolute difference between AI ancestry of parents a
+```{r}
+mexicans_assor_data_subset$Parental_AI_Diff<-abs(mexicans_assor_data_subset$Parent1_AI - mexicans_assor_data_subset$Parent2_AI)
+```
+
+
+```{r}
+#break up by decades 
+mexicans_1930s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year<1940),]
+mexicans_1930s$Decade ="1930"
+
+mexicans_1940s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1940 & mexicans_assor_data_subset$estimated_birth_year<1950),]
+mexicans_1940s$Decade ="1940"
+
+mexicans_1950s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1950 & mexicans_assor_data_subset$estimated_birth_year<1960),]
+mexicans_1950s$Decade ="1950"
+
+mexicans_1960s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1960 & mexicans_assor_data_subset$estimated_birth_year<1970),]
+mexicans_1960s$Decade ="1960"
+
+mexicans_1970s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1970 & mexicans_assor_data_subset$estimated_birth_year<1980),]
+mexicans_1970s$Decade ="1970"
+
+mexicans_1980s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1980 & mexicans_assor_data_subset$estimated_birth_year<1990),]
+mexicans_1980s$Decade ="1980"
+
+mexicans_1990s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1990),]
+mexicans_1990s$Decade ="1990"
+
+mexicans_all<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
+```
+
+
+Plot data 
+```{r}
+library(ggplot2)
+library(ggridges)
+require(RColorBrewer)
+
+myColors=brewer.pal(7, "Set1")
+
+#Plotting ridgeline plot
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/supplementary_figure9.pdf",height=2.375,width=2.55,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.6))
+ggplot(mexicans_all,aes(x=Parental_AI_Diff,y=Decade,fill=factor(Decade))) +
+  geom_density_ridges(scale=1)+ theme_bw() + theme(axis.text.x=element_text(size=rel(0.8)),axis.text.y=element_text(size=rel(0.8))) + theme(axis.title.x = element_text(size=10),axis.title.y = element_text(size=10))+
+  scale_y_discrete(expand = expand_scale(mult = c(0.01, .2))) +  scale_fill_manual(values=c("#E41A1C","#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628")) + theme(legend.position = "none") + labs(x="Difference in Parental AI ancestry ", y="Decades")
+#dev.off()
+
+```
+
+
