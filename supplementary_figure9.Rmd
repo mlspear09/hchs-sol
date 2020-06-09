@@ -58,6 +58,47 @@ mexicans_1990s$Decade ="1990"
 mexicans_all<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
 ```
 
+Correlation analyses, the following results were added in manually into supplementary figure 9 on keynote 
+```{r}
+#1930s 
+cor_1930s<-cor.test(mexicans_1930s$Parent1_AI, mexicans_1930s$Parent2_AI)
+cor_1930s
+```
+
+```{r}
+#1940s 
+cor_1940s<-cor.test(mexicans_1940s$Parent1_AI, mexicans_1940s$Parent2_AI)
+cor_1940s
+```
+```{r}
+#1950s 
+cor_1950s<-cor.test(mexicans_1950s$Parent1_AI, mexicans_1950s$Parent2_AI)
+cor_1950s
+```
+
+```{r}
+#1960s 
+cor_1960s<-cor.test(mexicans_1960s$Parent1_AI, mexicans_1960s$Parent2_AI)
+cor_1960s
+```
+
+```{r}
+#1970s 
+cor_1970s<-cor.test(mexicans_1970s$Parent1_AI, mexicans_1970s$Parent2_AI)
+cor_1970s
+```
+
+```{r}
+#1980s 
+cor_1980s<-cor.test(mexicans_1980s$Parent1_AI, mexicans_1980s$Parent2_AI)
+cor_1980s
+```
+
+```{r}
+#1990s 
+cor_1990s<-cor.test(mexicans_1990s$Parent1_AI, mexicans_1990s$Parent2_AI)
+cor_1990s
+```
 
 Plot data 
 ```{r}
@@ -72,7 +113,8 @@ myColors=brewer.pal(7, "Set1")
 par(mar=c(2.1,2.1,0.1,0.6))
 ggplot(mexicans_all,aes(x=Parental_AI_Diff,y=Decade,fill=factor(Decade))) +
   geom_density_ridges(scale=1)+ theme_bw() + theme(axis.text.x=element_text(size=rel(0.8)),axis.text.y=element_text(size=rel(0.8))) + theme(axis.title.x = element_text(size=10),axis.title.y = element_text(size=10))+
-  scale_y_discrete(expand = expand_scale(mult = c(0.01, .2))) +  scale_fill_manual(values=c("#E41A1C","#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628")) + theme(legend.position = "none") + labs(x="Difference in Parental AI ancestry ", y="Decades")
+  scale_y_discrete(expand = expand_scale(mult = c(0.01, .2))) + 
+ scale_fill_manual(values=c("#E41A1C","#FF7F00","#FFFF33","#4DAF4A","#377EB8","#984EA3","#A65628")) + theme(legend.position = "none") + labs(x="Difference in Parental AI ancestry ", y="Decades")
 #dev.off()
 
 ```
