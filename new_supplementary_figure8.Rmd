@@ -110,21 +110,12 @@ dev.off()
 
 ```
 
-```
-
 
 ###############################################
-#Plot of sum of AI tracts in MB
+#Panel B - Plot of sum of AI tracts in MB
 
-
-
-###############################################
-#Plot of normalized AI tracts in BP 
-
-
-AI tracts 
 ```{r}
-#read in summed ROH calls 
+#read in summed AI ROH calls 
 ai_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/NAM_ROH_segments/reclassified_classes/summed_calls2/HCHS_SOL_Mexicans_alldecades_summed_NAM_ROH_calls_newclasses_080519.txt",header=F,sep='\t')
 
 #adding column titles 
@@ -140,17 +131,89 @@ ai_roh_calls$ROH_A_Mb = ai_roh_calls$ROH_A/1000000
 ai_roh_calls$ROH_B_Mb = ai_roh_calls$ROH_B/1000000
 ai_roh_calls$ROH_C_Mb = ai_roh_calls$ROH_C/1000000
 
-#3570 samples made the cut - some samples do not have NAM roh. 
-
-#read in pheno file 
-d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
-
-#subset for needed variables
-pheno_subsetted<-subset(d,select=c("V1","V2","US_BORN","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL"))
-
 #merge with pheno file 
 ai_roh_with_pheno<-merge(ai_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+
+#sum of ROH classes 
+ai_roh_with_pheno$ROH_sums<- rowSums(ai_roh_with_pheno[,c("ROH_A_Mb", "ROH_B_Mb","ROH_C_Mb")])
 ```
+
+
+```{r}
+mexicans_1930s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year<1940),]
+mexicans_1930s_ai$Decade ="1930s"
+
+mexicans_1940s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1940 & ai_roh_with_pheno$estimated_birth_year<1950),]
+mexicans_1940s_ai$Decade ="1940s"
+
+mexicans_1950s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1950 & ai_roh_with_pheno$estimated_birth_year<1960),]
+mexicans_1950s_ai$Decade ="1950s"
+
+mexicans_1960s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1960 & ai_roh_with_pheno$estimated_birth_year<1970),]
+mexicans_1960s_ai$Decade ="1960s"
+
+mexicans_1970s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1970 & ai_roh_with_pheno$estimated_birth_year<1980),]
+mexicans_1970s_ai$Decade ="1970s"
+
+mexicans_1980s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1980 & ai_roh_with_pheno$estimated_birth_year<1990),]
+mexicans_1980s_ai$Decade ="1980s"
+
+mexicans_1990s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1990),]
+mexicans_1990s_ai$Decade ="1990s"
+
+```
+
+
+```{r}
+####Plotting the vioplot for ai ROH, not jsut Native american regions 
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/supplementary_figure8_panelB.pdf",height=2.00,width=6.0,pointsize=10)
+par(mfrow=c(1,4), mai = c(0.25, 0.25, 0.2, 0.1))
+vioplot(mexicans_1930s_ai$ROH_sums,mexicans_1940s_ai$ROH_sums,mexicans_1950s_ai$ROH_sums,mexicans_1960s_ai$ROH_sums,mexicans_1970s_ai$ROH_sums,mexicans_1980s_ai$ROH_sums,mexicans_1990s_ai$ROH_sums,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#1B9E77",xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,1000))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.6)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.30)
+mtext(side=2,"Total AI ROH (Mbps)",line=1.1,cex.lab=0.30)
+abline(h=seq(0,1000,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Small ROH 
+vioplot(mexicans_1930s_ai$ROH_A_Mb,mexicans_1940s_ai$ROH_A_Mb,mexicans_1950s_ai$ROH_A_Mb,mexicans_1960s_ai$ROH_A_Mb,mexicans_1970s_ai$ROH_A_Mb,mexicans_1980s_ai$ROH_A_Mb,mexicans_1990s_ai$ROH_A_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#D95F02",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.axis=0.50)
+mtext(side=2,"Total small AI ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,200,by=50),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Medium ROH
+vioplot(mexicans_1930s_ai$ROH_B_Mb,mexicans_1940s_ai$ROH_B_Mb,mexicans_1950s_ai$ROH_B_Mb,mexicans_1960s_ai$ROH_B_Mb,mexicans_1970s_ai$ROH_B_Mb,mexicans_1980s_ai$ROH_B_Mb,mexicans_1990s_ai$ROH_B_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#7570B3",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.50)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.50)
+mtext(side=2,"Total medium AI ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,200,by=50),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Long ROH
+vioplot(mexicans_1930s_ai$ROH_C_Mb,mexicans_1940s_ai$ROH_C_Mb,mexicans_1950s_ai$ROH_C_Mb,mexicans_1960s_ai$ROH_C_Mb,mexicans_1970s_ai$ROH_C_Mb,mexicans_1980s_ai$ROH_C_Mb,mexicans_1990s_ai$ROH_C_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#E7298A",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,800))
+axis(side=1,padj=-2,cex.axis=0.60,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.50)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.50)
+mtext(side=2,"Total long AI ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,800,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+dev.off()
+```
+
+
+###############################################
+#Plot of normalized AI tracts in BP 
+
+
 
 
 
