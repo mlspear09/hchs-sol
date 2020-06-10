@@ -211,11 +211,7 @@ dev.off()
 
 
 ###############################################
-#Plot of normalized AI tracts in BP 
-
-
-
-
+#Panel C - Plot of normalized AI tracts in BP 
 
 ```{r}
 #Read in the admixture file estimates file 
@@ -248,18 +244,85 @@ ai_roh_with_pheno_admixture$ROH_A_NORM<-(ai_roh_with_pheno_admixture$ROH_A)/((ai
 ai_roh_with_pheno_admixture$ROH_B_NORM<-(ai_roh_with_pheno_admixture$ROH_B)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
 
 #normalizing long ROH by global ancestry
+ai_roh_with_pheno_admixture$ROH_C_NORM<-(ai_roh_with_pheno_admixture$ROH_C)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+
 ```
 
 
 ```{r}
-ai_roh_with_pheno_admixture$ROH_C_NORM<-(ai_roh_with_pheno_admixture$ROH_C)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
+mexicans_1930s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year<1940),]
+mexicans_1930s$Decade ="1930s"
 
-#adjusted BP genome covered in ROH???
-#2781821274 BP when looking at only one haplotype
-ai_roh_with_pheno_admixture$prop_genome_AI_ROH<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
+mexicans_1940s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1940 & ai_roh_with_pheno_admixture$estimated_birth_year<1950),]
+mexicans_1940s$Decade ="1940s"
+
+mexicans_1950s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1950 & ai_roh_with_pheno_admixture$estimated_birth_year<1960),]
+mexicans_1950s$Decade ="1950s"
+
+mexicans_1960s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1960 & ai_roh_with_pheno_admixture$estimated_birth_year<1970),]
+mexicans_1960s$Decade ="1960s"
+
+mexicans_1970s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1970 & ai_roh_with_pheno_admixture$estimated_birth_year<1980),]
+mexicans_1970s$Decade ="1970s"
+
+mexicans_1980s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1980 & ai_roh_with_pheno_admixture$estimated_birth_year<1990),]
+mexicans_1980s$Decade ="1980s"
+
+mexicans_1990s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1990),]
+mexicans_1990s$Decade ="1990s"
+
 ```
 
 
 
+```{r}
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/supplementary_figure8_panelC.pdf",height=2.00,width=6.0,pointsize=10)
+par(mfrow=c(1,4), mai = c(0.25, 0.4, 0.2, 0.1))
+vioplot(mexicans_1930s$ROH_allclasses_sums_NORM,mexicans_1940s$ROH_allclasses_sums_NORM,mexicans_1950s$ROH_allclasses_sums_NORM,mexicans_1960s$ROH_allclasses_sums_NORM,mexicans_1970s$ROH_allclasses_sums_NORM,mexicans_1980s$ROH_allclasses_sums_NORM,mexicans_1990s$ROH_allclasses_sums_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#1B9E77",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.7))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Total AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.7,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Small ROH 
+vioplot(mexicans_1930s$ROH_A_NORM,mexicans_1940s$ROH_A_NORM,mexicans_1950s$ROH_A_NORM,mexicans_1960s$ROH_A_NORM,mexicans_1970s$ROH_A_NORM,mexicans_1980s$ROH_A_NORM,mexicans_1990s$ROH_A_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#D95F02",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Small AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.1,by=0.01),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Medium ROH
+vioplot(mexicans_1930s$ROH_B_NORM,mexicans_1940s$ROH_B_NORM,mexicans_1950s$ROH_B_NORM,mexicans_1960s$ROH_B_NORM,mexicans_1970s$ROH_B_NORM,mexicans_1980s$ROH_B_NORM,mexicans_1990s$ROH_B_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#7570B3",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Medium AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.1,by=0.01),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Long ROH
+vioplot(mexicans_1930s$ROH_C_NORM,mexicans_1940s$ROH_C_NORM,mexicans_1950s$ROH_C_NORM,mexicans_1960s$ROH_C_NORM,mexicans_1970s$ROH_C_NORM,mexicans_1980s$ROH_C_NORM,mexicans_1990s$ROH_C_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#E7298A",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.7))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Long AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.7,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+dev.off()
+
+
+```
 
 
