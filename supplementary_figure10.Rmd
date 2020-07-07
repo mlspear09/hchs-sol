@@ -5,16 +5,15 @@ date: "07/07/2020"
 output: html_document
 ---
 
+Read in and subset data 
 ```{r}
-####Creating table of correaltion coefficients 
 Mexicans_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T, sep='\t')
 
 #Subsetting out the vairables I want to test 
-
 subset_Mexican_pheno<-subset(Mexicans_pheno, 
                              select=c("NAM","estimated_birth_year","SLPA92","ABPA1A", "ABPA1B", "ABPA1C", "ABPA1D", "ABPA1E", "ABPA1F","LABA91","HBA1C_SI","MHEA27","PRBA29","BMI","HEIGHT","LABA1","LABA23","LABA24","LABA25","LABA26","LABA27","ANTA4","LABA3","LABA5","LABA9","LABA6","PRBA25","SBPA5","WAIST_HIP","ANTA10A","ANTA10B","EGFRCKD","EGFRMDRD","MENO_C","LABA66","LABA68","LABA67","LABA69","SLPDUR","ECGA8","LABA82","LABA83","LABA84","LABA103","ANTA5","ECGA10","ECGA11","FEV1_FVC_RATIO","ECGA9","ECGA7","LABA10","LABA11","LABA12","LABA13","LABA14","LABA4","LABA7","LABA8","LABA70","LABA71","LABA79","PRBA36","LABA76","LABA2","LABA81","ECGA12","ECGA264","LABA99","SBPA6","LABA72","LABA80"))
 
-
+#signifance level thresohold based on numbr of traits 
 .05/66
 alpha=0.0007575758
 
@@ -641,15 +640,15 @@ SLPA92_table[1,4]<-SLPA92_corr_test_NAM$p.value
 ```
 
 
-plotting data 
+reorgnaizing tables
 ```{r}
-
 require(RColorBrewer)
 pcol=brewer.pal(11, "RdBu")
 
 #######
 #merging tables into one major table.
 NAM_traits_table<-rbind(HEIGHT_table,LABA83_table,LABA68_table,LABA10_table,LABA11_table,ANTA10B_table,LABA23_table,LABA99_table,LABA80_table,ECGA10_table,LABA25_table, LABA1_table,HBA1C_SI_table,LABA66_table,LABA69_table,FEV1_FVC_RATIO_table,WAIST_HIP_table,EGFRMDRD_table,EGFRCKD_table,PRBA36_table,SBPA6_table,LABA72_table,SBPA5_table)
+
 not_NAM_traits_table<- rbind(LABA103_table,LABA84_table,LABA82_table,ECGA8_table,MHEA27_table,MENO_C_table,LABA9_table,LABA76_table, LABA91_table, ABPA1F_table,ABPA1E_table,ABPA1D_table,ABPA1C_table,ABPA1B_table,ABPA1A_table,SLPA92_table,LABA70_table,ANTA10A_table,LABA5_table,ANTA5_table,LABA6_table,LABA8_table,LABA71_table,ECGA9_table,PRBA29_table,ECGA11_table,PRBA25_table,LABA27_table,BMI_table,ECGA12_table,ECGA264_table,LABA79_table,LABA67_table,LABA2_table,LABA3_table,LABA4_table,LABA7_table,LABA12_table,LABA13_table,LABA24_table,LABA26_table,LABA81_table,ECGA7_table)
 
 ##
@@ -661,31 +660,27 @@ sorted_nam_correlation_plot_table$observation_order <- 1:nrow(sorted_nam_correla
 
 not_sig_points=sorted_nam_correlation_plot_table[which(sorted_nam_correlation_plot_table$NAM_P_value>0.00076),]
 
+```
 
-
+```{r}
 plot_labels=c("Height","Hip girth","HDL cholesterol","% neutrophils", "Age at natural menopause","Neutrophil count","LDL cholesterol","Total cholesterol", "White blood count","Average diastolic blood pressure","Predicted FVC","Monocyte count","Average systolic blood pressure","Waist girth","Left brachial systolic blood pressure","Creatinine","% Fat","FVC","Ferritin","% Transferrin saturation","Right brachial systolic blood pressure","Heart rate, ventricular","Mean corpuscular volume","High-sensitivity C-reactive protein","PR duration","Mean corpuscular hemoglobin","Heart rate, atrial","Basophil count","Right dorsalis pedis systolic blood pressure","FEV1","Iron","Left posterior tibial systolic blood pressure","Right posterior tibial systolic blood pressure","Mean corpuscular hemoglobin concentration","Left dorsalis pedis systolic blood pressure","QTc calculated","Eosinophil count","% Monocytes","Hemoglobin","HRV","% Hematocrit","Body mass index","Mean SpO2","Platelet count","Albumin/creatine ratio","Age at which menses began","Lymphocyte count","Red blood cell count","QT duration","Urine microalbumin, random","% Eosinophils","Triglycerides","Urine creatinine, random","Heart rate, ventricular","Glucose, fasting","Glucose, post OGTT","% Glycosylated hemoglobin","Glycosylated hemoglobin (HbA1c)","Total iron binding capacity","Waist to hip ratio","QRS duration","% Lymphocytes","FEV1 FVC Ratio","% Immature granulocytes","EGFR MDRD","EGFR CKD Epi")
 
 
 
 
 #####plotting the points 
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/supplementary_figure10.pdf",height=4.25,width=6,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/supplementary_figure10.pdf",height=4.25,width=6,pointsize=10)
 par(mar=c(13,2.1,0.1,0.1))
 plot(1,1,type='n',xlim=c(1,66),ylim=c(-0.3,0.3),xlab="",ylab="",xaxt='n',yaxt='n')
 abline(h=seq(-0.3,0.3,by=0.1),col=rgb(0,0,0,0.1))
-#abline(v=seq(-0.6,0.6,by=0.1),col=rgb(0,0,0,0.1))
 abline(h=0)
 axis(side=1,padj=0.4,cex.axis=0.7, at=c(1:66),labels=(plot_labels),srt=45,las=2,tck=-0.01)
 #axis(side=1,padj=0.4,cex.axis=0.7, tck=-0.01)
-#axis(side=2,padj=1.5,cex.axis=0.7)
-#text(x = seq(1, 66, by=1),par("usr")[3] - 0.2,labels=(plot_labels),srt = 45, pos = 1, xpd = TRUE)
+axis(side=2,padj=1.5,cex.axis=0.7)
 mtext(side=2,expression(tau),line=1.1)
 points(sorted_nam_correlation_plot_table$observation_order,sorted_nam_correlation_plot_table$NAM_tau, pch=15, col=pcol[4],cex=1)
 points(not_sig_points$observation_order,not_sig_points$NAM_tau, pch=15, col="black",cex=1)
-#points(diamonds$estimated_birth_year,diamonds$NAM, pch=18, col=pcol[11],cex=1.25)
 legend("topleft", legend=c("p<0.00075","p>0.00075"),
        col=c(pcol[4],"black"), pch=c(15,15),cex=0.6,bg="white")
-#dev.off()
-
-
+dev.off()
 ```
