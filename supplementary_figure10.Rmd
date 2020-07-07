@@ -1,0 +1,691 @@
+---
+title: "supplementary_figure 10"
+author: "Melissa Spear"
+date: "07/07/2020"
+output: html_document
+---
+
+```{r}
+####Creating table of correaltion coefficients 
+Mexicans_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T, sep='\t')
+
+#Subsetting out the vairables I want to test 
+
+subset_Mexican_pheno<-subset(Mexicans_pheno, 
+                             select=c("NAM","estimated_birth_year","SLPA92","ABPA1A", "ABPA1B", "ABPA1C", "ABPA1D", "ABPA1E", "ABPA1F","LABA91","HBA1C_SI","MHEA27","PRBA29","BMI","HEIGHT","LABA1","LABA23","LABA24","LABA25","LABA26","LABA27","ANTA4","LABA3","LABA5","LABA9","LABA6","PRBA25","SBPA5","WAIST_HIP","ANTA10A","ANTA10B","EGFRCKD","EGFRMDRD","MENO_C","LABA66","LABA68","LABA67","LABA69","SLPDUR","ECGA8","LABA82","LABA83","LABA84","LABA103","ANTA5","ECGA10","ECGA11","FEV1_FVC_RATIO","ECGA9","ECGA7","LABA10","LABA11","LABA12","LABA13","LABA14","LABA4","LABA7","LABA8","LABA70","LABA71","LABA79","PRBA36","LABA76","LABA2","LABA81","ECGA12","ECGA264","LABA99","SBPA6","LABA72","LABA80"))
+
+
+.05/66
+alpha=0.0007575758
+
+```
+
+
+Creating table of correlation coeffcients to then plot later 
+```{r}
+##LABA2 <- 
+LABA2_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA2,use="complete.obs",type="kendall")
+
+LABA2_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA2_table[1,1]<-"LABA2"
+LABA2_table[1,2]<-LABA2_corr_test_NAM$parameter+2
+LABA2_table[1,3]<-LABA2_corr_test_NAM$estimate
+LABA2_table[1,4]<-LABA2_corr_test_NAM$p.value
+
+##LABA3 <- 
+LABA3_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA3,use="complete.obs",type="kendall")
+
+LABA3_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA3_table[1,1]<-"LABA3"
+LABA3_table[1,2]<-LABA3_corr_test_NAM$parameter+2
+LABA3_table[1,3]<-LABA3_corr_test_NAM$estimate
+LABA3_table[1,4]<-LABA3_corr_test_NAM$p.value
+
+##LABA4 
+LABA4_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA4,use="complete.obs",type="kendall")
+
+LABA4_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA4_table[1,1]<-"LABA4"
+LABA4_table[1,2]<-LABA4_corr_test_NAM$parameter+2
+LABA4_table[1,3]<-LABA4_corr_test_NAM$estimate
+LABA4_table[1,4]<-LABA4_corr_test_NAM$p.value
+
+##LABA7
+LABA7_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA7,use="complete.obs",type="kendall")
+
+LABA7_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA7_table[1,1]<-"LABA7"
+LABA7_table[1,2]<-LABA7_corr_test_NAM$parameter+2
+LABA7_table[1,3]<-LABA7_corr_test_NAM$estimate
+LABA7_table[1,4]<-LABA7_corr_test_NAM$p.value
+
+##LABA12
+LABA12_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA12,use="complete.obs",type="kendall")
+
+LABA12_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA12_table[1,1]<-"LABA12"
+LABA12_table[1,2]<-LABA12_corr_test_NAM$parameter+2
+LABA12_table[1,3]<-LABA12_corr_test_NAM$estimate
+LABA12_table[1,4]<-LABA12_corr_test_NAM$p.value
+
+##LABA13
+LABA13_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA13,use="complete.obs",type="kendall")
+
+LABA13_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA13_table[1,1]<-"LABA13"
+LABA13_table[1,2]<-LABA13_corr_test_NAM$parameter+2
+LABA13_table[1,3]<-LABA13_corr_test_NAM$estimate
+LABA13_table[1,4]<-LABA13_corr_test_NAM$p.value
+
+##LABA24
+LABA24_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA24,use="complete.obs",type="kendall")
+
+LABA24_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA24_table[1,1]<-"LABA24"
+LABA24_table[1,2]<-LABA24_corr_test_NAM$parameter+2
+LABA24_table[1,3]<-LABA24_corr_test_NAM$estimate
+LABA24_table[1,4]<-LABA24_corr_test_NAM$p.value
+
+##LABA26
+LABA26_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA26,use="complete.obs",type="kendall")
+
+LABA26_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA26_table[1,1]<-"LABA26"
+LABA26_table[1,2]<-LABA26_corr_test_NAM$parameter+2
+LABA26_table[1,3]<-LABA26_corr_test_NAM$estimate
+LABA26_table[1,4]<-LABA26_corr_test_NAM$p.value
+
+##LABA81
+LABA81_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA81,use="complete.obs",type="kendall")
+
+LABA81_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA81_table[1,1]<-"LABA81"
+LABA81_table[1,2]<-LABA81_corr_test_NAM$parameter+2
+LABA81_table[1,3]<-LABA81_corr_test_NAM$estimate
+LABA81_table[1,4]<-LABA81_corr_test_NAM$p.value
+
+
+##ECGA7
+ECGA7_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ECGA7,use="complete.obs",type="kendall")
+
+ECGA7_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ECGA7_table[1,1]<-"ECGA7"
+ECGA7_table[1,2]<-ECGA7_corr_test_NAM$parameter+2
+ECGA7_table[1,3]<-ECGA7_corr_test_NAM$estimate
+ECGA7_table[1,4]<-ECGA7_corr_test_NAM$p.value
+
+
+##LABA68 <- 
+LABA68_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA68,use="complete.obs",type="kendall")
+
+LABA68_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA68_table[1,1]<-"LABA68"
+LABA68_table[1,2]<-LABA68_corr_test_NAM$parameter+2
+LABA68_table[1,3]<-LABA68_corr_test_NAM$estimate
+LABA68_table[1,4]<-LABA68_corr_test_NAM$p.value
+
+##LABA10 <- 
+LABA10_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA10,use="complete.obs",type="kendall")
+
+LABA10_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA10_table[1,1]<-"LABA10"
+LABA10_table[1,2]<-LABA10_corr_test_NAM$parameter+2
+LABA10_table[1,3]<-LABA10_corr_test_NAM$estimate
+LABA10_table[1,4]<-LABA10_corr_test_NAM$p.value
+
+##LABA11 <- 
+LABA11_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA11,use="complete.obs",type="kendall")
+
+LABA11_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA11_table[1,1]<-"LABA11"
+LABA11_table[1,2]<-LABA11_corr_test_NAM$parameter+2
+LABA11_table[1,3]<-LABA11_corr_test_NAM$estimate
+LABA11_table[1,4]<-LABA11_corr_test_NAM$p.value
+
+##ANTA10B <- 
+ANTA10B_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ANTA10B,use="complete.obs",type="kendall")
+
+ANTA10B_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ANTA10B_table[1,1]<-"ANTA10B"
+ANTA10B_table[1,2]<-ANTA10B_corr_test_NAM$parameter+2
+ANTA10B_table[1,3]<-ANTA10B_corr_test_NAM$estimate
+ANTA10B_table[1,4]<-ANTA10B_corr_test_NAM$p.value
+
+##LABA23 <- 
+LABA23_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA23,use="complete.obs",type="kendall")
+
+LABA23_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA23_table[1,1]<-"LABA23"
+LABA23_table[1,2]<-LABA23_corr_test_NAM$parameter+2
+LABA23_table[1,3]<-LABA23_corr_test_NAM$estimate
+LABA23_table[1,4]<-LABA23_corr_test_NAM$p.value
+
+##LABA99 <- 
+LABA99_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA99,use="complete.obs",type="kendall")
+
+LABA99_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA99_table[1,1]<-"LABA99"
+LABA99_table[1,2]<-LABA99_corr_test_NAM$parameter+2
+LABA99_table[1,3]<-LABA99_corr_test_NAM$estimate
+LABA99_table[1,4]<-LABA99_corr_test_NAM$p.value
+
+
+##LABA80 <- 
+LABA80_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA80,use="complete.obs",type="kendall")
+
+LABA80_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA80_table[1,1]<-"LABA80"
+LABA80_table[1,2]<-LABA80_corr_test_NAM$parameter+2
+LABA80_table[1,3]<-LABA80_corr_test_NAM$estimate
+LABA80_table[1,4]<-LABA80_corr_test_NAM$p.value
+
+##LABA5 <- 
+LABA5_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA5,use="complete.obs",type="kendall")
+
+LABA5_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA5_table[1,1]<-"LABA5"
+LABA5_table[1,2]<-LABA5_corr_test_NAM$parameter+2
+LABA5_table[1,3]<-LABA5_corr_test_NAM$estimate
+LABA5_table[1,4]<-LABA5_corr_test_NAM$p.value
+
+##ANTA5 <- 
+ANTA5_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ANTA5,use="complete.obs",type="kendall")
+
+ANTA5_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ANTA5_table[1,1]<-"ANTA5"
+ANTA5_table[1,2]<-ANTA5_corr_test_NAM$parameter+2
+ANTA5_table[1,3]<-ANTA5_corr_test_NAM$estimate
+ANTA5_table[1,4]<-ANTA5_corr_test_NAM$p.value
+
+##LABA6 <- 
+LABA6_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA6,use="complete.obs",type="kendall")
+
+LABA6_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA6_table[1,1]<-"LABA6"
+LABA6_table[1,2]<-LABA6_corr_test_NAM$parameter+2
+LABA6_table[1,3]<-LABA6_corr_test_NAM$estimate
+LABA6_table[1,4]<-LABA6_corr_test_NAM$p.value
+
+##LABA8 <- 
+LABA8_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA8,use="complete.obs",type="kendall")
+
+LABA8_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA8_table[1,1]<-"LABA8"
+LABA8_table[1,2]<-LABA8_corr_test_NAM$parameter+2
+LABA8_table[1,3]<-LABA8_corr_test_NAM$estimate
+LABA8_table[1,4]<-LABA8_corr_test_NAM$p.value
+
+##LABA71 <- 
+LABA71_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA71,use="complete.obs",type="kendall")
+
+LABA71_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA71_table[1,1]<-"LABA71"
+LABA71_table[1,2]<-LABA71_corr_test_NAM$parameter+2
+LABA71_table[1,3]<-LABA71_corr_test_NAM$estimate
+LABA71_table[1,4]<-LABA71_corr_test_NAM$p.value
+
+##SBPA5 <- 
+SBPA5_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$SBPA5,use="complete.obs",type="kendall")
+
+SBPA5_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+SBPA5_table[1,1]<-"SBPA5"
+SBPA5_table[1,2]<-SBPA5_corr_test_NAM$parameter+2
+SBPA5_table[1,3]<-SBPA5_corr_test_NAM$estimate
+SBPA5_table[1,4]<-SBPA5_corr_test_NAM$p.value
+
+##ECGA9 <- 
+ECGA9_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ECGA9,use="complete.obs",type="kendall")
+
+ECGA9_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ECGA9_table[1,1]<-"ECGA9"
+ECGA9_table[1,2]<-ECGA9_corr_test_NAM$parameter+2
+ECGA9_table[1,3]<-ECGA9_corr_test_NAM$estimate
+ECGA9_table[1,4]<-ECGA9_corr_test_NAM$p.value
+
+##PRBA29 <- 
+PRBA29_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$PRBA29,use="complete.obs",type="kendall")
+
+PRBA29_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+PRBA29_table[1,1]<-"PRBA29"
+PRBA29_table[1,2]<-PRBA29_corr_test_NAM$parameter+2
+PRBA29_table[1,3]<-PRBA29_corr_test_NAM$estimate
+PRBA29_table[1,4]<-PRBA29_corr_test_NAM$p.value
+
+##ECGA11 <- 
+ECGA11_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ECGA11,use="complete.obs",type="kendall")
+
+ECGA11_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ECGA11_table[1,1]<-"ECGA11"
+ECGA11_table[1,2]<-ECGA11_corr_test_NAM$parameter+2
+ECGA11_table[1,3]<-ECGA11_corr_test_NAM$estimate
+ECGA11_table[1,4]<-ECGA11_corr_test_NAM$p.value
+
+##PRBA25 <- 
+PRBA25_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$PRBA25,use="complete.obs",type="kendall")
+
+PRBA25_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+PRBA25_table[1,1]<-"PRBA25"
+PRBA25_table[1,2]<-PRBA25_corr_test_NAM$parameter+2
+PRBA25_table[1,3]<-PRBA25_corr_test_NAM$estimate
+PRBA25_table[1,4]<-PRBA25_corr_test_NAM$p.value
+
+##LABA27 <- 
+LABA27_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA27,use="complete.obs",type="kendall")
+
+LABA27_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA27_table[1,1]<-"LABA27"
+LABA27_table[1,2]<-LABA27_corr_test_NAM$parameter+2
+LABA27_table[1,3]<-LABA27_corr_test_NAM$estimate
+LABA27_table[1,4]<-LABA27_corr_test_NAM$p.value
+
+##BMI <- 
+BMI_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$BMI,use="complete.obs",type="kendall")
+
+BMI_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+BMI_table[1,1]<-"BMI"
+BMI_table[1,2]<-BMI_corr_test_NAM$parameter+2
+BMI_table[1,3]<-BMI_corr_test_NAM$estimate
+BMI_table[1,4]<-BMI_corr_test_NAM$p.value
+
+##ECGA12 <- 
+ECGA12_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ECGA12,use="complete.obs",type="kendall")
+
+ECGA12_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ECGA12_table[1,1]<-"ECGA12"
+ECGA12_table[1,2]<-ECGA12_corr_test_NAM$parameter+2
+ECGA12_table[1,3]<-ECGA12_corr_test_NAM$estimate
+ECGA12_table[1,4]<-ECGA12_corr_test_NAM$p.value
+
+##ECGA264 <- 
+ECGA264_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ECGA264,use="complete.obs",type="kendall")
+
+ECGA264_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ECGA264_table[1,1]<-"ECGA264"
+ECGA264_table[1,2]<-ECGA264_corr_test_NAM$parameter+2
+ECGA264_table[1,3]<-ECGA264_corr_test_NAM$estimate
+ECGA264_table[1,4]<-ECGA264_corr_test_NAM$p.value
+
+##LABA79 <- 
+LABA79_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA79,use="complete.obs",type="kendall")
+
+LABA79_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA79_table[1,1]<-"LABA79"
+LABA79_table[1,2]<-LABA79_corr_test_NAM$parameter+2
+LABA79_table[1,3]<-LABA79_corr_test_NAM$estimate
+LABA79_table[1,4]<-LABA79_corr_test_NAM$p.value
+
+##LABA67 <- 
+LABA67_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA67,use="complete.obs",type="kendall")
+
+LABA67_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA67_table[1,1]<-"LABA67"
+LABA67_table[1,2]<-LABA67_corr_test_NAM$parameter+2
+LABA67_table[1,3]<-LABA67_corr_test_NAM$estimate
+LABA67_table[1,4]<-LABA67_corr_test_NAM$p.value
+
+##HEIGHT <- 
+HEIGHT_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$HEIGHT,use="complete.obs",type="kendall")
+
+HEIGHT_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+HEIGHT_table[1,1]<-"HEIGHT"
+HEIGHT_table[1,2]<-HEIGHT_corr_test_NAM$parameter+2
+HEIGHT_table[1,3]<-HEIGHT_corr_test_NAM$estimate
+HEIGHT_table[1,4]<-HEIGHT_corr_test_NAM$p.value
+
+##LABA70 <- 
+LABA70_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA70,use="complete.obs",type="kendall")
+
+LABA70_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA70_table[1,1]<-"LABA70"
+LABA70_table[1,2]<-LABA70_corr_test_NAM$parameter+2
+LABA70_table[1,3]<-LABA70_corr_test_NAM$estimate
+LABA70_table[1,4]<-LABA70_corr_test_NAM$p.value
+
+##LABA83 <- 
+LABA83_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA83,use="complete.obs",type="kendall")
+
+LABA83_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA83_table[1,1]<-"LABA83"
+LABA83_table[1,2]<-LABA83_corr_test_NAM$parameter+2
+LABA83_table[1,3]<-LABA83_corr_test_NAM$estimate
+LABA83_table[1,4]<-LABA83_corr_test_NAM$p.value
+
+##LABA66 <- 
+LABA66_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA66,use="complete.obs",type="kendall")
+
+LABA66_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA66_table[1,1]<-"LABA66"
+LABA66_table[1,2]<-LABA66_corr_test_NAM$parameter+2
+LABA66_table[1,3]<-LABA66_corr_test_NAM$estimate
+LABA66_table[1,4]<-LABA66_corr_test_NAM$p.value
+
+##LABA69 <- 
+LABA69_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA69,use="complete.obs",type="kendall")
+
+LABA69_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA69_table[1,1]<-"LABA69"
+LABA69_table[1,2]<-LABA69_corr_test_NAM$parameter+2
+LABA69_table[1,3]<-LABA69_corr_test_NAM$estimate
+LABA69_table[1,4]<-LABA69_corr_test_NAM$p.value
+
+##FEV1_FVC_RATIO <- 
+FEV1_FVC_RATIO_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$FEV1_FVC_RATIO,use="complete.obs",type="kendall")
+
+FEV1_FVC_RATIO_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+FEV1_FVC_RATIO_table[1,1]<-"FEV1_FVC_RATIO"
+FEV1_FVC_RATIO_table[1,2]<-FEV1_FVC_RATIO_corr_test_NAM$parameter+2
+FEV1_FVC_RATIO_table[1,3]<-FEV1_FVC_RATIO_corr_test_NAM$estimate
+FEV1_FVC_RATIO_table[1,4]<-FEV1_FVC_RATIO_corr_test_NAM$p.value
+
+##WAIST_HIP <- 
+WAIST_HIP_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$WAIST_HIP,use="complete.obs",type="kendall")
+
+WAIST_HIP_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+WAIST_HIP_table[1,1]<-"WAIST_HIP"
+WAIST_HIP_table[1,2]<-WAIST_HIP_corr_test_NAM$parameter+2
+WAIST_HIP_table[1,3]<-WAIST_HIP_corr_test_NAM$estimate
+WAIST_HIP_table[1,4]<-WAIST_HIP_corr_test_NAM$p.value
+
+##ANTA10A <- 
+ANTA10A_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ANTA10A,use="complete.obs",type="kendall")
+
+ANTA10A_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ANTA10A_table[1,1]<-"ANTA10A"
+ANTA10A_table[1,2]<-ANTA10A_corr_test_NAM$parameter+2
+ANTA10A_table[1,3]<-ANTA10A_corr_test_NAM$estimate
+ANTA10A_table[1,4]<-ANTA10A_corr_test_NAM$p.value
+
+
+##EGFRMDRD <- 
+EGFRMDRD_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$EGFRMDRD,use="complete.obs",type="kendall")
+
+EGFRMDRD_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+EGFRMDRD_table[1,1]<-"EGFRMDRD"
+EGFRMDRD_table[1,2]<-EGFRMDRD_corr_test_NAM$parameter+2
+EGFRMDRD_table[1,3]<-EGFRMDRD_corr_test_NAM$estimate
+EGFRMDRD_table[1,4]<-EGFRMDRD_corr_test_NAM$p.value
+
+##EGFRCKD <- 
+EGFRCKD_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$EGFRCKD,use="complete.obs",type="kendall")
+
+EGFRCKD_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+EGFRCKD_table[1,1]<-"EGFRCKD"
+EGFRCKD_table[1,2]<-EGFRCKD_corr_test_NAM$parameter+2
+EGFRCKD_table[1,3]<-EGFRCKD_corr_test_NAM$estimate
+EGFRCKD_table[1,4]<-EGFRCKD_corr_test_NAM$p.value
+
+##PRBA36 <- 
+PRBA36_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$PRBA36,use="complete.obs",type="kendall")
+
+PRBA36_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+PRBA36_table[1,1]<-"PRBA36"
+PRBA36_table[1,2]<-PRBA36_corr_test_NAM$parameter+2
+PRBA36_table[1,3]<-PRBA36_corr_test_NAM$estimate
+PRBA36_table[1,4]<-PRBA36_corr_test_NAM$p.value
+
+##SBPA6 <- 
+SBPA6_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$SBPA6,use="complete.obs",type="kendall")
+
+SBPA6_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+SBPA6_table[1,1]<-"SBPA6"
+SBPA6_table[1,2]<-SBPA6_corr_test_NAM$parameter+2
+SBPA6_table[1,3]<-SBPA6_corr_test_NAM$estimate
+SBPA6_table[1,4]<-SBPA6_corr_test_NAM$p.value
+
+##LABA72 <- 
+LABA72_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA72,use="complete.obs",type="kendall")
+
+LABA72_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA72_table[1,1]<-"LABA72"
+LABA72_table[1,2]<-LABA72_corr_test_NAM$parameter+2
+LABA72_table[1,3]<-LABA72_corr_test_NAM$estimate
+LABA72_table[1,4]<-LABA72_corr_test_NAM$p.value
+
+
+####Missing variables 
+
+##LABA76 <- Creatinine (mg/dL)
+LABA76_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA76,use="complete.obs",type="kendall")
+
+LABA76_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA76_table[1,1]<-"LABA76"
+LABA76_table[1,2]<-LABA76_corr_test_NAM$parameter+2
+LABA76_table[1,3]<-LABA76_corr_test_NAM$estimate
+LABA76_table[1,4]<-LABA76_corr_test_NAM$p.value
+
+##LABA1 <- White blood count (x10e9)
+LABA1_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA1,use="complete.obs",type="kendall")
+
+LABA1_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA1_table[1,1]<-"LABA1"
+LABA1_table[1,2]<-LABA1_corr_test_NAM$parameter+2
+LABA1_table[1,3]<-LABA1_corr_test_NAM$estimate
+LABA1_table[1,4]<-LABA1_corr_test_NAM$p.value
+
+##LABA25 <- Monocyte count (x10e9)
+LABA25_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA25,use="complete.obs",type="kendall")
+
+LABA25_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA25_table[1,1]<-"LABA25"
+LABA25_table[1,2]<-LABA25_corr_test_NAM$parameter+2
+LABA25_table[1,3]<-LABA25_corr_test_NAM$estimate
+LABA25_table[1,4]<-LABA25_corr_test_NAM$p.value
+
+##LABA9 <- Platelet count (x10e9)
+LABA9_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA9,use="complete.obs",type="kendall")
+
+LABA9_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA9_table[1,1]<-"LABA9"
+LABA9_table[1,2]<-LABA9_corr_test_NAM$parameter+2
+LABA9_table[1,3]<-LABA9_corr_test_NAM$estimate
+LABA9_table[1,4]<-LABA9_corr_test_NAM$p.value
+
+
+##MENO_C <- Natural Menopause began 
+MENO_C_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$MENO_C,use="complete.obs",type="kendall")
+
+MENO_C_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+MENO_C_table[1,1]<-"MENO_C"
+MENO_C_table[1,2]<-MENO_C_corr_test_NAM$parameter+2
+MENO_C_table[1,3]<-MENO_C_corr_test_NAM$estimate
+MENO_C_table[1,4]<-MENO_C_corr_test_NAM$p.value
+
+##MHEA27 <- Age at which menses began 
+MHEA27_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$MHEA27,use="complete.obs",type="kendall")
+
+MHEA27_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+MHEA27_table[1,1]<-"MHEA27"
+MHEA27_table[1,2]<-MHEA27_corr_test_NAM$parameter+2
+MHEA27_table[1,3]<-MHEA27_corr_test_NAM$estimate
+MHEA27_table[1,4]<-MHEA27_corr_test_NAM$p.value
+
+
+##ECGA8 <- Heart rate, ventricular
+ECGA8_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ECGA8,use="complete.obs",type="kendall")
+
+ECGA8_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ECGA8_table[1,1]<-"ECGA8"
+ECGA8_table[1,2]<-ECGA8_corr_test_NAM$parameter+2
+ECGA8_table[1,3]<-ECGA8_corr_test_NAM$estimate
+ECGA8_table[1,4]<-ECGA8_corr_test_NAM$p.value
+
+##LABA82 <- Iron (ug/dL) 
+LABA82_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA82,use="complete.obs",type="kendall")
+
+LABA82_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA82_table[1,1]<-"LABA82"
+LABA82_table[1,2]<-LABA82_corr_test_NAM$parameter+2
+LABA82_table[1,3]<-LABA82_corr_test_NAM$estimate
+LABA82_table[1,4]<-LABA82_corr_test_NAM$p.value
+
+##LABA84 <- % Transferrin saturation
+LABA84_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA84,use="complete.obs",type="kendall")
+
+LABA84_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA84_table[1,1]<-"LABA84"
+LABA84_table[1,2]<-LABA84_corr_test_NAM$parameter+2
+LABA84_table[1,3]<-LABA84_corr_test_NAM$estimate
+LABA84_table[1,4]<-LABA84_corr_test_NAM$p.value
+
+##LABA103 <- Ferritin (ug/L)
+LABA103_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA103,use="complete.obs",type="kendall")
+
+LABA103_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA103_table[1,1]<-"LABA103"
+LABA103_table[1,2]<-LABA103_corr_test_NAM$parameter+2
+LABA103_table[1,3]<-LABA103_corr_test_NAM$estimate
+LABA103_table[1,4]<-LABA103_corr_test_NAM$p.value
+
+##ECGA10 <- 
+ECGA10_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ECGA10,use="complete.obs",type="kendall")
+
+ECGA10_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ECGA10_table[1,1]<-"ECGA10"
+ECGA10_table[1,2]<-ECGA10_corr_test_NAM$parameter+2
+ECGA10_table[1,3]<-ECGA10_corr_test_NAM$estimate
+ECGA10_table[1,4]<-ECGA10_corr_test_NAM$p.value
+
+
+##HBA1C_SI <- Glycosylated hemoglobin (HbA1c) in SI units (mmol/mol)
+#The glycated hemoglobin (HbA1c) test is an important blood test that determine how well you are managing your diabetes. Hemoglobin is a substance in red blood cells that carries oxygen to tissues. It can also attach to sugar in the blood, forming a substance called glycated hemoglobin, or Hemoglobin A1C
+HBA1C_SI_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$HBA1C_SI,use="complete.obs",type="kendall")
+
+HBA1C_SI_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+HBA1C_SI_table[1,1]<-"HBA1C_SI"
+HBA1C_SI_table[1,2]<-HBA1C_SI_corr_test_NAM$parameter+2
+HBA1C_SI_table[1,3]<-HBA1C_SI_corr_test_NAM$estimate
+HBA1C_SI_table[1,4]<-HBA1C_SI_corr_test_NAM$p.value
+
+
+##LABA91 <- High-sensitivity C-reactive protein (mg/L)
+LABA91_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$LABA91,use="complete.obs",type="kendall")
+
+LABA91_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+LABA91_table[1,1]<-"LABA91"
+LABA91_table[1,2]<-LABA91_corr_test_NAM$parameter+2
+LABA91_table[1,3]<-LABA91_corr_test_NAM$estimate
+LABA91_table[1,4]<-LABA91_corr_test_NAM$p.value
+
+
+#differnet blood presures 
+
+##ABPA1A <- Right brachial systolic blood pressure (mm HG) 
+ABPA1A_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ABPA1A,use="complete.obs",type="kendall")
+
+ABPA1A_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ABPA1A_table[1,1]<-"ABPA1A"
+ABPA1A_table[1,2]<-ABPA1A_corr_test_NAM$parameter+2
+ABPA1A_table[1,3]<-ABPA1A_corr_test_NAM$estimate
+ABPA1A_table[1,4]<-ABPA1A_corr_test_NAM$p.value
+
+##ABPA1B <- Right dorsalis pedis systolic blood pressure (mm HG) 
+ABPA1B_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ABPA1B,use="complete.obs",type="kendall")
+
+ABPA1B_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ABPA1B_table[1,1]<-"ABPA1B"
+ABPA1B_table[1,2]<-ABPA1B_corr_test_NAM$parameter+2
+ABPA1B_table[1,3]<-ABPA1B_corr_test_NAM$estimate
+ABPA1B_table[1,4]<-ABPA1B_corr_test_NAM$p.value
+
+
+##ABPA1C <- Right posterior tibial systolic blood pressure (mm HG) 
+ABPA1C_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ABPA1C,use="complete.obs",type="kendall")
+
+ABPA1C_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ABPA1C_table[1,1]<-"ABPA1C"
+ABPA1C_table[1,2]<-ABPA1C_corr_test_NAM$parameter+2
+ABPA1C_table[1,3]<-ABPA1C_corr_test_NAM$estimate
+ABPA1C_table[1,4]<-ABPA1C_corr_test_NAM$p.value
+
+
+##ABPA1D <- Left posterior tibial systolic blood pressure (mm HG) 
+ABPA1D_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ABPA1D,use="complete.obs",type="kendall")
+
+ABPA1D_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ABPA1D_table[1,1]<-"ABPA1D"
+ABPA1D_table[1,2]<-ABPA1D_corr_test_NAM$parameter+2
+ABPA1D_table[1,3]<-ABPA1D_corr_test_NAM$estimate
+ABPA1D_table[1,4]<-ABPA1D_corr_test_NAM$p.value
+
+
+##ABPA1E <- Left dorsalis pedis systolic blood pressure (mm HG) 
+ABPA1E_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ABPA1E,use="complete.obs",type="kendall")
+
+ABPA1E_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ABPA1E_table[1,1]<-"ABPA1E"
+ABPA1E_table[1,2]<-ABPA1E_corr_test_NAM$parameter+2
+ABPA1E_table[1,3]<-ABPA1E_corr_test_NAM$estimate
+ABPA1E_table[1,4]<-ABPA1E_corr_test_NAM$p.value
+
+
+##ABPA1F <- Left brachial systolic blood pressure (mm HG)
+ABPA1F_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$ABPA1F,use="complete.obs",type="kendall")
+
+ABPA1F_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+ABPA1F_table[1,1]<-"ABPA1F"
+ABPA1F_table[1,2]<-ABPA1F_corr_test_NAM$parameter+2
+ABPA1F_table[1,3]<-ABPA1F_corr_test_NAM$estimate
+ABPA1F_table[1,4]<-ABPA1F_corr_test_NAM$p.value
+
+##SLPA92 <- Mean SpO2
+SLPA92_corr_test_NAM<-cor.test(subset_Mexican_pheno$NAM,subset_Mexican_pheno$SLPA92,use="complete.obs",type="kendall")
+
+SLPA92_table<-setNames(data.frame(matrix(ncol=4, nrow=0)), c("Phenotype","N","NAM-tau","NAM-P value"))
+SLPA92_table[1,1]<-"SLPA92"
+SLPA92_table[1,2]<-SLPA92_corr_test_NAM$parameter+2
+SLPA92_table[1,3]<-SLPA92_corr_test_NAM$estimate
+SLPA92_table[1,4]<-SLPA92_corr_test_NAM$p.value
+
+#didnt pick laba 14,15,16,17,18,19,20,21 because of spread
+
+```
+
+
+plotting data 
+```{r}
+
+require(RColorBrewer)
+pcol=brewer.pal(11, "RdBu")
+
+#######
+#merging tables into one major table.
+NAM_traits_table<-rbind(HEIGHT_table,LABA83_table,LABA68_table,LABA10_table,LABA11_table,ANTA10B_table,LABA23_table,LABA99_table,LABA80_table,ECGA10_table,LABA25_table, LABA1_table,HBA1C_SI_table,LABA66_table,LABA69_table,FEV1_FVC_RATIO_table,WAIST_HIP_table,EGFRMDRD_table,EGFRCKD_table,PRBA36_table,SBPA6_table,LABA72_table,SBPA5_table)
+not_NAM_traits_table<- rbind(LABA103_table,LABA84_table,LABA82_table,ECGA8_table,MHEA27_table,MENO_C_table,LABA9_table,LABA76_table, LABA91_table, ABPA1F_table,ABPA1E_table,ABPA1D_table,ABPA1C_table,ABPA1B_table,ABPA1A_table,SLPA92_table,LABA70_table,ANTA10A_table,LABA5_table,ANTA5_table,LABA6_table,LABA8_table,LABA71_table,ECGA9_table,PRBA29_table,ECGA11_table,PRBA25_table,LABA27_table,BMI_table,ECGA12_table,ECGA264_table,LABA79_table,LABA67_table,LABA2_table,LABA3_table,LABA4_table,LABA7_table,LABA12_table,LABA13_table,LABA24_table,LABA26_table,LABA81_table,ECGA7_table)
+
+##
+nam_correlation_plot_table<-rbind(NAM_traits_table,not_NAM_traits_table)
+names(nam_correlation_plot_table)=c("Phenotype","N","NAM_tau","NAM_P_value")
+sorted_nam_correlation_plot_table<-nam_correlation_plot_table[order(nam_correlation_plot_table$NAM_tau),]
+
+sorted_nam_correlation_plot_table$observation_order <- 1:nrow(sorted_nam_correlation_plot_table)
+
+not_sig_points=sorted_nam_correlation_plot_table[which(sorted_nam_correlation_plot_table$NAM_P_value>0.00076),]
+
+
+
+plot_labels=c("Height","Hip girth","HDL cholesterol","% neutrophils", "Age at natural menopause","Neutrophil count","LDL cholesterol","Total cholesterol", "White blood count","Average diastolic blood pressure","Predicted FVC","Monocyte count","Average systolic blood pressure","Waist girth","Left brachial systolic blood pressure","Creatinine","% Fat","FVC","Ferritin","% Transferrin saturation","Right brachial systolic blood pressure","Heart rate, ventricular","Mean corpuscular volume","High-sensitivity C-reactive protein","PR duration","Mean corpuscular hemoglobin","Heart rate, atrial","Basophil count","Right dorsalis pedis systolic blood pressure","FEV1","Iron","Left posterior tibial systolic blood pressure","Right posterior tibial systolic blood pressure","Mean corpuscular hemoglobin concentration","Left dorsalis pedis systolic blood pressure","QTc calculated","Eosinophil count","% Monocytes","Hemoglobin","HRV","% Hematocrit","Body mass index","Mean SpO2","Platelet count","Albumin/creatine ratio","Age at which menses began","Lymphocyte count","Red blood cell count","QT duration","Urine microalbumin, random","% Eosinophils","Triglycerides","Urine creatinine, random","Heart rate, ventricular","Glucose, fasting","Glucose, post OGTT","% Glycosylated hemoglobin","Glycosylated hemoglobin (HbA1c)","Total iron binding capacity","Waist to hip ratio","QRS duration","% Lymphocytes","FEV1 FVC Ratio","% Immature granulocytes","EGFR MDRD","EGFR CKD Epi")
+
+
+
+
+#####plotting the points 
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/supplementary_figure10.pdf",height=4.25,width=6,pointsize=10)
+par(mar=c(13,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=c(1,66),ylim=c(-0.3,0.3),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(-0.3,0.3,by=0.1),col=rgb(0,0,0,0.1))
+#abline(v=seq(-0.6,0.6,by=0.1),col=rgb(0,0,0,0.1))
+abline(h=0)
+axis(side=1,padj=0.4,cex.axis=0.7, at=c(1:66),labels=(plot_labels),srt=45,las=2,tck=-0.01)
+#axis(side=1,padj=0.4,cex.axis=0.7, tck=-0.01)
+#axis(side=2,padj=1.5,cex.axis=0.7)
+#text(x = seq(1, 66, by=1),par("usr")[3] - 0.2,labels=(plot_labels),srt = 45, pos = 1, xpd = TRUE)
+mtext(side=2,expression(tau),line=1.1)
+points(sorted_nam_correlation_plot_table$observation_order,sorted_nam_correlation_plot_table$NAM_tau, pch=15, col=pcol[4],cex=1)
+points(not_sig_points$observation_order,not_sig_points$NAM_tau, pch=15, col="black",cex=1)
+#points(diamonds$estimated_birth_year,diamonds$NAM, pch=18, col=pcol[11],cex=1.25)
+legend("topleft", legend=c("p<0.00075","p>0.00075"),
+       col=c(pcol[4],"black"), pch=c(15,15),cex=0.6,bg="white")
+#dev.off()
+
+
+```
