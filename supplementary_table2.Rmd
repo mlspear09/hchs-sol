@@ -1,0 +1,735 @@
+---
+title: "Supplementary Table 2"
+author: "Melissa Spear"
+date: "08/07/2020"
+output: html_document
+---
+
+Supplementary Table 2 - All 66 traits 
+
+```{r}
+Mexicans_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T, sep='\t')
+
+Mexicans_pheno$CENTER2<-as.numeric(Mexicans_pheno$CENTER)
+# Subsetting out the vairables I want to test 
+
+subset_Mexican_pheno<-subset(Mexicans_pheno, 
+                             select=c("NAM","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL","GENDERNUM","CENTER2","SLPA92","ABPA1A", "ABPA1B", "ABPA1C", "ABPA1D", "ABPA1E", "ABPA1F","LABA91","HBA1C_SI","MHEA27","PRBA29","BMI","HEIGHT","LABA1","LABA23","LABA24","LABA25","LABA26","LABA27","ANTA4","LABA3","LABA5","LABA9","LABA6","PRBA25","SBPA5","WAIST_HIP","ANTA10A","ANTA10B","EGFRCKD","EGFRMDRD","MENO_C","LABA66","LABA68","LABA67","LABA69","SLPDUR","ECGA8","LABA82","LABA83","LABA84","LABA103","ANTA5","ECGA10","ECGA11","FEV1_FVC_RATIO","ECGA9","ECGA7","LABA10","LABA11","LABA12","LABA13","LABA14","LABA4","LABA7","LABA8","LABA70","LABA71","LABA79","PRBA36","LABA76","LABA2","LABA81","ECGA12","ECGA264","LABA99","SBPA6","LABA72","LABA80"))
+
+require(RColorBrewer)
+pcol=brewer.pal(11, "RdBu")
+
+library("ggpubr")
+####order based on order of traits in the correlation plo.. of onyl the significantly associated traits. 
+
+
+####The following runs a regression not doing anything wiht the data distibution. But will indicate in table some traits that should be transformed. 
+#######################################
+#Height 
+ggdensity(subset_Mexican_pheno$HEIGHT)  #need to cut some outliers 
+HEIGHT_summary=lm(HEIGHT~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+HEIGHT_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+HEIGHT_table_NAM[1,1]<-"HEIGHT"
+HEIGHT_table_NAM[1,2]<-(summary(HEIGHT_summary)$df[2]) + 6
+HEIGHT_table_NAM[1,3]<-"NAM"
+HEIGHT_table_NAM[1,4]<-summary(HEIGHT_summary)$r.squared
+HEIGHT_table_NAM[1,5]<-summary(HEIGHT_summary)$coeff[2,1]
+HEIGHT_table_NAM[1,6]<-summary(HEIGHT_summary)$coeff[2,2]
+HEIGHT_table_NAM[1,7]<-summary(HEIGHT_summary)$coeff[2,4]
+
+######
+#Hip girth aka ANTA10B
+ggdensity(subset_Mexican_pheno$ANTA10B)  ###need to log transform or cut outliers 
+ANTA10B_summary=lm(ANTA10B~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+ANTA10B_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+ANTA10B_table_NAM[1,1]<-"Hip girth"
+ANTA10B_table_NAM[1,2]<-(summary(ANTA10B_summary)$df[2]) + 6
+ANTA10B_table_NAM[1,3]<-"NAM"
+ANTA10B_table_NAM[1,4]<-summary(ANTA10B_summary)$r.squared
+ANTA10B_table_NAM[1,5]<-summary(ANTA10B_summary)$coeff[2,1]
+ANTA10B_table_NAM[1,6]<-summary(ANTA10B_summary)$coeff[2,2]
+ANTA10B_table_NAM[1,7]<-summary(ANTA10B_summary)$coeff[2,4]
+
+#####
+# HDL cholesterol aka LABA68
+ggdensity(subset_Mexican_pheno$LABA68)  #need to cut some outliers or log transform 
+LABA68_summary=lm(LABA68~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA68_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA68_table_NAM[1,1]<-"HDL cholesterol"
+LABA68_table_NAM[1,2]<-(summary(LABA68_summary)$df[2]) + 6
+LABA68_table_NAM[1,3]<-"NAM"
+LABA68_table_NAM[1,4]<-summary(LABA68_summary)$r.squared
+LABA68_table_NAM[1,5]<-summary(LABA68_summary)$coeff[2,1]
+LABA68_table_NAM[1,6]<-summary(LABA68_summary)$coeff[2,2]
+LABA68_table_NAM[1,7]<-summary(LABA68_summary)$coeff[2,4]
+
+#####
+# % neutrophils aka LABA10
+ggdensity(subset_Mexican_pheno$LABA10)  #need to cut some outliers 
+LABA10_summary=lm(LABA10~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA10_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA10_table_NAM[1,1]<-"% Neutrophils"
+LABA10_table_NAM[1,2]<-(summary(LABA10_summary)$df[2]) + 6
+LABA10_table_NAM[1,3]<-"NAM"
+LABA10_table_NAM[1,4]<-summary(LABA10_summary)$r.squared
+LABA10_table_NAM[1,5]<-summary(LABA10_summary)$coeff[2,1]
+LABA10_table_NAM[1,6]<-summary(LABA10_summary)$coeff[2,2]
+LABA10_table_NAM[1,7]<-summary(LABA10_summary)$coeff[2,4]
+
+#####
+# Neutrophil count aka LABA23
+ggdensity(subset_Mexican_pheno$LABA23)  #need to cut some outliers or log transform 
+LABA23_summary=lm(LABA23~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA23_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA23_table_NAM[1,1]<-"Neutrophil count"
+LABA23_table_NAM[1,2]<-(summary(LABA23_summary)$df[2]) + 6
+LABA23_table_NAM[1,3]<-"NAM"
+LABA23_table_NAM[1,4]<-summary(LABA23_summary)$r.squared
+LABA23_table_NAM[1,5]<-summary(LABA23_summary)$coeff[2,1]
+LABA23_table_NAM[1,6]<-summary(LABA23_summary)$coeff[2,2]
+LABA23_table_NAM[1,7]<-summary(LABA23_summary)$coeff[2,4]
+
+
+#####
+# LDL cholesterol aka LABA69
+ggdensity(subset_Mexican_pheno$LABA69)  #need to cut some outliers or log transform 
+LABA69_summary=lm(LABA69~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA69_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA69_table_NAM[1,1]<-"LDL cholesterol"
+LABA69_table_NAM[1,2]<-(summary(LABA69_summary)$df[2]) + 6
+LABA69_table_NAM[1,3]<-"NAM"
+LABA69_table_NAM[1,4]<-summary(LABA69_summary)$r.squared
+LABA69_table_NAM[1,5]<-summary(LABA69_summary)$coeff[2,1]
+LABA69_table_NAM[1,6]<-summary(LABA69_summary)$coeff[2,2]
+LABA69_table_NAM[1,7]<-summary(LABA69_summary)$coeff[2,4]
+
+
+#####
+# Total cholesterol aka LABA66
+ggdensity(subset_Mexican_pheno$LABA66)  #need to cut some outliers or log transform 
+LABA66_summary=lm(LABA66~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA66_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA66_table_NAM[1,1]<-"Total cholesterol"
+LABA66_table_NAM[1,2]<-(summary(LABA66_summary)$df[2]) + 6
+LABA66_table_NAM[1,3]<-"NAM"
+LABA66_table_NAM[1,4]<-summary(LABA66_summary)$r.squared
+LABA66_table_NAM[1,5]<-summary(LABA66_summary)$coeff[2,1]
+LABA66_table_NAM[1,6]<-summary(LABA66_summary)$coeff[2,2]
+LABA66_table_NAM[1,7]<-summary(LABA66_summary)$coeff[2,4]
+
+
+#####
+# White blood cell count aka LABA1
+ggdensity(subset_Mexican_pheno$LABA1)  #need to cut some outliers or log transform 
+LABA1_summary=lm(LABA1~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA1_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA1_table_NAM[1,1]<-"White blood cell count"
+LABA1_table_NAM[1,2]<-(summary(LABA1_summary)$df[2]) + 6
+LABA1_table_NAM[1,3]<-"NAM"
+LABA1_table_NAM[1,4]<-summary(LABA1_summary)$r.squared
+LABA1_table_NAM[1,5]<-summary(LABA1_summary)$coeff[2,1]
+LABA1_table_NAM[1,6]<-summary(LABA1_summary)$coeff[2,2]
+LABA1_table_NAM[1,7]<-summary(LABA1_summary)$coeff[2,4]
+
+
+#####
+# Average diastolic blood pressure aka SBPA6
+ggdensity(subset_Mexican_pheno$SBPA6)  #need to cut some outliers or log transform 
+SBPA6_summary=lm(SBPA6~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+SBPA6_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+SBPA6_table_NAM[1,1]<-"Average diastolic blood pressure"
+SBPA6_table_NAM[1,2]<-(summary(SBPA6_summary)$df[2]) + 6
+SBPA6_table_NAM[1,3]<-"NAM"
+SBPA6_table_NAM[1,4]<-summary(SBPA6_summary)$r.squared
+SBPA6_table_NAM[1,5]<-summary(SBPA6_summary)$coeff[2,1]
+SBPA6_table_NAM[1,6]<-summary(SBPA6_summary)$coeff[2,2]
+SBPA6_table_NAM[1,7]<-summary(SBPA6_summary)$coeff[2,4]
+
+#####
+# Predicted FVC aka PRBA36
+ggdensity(subset_Mexican_pheno$PRBA36)  #kinda bimodal...  
+PRBA36_summary=lm(PRBA36~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+PRBA36_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+PRBA36_table_NAM[1,1]<-"Predicted FVC"
+PRBA36_table_NAM[1,2]<-(summary(PRBA36_summary)$df[2]) + 6
+PRBA36_table_NAM[1,3]<-"NAM"
+PRBA36_table_NAM[1,4]<-summary(PRBA36_summary)$r.squared
+PRBA36_table_NAM[1,5]<-summary(PRBA36_summary)$coeff[2,1]
+PRBA36_table_NAM[1,6]<-summary(PRBA36_summary)$coeff[2,2]
+PRBA36_table_NAM[1,7]<-summary(PRBA36_summary)$coeff[2,4]
+
+#####
+# Monocyte count aka LABA25
+ggdensity(subset_Mexican_pheno$LABA25)  #extremely weird... 
+LABA25_summary=lm(LABA25~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA25_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA25_table_NAM[1,1]<-"Monocyte count"
+LABA25_table_NAM[1,2]<-(summary(LABA25_summary)$df[2]) + 6
+LABA25_table_NAM[1,3]<-"NAM"
+LABA25_table_NAM[1,4]<-summary(LABA25_summary)$r.squared
+LABA25_table_NAM[1,5]<-summary(LABA25_summary)$coeff[2,1]
+LABA25_table_NAM[1,6]<-summary(LABA25_summary)$coeff[2,2]
+LABA25_table_NAM[1,7]<-summary(LABA25_summary)$coeff[2,4]
+
+
+#####
+# Average systolic blood pressure aka SBPA5
+ggdensity(subset_Mexican_pheno$SBPA5)  #need to cut some outliers or log transform 
+SBPA5_summary=lm(SBPA5~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+SBPA5_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+SBPA5_table_NAM[1,1]<-"Average systolic blood pressure"
+SBPA5_table_NAM[1,2]<-(summary(SBPA5_summary)$df[2]) + 6
+SBPA5_table_NAM[1,3]<-"NAM"
+SBPA5_table_NAM[1,4]<-summary(SBPA5_summary)$r.squared
+SBPA5_table_NAM[1,5]<-summary(SBPA5_summary)$coeff[2,1]
+SBPA5_table_NAM[1,6]<-summary(SBPA5_summary)$coeff[2,2]
+SBPA5_table_NAM[1,7]<-summary(SBPA5_summary)$coeff[2,4]#####
+
+
+#  % Glycosylated hemoglobin aka LABA72
+ggdensity(subset_Mexican_pheno$LABA72)  #need to cut some outliers or log transform 
+LABA72_summary=lm(LABA72~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA72_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA72_table_NAM[1,1]<-"% Glycosylated hemoglobin"
+LABA72_table_NAM[1,2]<-(summary(LABA72_summary)$df[2]) + 6
+LABA72_table_NAM[1,3]<-"NAM"
+LABA72_table_NAM[1,4]<-summary(LABA72_summary)$r.squared
+LABA72_table_NAM[1,5]<-summary(LABA72_summary)$coeff[2,1]
+LABA72_table_NAM[1,6]<-summary(LABA72_summary)$coeff[2,2]
+LABA72_table_NAM[1,7]<-summary(LABA72_summary)$coeff[2,4]
+
+
+#  Glycosylated hemoglobin (HbA1c) aka HBA1C_SI
+ggdensity(subset_Mexican_pheno$HBA1C_SI)  #need to cut some outliers or log transform, kinda wierd too. 
+HBA1C_SI_summary=lm(HBA1C_SI~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+HBA1C_SI_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+HBA1C_SI_table_NAM[1,1]<-"Glycosylated hemoglobin (HbA1c)"
+HBA1C_SI_table_NAM[1,2]<-(summary(HBA1C_SI_summary)$df[2]) + 6
+HBA1C_SI_table_NAM[1,3]<-"NAM"
+HBA1C_SI_table_NAM[1,4]<-summary(HBA1C_SI_summary)$r.squared
+HBA1C_SI_table_NAM[1,5]<-summary(HBA1C_SI_summary)$coeff[2,1]
+HBA1C_SI_table_NAM[1,6]<-summary(HBA1C_SI_summary)$coeff[2,2]
+HBA1C_SI_table_NAM[1,7]<-summary(HBA1C_SI_summary)$coeff[2,4]
+
+# Total iron binding capacity aka LABA83
+ggdensity(subset_Mexican_pheno$LABA83)  
+LABA83_summary=lm(LABA83~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA83_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA83_table_NAM[1,1]<-"Total iron binding capacity"
+LABA83_table_NAM[1,2]<-(summary(LABA83_summary)$df[2]) + 6
+LABA83_table_NAM[1,3]<-"NAM"
+LABA83_table_NAM[1,4]<-summary(LABA83_summary)$r.squared
+LABA83_table_NAM[1,5]<-summary(LABA83_summary)$coeff[2,1]
+LABA83_table_NAM[1,6]<-summary(LABA83_summary)$coeff[2,2]
+LABA83_table_NAM[1,7]<-summary(LABA83_summary)$coeff[2,4]
+
+# Waist to Hip Ratio aka WAIST_HIP
+ggdensity(subset_Mexican_pheno$WAIST_HIP)  
+WAIST_HIP_summary=lm(WAIST_HIP~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+WAIST_HIP_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+WAIST_HIP_table_NAM[1,1]<-"Waist to hip ratio"
+WAIST_HIP_table_NAM[1,2]<-(summary(WAIST_HIP_summary)$df[2]) + 6
+WAIST_HIP_table_NAM[1,3]<-"NAM"
+WAIST_HIP_table_NAM[1,4]<-summary(WAIST_HIP_summary)$r.squared
+WAIST_HIP_table_NAM[1,5]<-summary(WAIST_HIP_summary)$coeff[2,1]
+WAIST_HIP_table_NAM[1,6]<-summary(WAIST_HIP_summary)$coeff[2,2]
+WAIST_HIP_table_NAM[1,7]<-summary(WAIST_HIP_summary)$coeff[2,4]
+
+
+# QRS duration aka ECGA10 #need to cut some outliers or log transform
+ggdensity(subset_Mexican_pheno$ECGA10)  
+ECGA10_summary=lm(ECGA10~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+ECGA10_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+ECGA10_table_NAM[1,1]<-"QRS duration"
+ECGA10_table_NAM[1,2]<-(summary(ECGA10_summary)$df[2]) + 6
+ECGA10_table_NAM[1,3]<-"NAM"
+ECGA10_table_NAM[1,4]<-summary(ECGA10_summary)$r.squared
+ECGA10_table_NAM[1,5]<-summary(ECGA10_summary)$coeff[2,1]
+ECGA10_table_NAM[1,6]<-summary(ECGA10_summary)$coeff[2,2]
+ECGA10_table_NAM[1,7]<-summary(ECGA10_summary)$coeff[2,4]
+
+
+# % Lymphocytes aka LABA11 #need to cut some outliers or log transform
+ggdensity(subset_Mexican_pheno$LABA11)  
+LABA11_summary=lm(LABA11~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA11_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA11_table_NAM[1,1]<-"% Lymphocytes"
+LABA11_table_NAM[1,2]<-(summary(LABA11_summary)$df[2]) + 6
+LABA11_table_NAM[1,3]<-"NAM"
+LABA11_table_NAM[1,4]<-summary(LABA11_summary)$r.squared
+LABA11_table_NAM[1,5]<-summary(LABA11_summary)$coeff[2,1]
+LABA11_table_NAM[1,6]<-summary(LABA11_summary)$coeff[2,2]
+LABA11_table_NAM[1,7]<-summary(LABA11_summary)$coeff[2,4]
+
+
+# FEV1 FVC Ratio aka FEV1_FVC_RATIO #need to cut some outliers
+ggdensity(subset_Mexican_pheno$FEV1_FVC_RATIO)  
+FEV1_FVC_RATIO_summary=lm(FEV1_FVC_RATIO~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+FEV1_FVC_RATIO_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+FEV1_FVC_RATIO_table_NAM[1,1]<-"FEV1 FVC Ratio"
+FEV1_FVC_RATIO_table_NAM[1,2]<-(summary(FEV1_FVC_RATIO_summary)$df[2]) + 6
+FEV1_FVC_RATIO_table_NAM[1,3]<-"NAM"
+FEV1_FVC_RATIO_table_NAM[1,4]<-summary(FEV1_FVC_RATIO_summary)$r.squared
+FEV1_FVC_RATIO_table_NAM[1,5]<-summary(FEV1_FVC_RATIO_summary)$coeff[2,1]
+FEV1_FVC_RATIO_table_NAM[1,6]<-summary(FEV1_FVC_RATIO_summary)$coeff[2,2]
+FEV1_FVC_RATIO_table_NAM[1,7]<-summary(FEV1_FVC_RATIO_summary)$coeff[2,4]
+
+
+# % Immature granulocytes aka LABA99 very skewed distibution 
+ggdensity(subset_Mexican_pheno$LABA99)  
+LABA99_summary=lm(LABA99~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA99_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA99_table_NAM[1,1]<-"% Immature granulocytes"
+LABA99_table_NAM[1,2]<-(summary(LABA99_summary)$df[2]) + 6
+LABA99_table_NAM[1,3]<-"NAM"
+LABA99_table_NAM[1,4]<-summary(LABA99_summary)$r.squared
+LABA99_table_NAM[1,5]<-summary(LABA99_summary)$coeff[2,1]
+LABA99_table_NAM[1,6]<-summary(LABA99_summary)$coeff[2,2]
+LABA99_table_NAM[1,7]<-summary(LABA99_summary)$coeff[2,4]
+
+
+# EGFRMDRD aka EGFRMDRD- need to log transform or cut outliers 
+ggdensity(subset_Mexican_pheno$EGFRMDRD)  
+EGFRMDRD_summary=lm(EGFRMDRD~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+EGFRMDRD_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+EGFRMDRD_table_NAM[1,1]<-"EGFR MDRD"
+EGFRMDRD_table_NAM[1,2]<-(summary(EGFRMDRD_summary)$df[2]) + 6
+EGFRMDRD_table_NAM[1,3]<-"NAM"
+EGFRMDRD_table_NAM[1,4]<-summary(EGFRMDRD_summary)$r.squared
+EGFRMDRD_table_NAM[1,5]<-summary(EGFRMDRD_summary)$coeff[2,1]
+EGFRMDRD_table_NAM[1,6]<-summary(EGFRMDRD_summary)$coeff[2,2]
+EGFRMDRD_table_NAM[1,7]<-summary(EGFRMDRD_summary)$coeff[2,4]
+
+
+# EGFRCKD aka EGFRCKD- need to cut outliers 
+ggdensity(subset_Mexican_pheno$EGFRCKD)  
+EGFRCKD_summary=lm(EGFRCKD~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+EGFRCKD_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+EGFRCKD_table_NAM[1,1]<-"EGFR CKD Epi"
+EGFRCKD_table_NAM[1,2]<-(summary(EGFRCKD_summary)$df[2]) + 6
+EGFRCKD_table_NAM[1,3]<-"NAM"
+EGFRCKD_table_NAM[1,4]<-summary(EGFRCKD_summary)$r.squared
+EGFRCKD_table_NAM[1,5]<-summary(EGFRCKD_summary)$coeff[2,1]
+EGFRCKD_table_NAM[1,6]<-summary(EGFRCKD_summary)$coeff[2,2]
+EGFRCKD_table_NAM[1,7]<-summary(EGFRCKD_summary)$coeff[2,4]
+
+
+all_tables_combined<-rbind(HEIGHT_table_NAM, ANTA10B_table_NAM,LABA68_table_NAM,LABA10_table_NAM,LABA23_table_NAM,LABA69_table_NAM,LABA66_table_NAM,LABA1_table_NAM,SBPA6_table_NAM,PRBA36_table_NAM,LABA25_table_NAM,SBPA5_table_NAM,LABA72_table_NAM,HBA1C_SI_table_NAM,LABA83_table_NAM,WAIST_HIP_table_NAM,ECGA10_table_NAM,LABA11_table_NAM,FEV1_FVC_RATIO_table_NAM,LABA99_table_NAM,EGFRMDRD_table_NAM,EGFRCKD_table_NAM)
+
+
+################################################################################
+############
+#redoing the table but removing outliers ot log transforming where needed.
+############
+################################################################################
+
+#Height - CUT OUTLIERS
+cut_height_outlier= subset_Mexican_pheno[which(subset_Mexican_pheno$HEIGHT!=122),]
+ggdensity(cut_height_outlier$HEIGHT)  ###LOG TRANSFORMATION doesnt work, cut one outlier. 
+
+HEIGHT_summary=lm(HEIGHT~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_height_outlier)
+
+HEIGHT_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+HEIGHT_table_NAM[1,1]<-"HEIGHT"
+HEIGHT_table_NAM[1,2]<-(summary(HEIGHT_summary)$df[2]) + 6
+HEIGHT_table_NAM[1,3]<-"NAM"
+HEIGHT_table_NAM[1,4]<-summary(HEIGHT_summary)$r.squared
+HEIGHT_table_NAM[1,5]<-summary(HEIGHT_summary)$coeff[2,1]
+HEIGHT_table_NAM[1,6]<-summary(HEIGHT_summary)$coeff[2,2]
+HEIGHT_table_NAM[1,7]<-summary(HEIGHT_summary)$coeff[2,4]
+
+######
+#Hip girth aka ANTA10B - CUT SOME OUTLIERS 
+ggdensity(subset_Mexican_pheno$ANTA10B)  ###need to log transform or cut outliers 
+ggdensity(log(subset_Mexican_pheno$ANTA10B))  ###log transformation wasnt enough... but still slightly weird when i cut outliers.. .
+
+
+cut_ANTA10B_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$ANTA10B<140),]
+ggdensity(cut_ANTA10B_outlier$ANTA10B) #need log transformation but still slightly skewed 
+
+ANTA10B_summary=lm(ANTA10B~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_ANTA10B_outlier)
+
+ANTA10B_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+ANTA10B_table_NAM[1,1]<-"Hip girth"
+ANTA10B_table_NAM[1,2]<-(summary(ANTA10B_summary)$df[2]) + 6
+ANTA10B_table_NAM[1,3]<-"NAM"
+ANTA10B_table_NAM[1,4]<-summary(ANTA10B_summary)$r.squared
+ANTA10B_table_NAM[1,5]<-summary(ANTA10B_summary)$coeff[2,1]
+ANTA10B_table_NAM[1,6]<-summary(ANTA10B_summary)$coeff[2,2]
+ANTA10B_table_NAM[1,7]<-summary(ANTA10B_summary)$coeff[2,4]
+
+#####
+# HDL cholesterol aka LABA68 - CUT SOME OUTLIERS 
+ggdensity(subset_Mexican_pheno$LABA68)#still slightly skewed LOG TRANSFORMATION doesnt work, overdoes it 
+summary(subset_Mexican_pheno$LABA68)
+
+cut_LABA68_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$LABA68<97),]
+ggdensity(cut_LABA68_outlier$LABA68)#still slightly skewed LOG TRANSFORMATION doesnt work, overdoes it 
+
+LABA68_summary<-lm(LABA68~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_LABA68_outlier)
+
+LABA68_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA68_table_NAM[1,1]<-"HDL cholesterol"
+LABA68_table_NAM[1,2]<-(summary(LABA68_summary)$df[2]) + 6
+LABA68_table_NAM[1,3]<-"NAM"
+LABA68_table_NAM[1,4]<-summary(LABA68_summary)$r.squared
+LABA68_table_NAM[1,5]<-summary(LABA68_summary)$coeff[2,1]
+LABA68_table_NAM[1,6]<-summary(LABA68_summary)$coeff[2,2]
+LABA68_table_NAM[1,7]<-summary(LABA68_summary)$coeff[2,4]
+
+#####
+# % neutrophils aka LABA10 -CUT SOME OUTLIERS BUT STILL A LITTLE WEIRD 
+ggdensity(subset_Mexican_pheno$LABA10)##LOG TRANSFORMATION doesnt work
+cut_LABA10_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$LABA10>26),]
+ggdensity(cut_LABA10_outlier$LABA10) ####still looks slightly off 
+
+LABA10_summary=lm(LABA10~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_LABA10_outlier)
+
+LABA10_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA10_table_NAM[1,1]<-"% Neutrophils"
+LABA10_table_NAM[1,2]<-(summary(LABA10_summary)$df[2]) + 6
+LABA10_table_NAM[1,3]<-"NAM"
+LABA10_table_NAM[1,4]<-summary(LABA10_summary)$r.squared
+LABA10_table_NAM[1,5]<-summary(LABA10_summary)$coeff[2,1]
+LABA10_table_NAM[1,6]<-summary(LABA10_summary)$coeff[2,2]
+LABA10_table_NAM[1,7]<-summary(LABA10_summary)$coeff[2,4]
+
+#####
+# Neutrophil count aka LABA23 - CUT SOME OUTLIERS 
+ggdensity(subset_Mexican_pheno$LABA23)  #need to cut some outliers or log transform 
+cut_LABA23_outlier= subset_Mexican_pheno[which(subset_Mexican_pheno$LABA23<8),]
+ggdensity(cut_LABA23_outlier$LABA23)###LOG TRANSFORMATION doesnt work 
+
+LABA23_summary=lm(LABA23~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_LABA23_outlier)
+
+LABA23_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA23_table_NAM[1,1]<-"Neutrophil count"
+LABA23_table_NAM[1,2]<-(summary(LABA23_summary)$df[2]) + 6
+LABA23_table_NAM[1,3]<-"NAM"
+LABA23_table_NAM[1,4]<-summary(LABA23_summary)$r.squared
+LABA23_table_NAM[1,5]<-summary(LABA23_summary)$coeff[2,1]
+LABA23_table_NAM[1,6]<-summary(LABA23_summary)$coeff[2,2]
+LABA23_table_NAM[1,7]<-summary(LABA23_summary)$coeff[2,4]
+
+
+#####
+# LDL cholesterol aka LABA69 - CUT OUTLIERS 
+ggdensity(subset_Mexican_pheno$LABA69)  #need to cut some outliers or log transform - log transofrom overdid it 
+ggdensity(log(subset_Mexican_pheno$LABA69))  #need to cut some outliers or log transform 
+
+cut_LABA69_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$LABA69<238),]
+ggdensity(cut_LABA69_outlier$LABA69)#LOG TRANSFORMATION doesnt work.. when remvoing outliers looks like a beta distribution??? check the type 
+summary(cut_LABA69_outlier$LABA69)
+LABA69_summary=lm(LABA69~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_LABA69_outlier)
+
+LABA69_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA69_table_NAM[1,1]<-"LDL cholesterol"
+LABA69_table_NAM[1,2]<-(summary(LABA69_summary)$df[2]) + 6
+LABA69_table_NAM[1,3]<-"NAM"
+LABA69_table_NAM[1,4]<-summary(LABA69_summary)$r.squared
+LABA69_table_NAM[1,5]<-summary(LABA69_summary)$coeff[2,1]
+LABA69_table_NAM[1,6]<-summary(LABA69_summary)$coeff[2,2]
+LABA69_table_NAM[1,7]<-summary(LABA69_summary)$coeff[2,4]
+
+
+#####
+# Total cholesterol aka LABA66 -LOG TRANSFORMED 
+ggdensity(subset_Mexican_pheno$LABA66)  #need to cut some outliers or log transform 
+ggdensity(log(subset_Mexican_pheno$LABA66)) #nneed to log transform 
+
+LABA66_summary=lm(log(LABA66)~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA66_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA66_table_NAM[1,1]<-"Total cholesterol"
+LABA66_table_NAM[1,2]<-(summary(LABA66_summary)$df[2]) + 6
+LABA66_table_NAM[1,3]<-"NAM"
+LABA66_table_NAM[1,4]<-summary(LABA66_summary)$r.squared
+LABA66_table_NAM[1,5]<-summary(LABA66_summary)$coeff[2,1]
+LABA66_table_NAM[1,6]<-summary(LABA66_summary)$coeff[2,2]
+LABA66_table_NAM[1,7]<-summary(LABA66_summary)$coeff[2,4]
+
+
+#####
+# White blood cell count aka LABA1 - LOG TRANSFORMED 
+ggdensity(subset_Mexican_pheno$LABA1)  #need to cut some outliers or log transform 
+ggdensity(log(subset_Mexican_pheno$LABA1))  #need to cut some outliers or log transform 
+
+
+LABA1_summary=lm(log(LABA1)~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA1_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA1_table_NAM[1,1]<-"White blood cell count"
+LABA1_table_NAM[1,2]<-(summary(LABA1_summary)$df[2]) + 6
+LABA1_table_NAM[1,3]<-"NAM"
+LABA1_table_NAM[1,4]<-summary(LABA1_summary)$r.squared
+LABA1_table_NAM[1,5]<-summary(LABA1_summary)$coeff[2,1]
+LABA1_table_NAM[1,6]<-summary(LABA1_summary)$coeff[2,2]
+LABA1_table_NAM[1,7]<-summary(LABA1_summary)$coeff[2,4]
+
+
+#####
+# Average diastolic blood pressure aka SBPA6 - LOG TRANSFORMED 
+ggdensity(subset_Mexican_pheno$SBPA6)  #need to cut some outliers or log transform 
+ggdensity(log(subset_Mexican_pheno$SBPA6))  #need to cut some outliers or log transform 
+
+SBPA6_summary=lm(log(SBPA6)~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+SBPA6_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+SBPA6_table_NAM[1,1]<-"Average diastolic blood pressure"
+SBPA6_table_NAM[1,2]<-(summary(SBPA6_summary)$df[2]) + 6
+SBPA6_table_NAM[1,3]<-"NAM"
+SBPA6_table_NAM[1,4]<-summary(SBPA6_summary)$r.squared
+SBPA6_table_NAM[1,5]<-summary(SBPA6_summary)$coeff[2,1]
+SBPA6_table_NAM[1,6]<-summary(SBPA6_summary)$coeff[2,2]
+SBPA6_table_NAM[1,7]<-summary(SBPA6_summary)$coeff[2,4]
+
+#####
+# Predicted FVC aka PRBA36 -NO IDEA WHAT TO DO 
+
+ggdensity(subset_Mexican_pheno$PRBA36)  #kinda bimodal...
+PRBA36_summary=lm(PRBA36~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+PRBA36_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+PRBA36_table_NAM[1,1]<-"Predicted FVC"
+PRBA36_table_NAM[1,2]<-(summary(PRBA36_summary)$df[2]) + 6
+PRBA36_table_NAM[1,3]<-"NAM"
+PRBA36_table_NAM[1,4]<-summary(PRBA36_summary)$r.squared
+PRBA36_table_NAM[1,5]<-summary(PRBA36_summary)$coeff[2,1]
+PRBA36_table_NAM[1,6]<-summary(PRBA36_summary)$coeff[2,2]
+PRBA36_table_NAM[1,7]<-summary(PRBA36_summary)$coeff[2,4]
+
+#####
+# Monocyte count aka LABA25 - NO IDEA WHAT TO DO - is this a binomial ish distirbituion.. counts vs contu=inous distribution , 
+ggdensity(subset_Mexican_pheno$LABA25)  #extremely weird... 
+LABA25_summary=lm(LABA25~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA25_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA25_table_NAM[1,1]<-"Monocyte count"
+LABA25_table_NAM[1,2]<-(summary(LABA25_summary)$df[2]) + 6
+LABA25_table_NAM[1,3]<-"NAM"
+LABA25_table_NAM[1,4]<-summary(LABA25_summary)$r.squared
+LABA25_table_NAM[1,5]<-summary(LABA25_summary)$coeff[2,1]
+LABA25_table_NAM[1,6]<-summary(LABA25_summary)$coeff[2,2]
+LABA25_table_NAM[1,7]<-summary(LABA25_summary)$coeff[2,4]
+
+
+#####
+# Average systolic blood pressure aka SBPA5 -LOG TRANSFORMED 
+ggdensity(subset_Mexican_pheno$SBPA5)  #need to cut some outliers or log transform 
+ggdensity(log(subset_Mexican_pheno$SBPA5))  #need to cut some outliers or log transform 
+
+SBPA5_summary=lm(log(SBPA5)~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+SBPA5_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+SBPA5_table_NAM[1,1]<-"Average systolic blood pressure"
+SBPA5_table_NAM[1,2]<-(summary(SBPA5_summary)$df[2]) + 6
+SBPA5_table_NAM[1,3]<-"NAM"
+SBPA5_table_NAM[1,4]<-summary(SBPA5_summary)$r.squared
+SBPA5_table_NAM[1,5]<-summary(SBPA5_summary)$coeff[2,1]
+SBPA5_table_NAM[1,6]<-summary(SBPA5_summary)$coeff[2,2]
+SBPA5_table_NAM[1,7]<-summary(SBPA5_summary)$coeff[2,4]#####
+
+
+#  % Glycosylated hemoglobin aka LABA72 - CUT OUTLIERS but was already very skewed to begin with... 
+ggdensity(subset_Mexican_pheno$LABA72)  #need to cut some outliers or log transform 
+ggdensity(log(subset_Mexican_pheno$LABA72))  #need to cut some outliers or log transform 
+
+cut_LABA72_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$LABA72<8),]
+ggdensity(cut_LABA72_outlier$LABA72)  #need to cut some outliers or log transform 
+
+LABA72_summary=lm(LABA72~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_LABA72_outlier)
+
+LABA72_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA72_table_NAM[1,1]<-"% Glycosylated hemoglobin"
+LABA72_table_NAM[1,2]<-(summary(LABA72_summary)$df[2]) + 6
+LABA72_table_NAM[1,3]<-"NAM"
+LABA72_table_NAM[1,4]<-summary(LABA72_summary)$r.squared
+LABA72_table_NAM[1,5]<-summary(LABA72_summary)$coeff[2,1]
+LABA72_table_NAM[1,6]<-summary(LABA72_summary)$coeff[2,2]
+LABA72_table_NAM[1,7]<-summary(LABA72_summary)$coeff[2,4]
+
+
+#  Glycosylated hemoglobin (HbA1c) aka HBA1C_SI- HAVE NO IDEA WHAT TO DO. 
+ggdensity(subset_Mexican_pheno$HBA1C_SI)  #need to cut some outliers or log transform, kinda wierd too. 
+ggdensity(log(subset_Mexican_pheno$HBA1C_SI))  #need to cut some outliers or log transform, kinda wierd too. 
+
+HBA1C_SI_summary=lm(HBA1C_SI~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+HBA1C_SI_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+HBA1C_SI_table_NAM[1,1]<-"Glycosylated hemoglobin (HbA1c)"
+HBA1C_SI_table_NAM[1,2]<-(summary(HBA1C_SI_summary)$df[2]) + 6
+HBA1C_SI_table_NAM[1,3]<-"NAM"
+HBA1C_SI_table_NAM[1,4]<-summary(HBA1C_SI_summary)$r.squared
+HBA1C_SI_table_NAM[1,5]<-summary(HBA1C_SI_summary)$coeff[2,1]
+HBA1C_SI_table_NAM[1,6]<-summary(HBA1C_SI_summary)$coeff[2,2]
+HBA1C_SI_table_NAM[1,7]<-summary(HBA1C_SI_summary)$coeff[2,4]
+
+# Total iron binding capacity aka LABA83 - ALREADY FOLLOWS NORMAL DISTRIBUTION 
+ggdensity(subset_Mexican_pheno$LABA83)  
+LABA83_summary=lm(LABA83~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA83_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA83_table_NAM[1,1]<-"Total iron binding capacity"
+LABA83_table_NAM[1,2]<-(summary(LABA83_summary)$df[2]) + 6
+LABA83_table_NAM[1,3]<-"NAM"
+LABA83_table_NAM[1,4]<-summary(LABA83_summary)$r.squared
+LABA83_table_NAM[1,5]<-summary(LABA83_summary)$coeff[2,1]
+LABA83_table_NAM[1,6]<-summary(LABA83_summary)$coeff[2,2]
+LABA83_table_NAM[1,7]<-summary(LABA83_summary)$coeff[2,4]
+
+# Waist to Hip Ratio aka WAIST_HIP - FOLLOWS NORMAL DISTRIBUTION MOSTLY 
+ggdensity(subset_Mexican_pheno$WAIST_HIP)  
+WAIST_HIP_summary=lm(WAIST_HIP~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+WAIST_HIP_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+WAIST_HIP_table_NAM[1,1]<-"Waist to hip ratio"
+WAIST_HIP_table_NAM[1,2]<-(summary(WAIST_HIP_summary)$df[2]) + 6
+WAIST_HIP_table_NAM[1,3]<-"NAM"
+WAIST_HIP_table_NAM[1,4]<-summary(WAIST_HIP_summary)$r.squared
+WAIST_HIP_table_NAM[1,5]<-summary(WAIST_HIP_summary)$coeff[2,1]
+WAIST_HIP_table_NAM[1,6]<-summary(WAIST_HIP_summary)$coeff[2,2]
+WAIST_HIP_table_NAM[1,7]<-summary(WAIST_HIP_summary)$coeff[2,4]
+
+
+# QRS duration aka ECGA10 - CUT SOME OUTLIERS 
+ggdensity(subset_Mexican_pheno$ECGA10)
+summary(subset_Mexican_pheno$ECGA10)
+
+cut_ECGA10_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$ECGA10<125),]
+
+ggdensity(cut_ECGA10_outlier$ECGA10)  
+
+ECGA10_summary=lm(ECGA10~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_ECGA10_outlier)
+
+ECGA10_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+ECGA10_table_NAM[1,1]<-"QRS duration"
+ECGA10_table_NAM[1,2]<-(summary(ECGA10_summary)$df[2]) + 6
+ECGA10_table_NAM[1,3]<-"NAM"
+ECGA10_table_NAM[1,4]<-summary(ECGA10_summary)$r.squared
+ECGA10_table_NAM[1,5]<-summary(ECGA10_summary)$coeff[2,1]
+ECGA10_table_NAM[1,6]<-summary(ECGA10_summary)$coeff[2,2]
+ECGA10_table_NAM[1,7]<-summary(ECGA10_summary)$coeff[2,4]
+
+
+# % Lymphocytes aka LABA11 -CUT OUT SOME OUTLIERS 
+ggdensity(subset_Mexican_pheno$LABA11)  
+ggdensity(log(subset_Mexican_pheno$LABA11))  
+
+summary(subset_Mexican_pheno$LABA11)
+
+cut_LABA11_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$LABA11<60),]
+ggdensity(cut_LABA11_outlier$LABA11)  
+
+LABA11_summary=lm(LABA11~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_LABA11_outlier)
+
+LABA11_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA11_table_NAM[1,1]<-"% Lymphocytes"
+LABA11_table_NAM[1,2]<-(summary(LABA11_summary)$df[2]) + 6
+LABA11_table_NAM[1,3]<-"NAM"
+LABA11_table_NAM[1,4]<-summary(LABA11_summary)$r.squared
+LABA11_table_NAM[1,5]<-summary(LABA11_summary)$coeff[2,1]
+LABA11_table_NAM[1,6]<-summary(LABA11_summary)$coeff[2,2]
+LABA11_table_NAM[1,7]<-summary(LABA11_summary)$coeff[2,4]
+
+
+# FEV1 FVC Ratio aka FEV1_FVC_RATIO - CUT SOME OUTLIERS 
+ggdensity(subset_Mexican_pheno$FEV1_FVC_RATIO) 
+
+summary(subset_Mexican_pheno$FEV1_FVC_RATIO)
+cut_FEV1_FVC_RATIO_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$FEV1_FVC_RATIO>60),]
+ggdensity(cut_FEV1_FVC_RATIO_outlier$FEV1_FVC_RATIO) 
+
+
+FEV1_FVC_RATIO_summary=lm(FEV1_FVC_RATIO~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_FEV1_FVC_RATIO_outlier)
+
+FEV1_FVC_RATIO_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+FEV1_FVC_RATIO_table_NAM[1,1]<-"FEV1 FVC Ratio"
+FEV1_FVC_RATIO_table_NAM[1,2]<-(summary(FEV1_FVC_RATIO_summary)$df[2]) + 6
+FEV1_FVC_RATIO_table_NAM[1,3]<-"NAM"
+FEV1_FVC_RATIO_table_NAM[1,4]<-summary(FEV1_FVC_RATIO_summary)$r.squared
+FEV1_FVC_RATIO_table_NAM[1,5]<-summary(FEV1_FVC_RATIO_summary)$coeff[2,1]
+FEV1_FVC_RATIO_table_NAM[1,6]<-summary(FEV1_FVC_RATIO_summary)$coeff[2,2]
+FEV1_FVC_RATIO_table_NAM[1,7]<-summary(FEV1_FVC_RATIO_summary)$coeff[2,4]
+
+
+# % Immature granulocytes aka LABA99 very skewed distibution - NO IDEA WHAT TO DO - some variation of beta ditribution. actually shoudl remove given the numbe rof sampels... ? maybe
+ggdensity(subset_Mexican_pheno$LABA99)  
+
+LABA99_summary=lm(LABA99~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=subset_Mexican_pheno)
+
+LABA99_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+LABA99_table_NAM[1,1]<-"% Immature granulocytes"
+LABA99_table_NAM[1,2]<-(summary(LABA99_summary)$df[2]) + 6
+LABA99_table_NAM[1,3]<-"NAM"
+LABA99_table_NAM[1,4]<-summary(LABA99_summary)$r.squared
+LABA99_table_NAM[1,5]<-summary(LABA99_summary)$coeff[2,1]
+LABA99_table_NAM[1,6]<-summary(LABA99_summary)$coeff[2,2]
+LABA99_table_NAM[1,7]<-summary(LABA99_summary)$coeff[2,4]
+
+
+# EGFRMDRD aka EGFRMDRD- need to log transform or cut outliers 
+ggdensity(subset_Mexican_pheno$EGFRMDRD)  
+ggdensity(log(subset_Mexican_pheno$EGFRMDRD))  
+summary(subset_Mexican_pheno$EGFRMDRD)
+
+cut_EGFRMDRD_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$EGFRMDRD<200),]
+ggdensity(cut_EGFRMDRD_outlier$EGFRMDRD)  
+
+
+EGFRMDRD_summary=lm(EGFRMDRD~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_EGFRMDRD_outlier)
+
+EGFRMDRD_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+EGFRMDRD_table_NAM[1,1]<-"EGFR MDRD"
+EGFRMDRD_table_NAM[1,2]<-(summary(EGFRMDRD_summary)$df[2]) + 6
+EGFRMDRD_table_NAM[1,3]<-"NAM"
+EGFRMDRD_table_NAM[1,4]<-summary(EGFRMDRD_summary)$r.squared
+EGFRMDRD_table_NAM[1,5]<-summary(EGFRMDRD_summary)$coeff[2,1]
+EGFRMDRD_table_NAM[1,6]<-summary(EGFRMDRD_summary)$coeff[2,2]
+EGFRMDRD_table_NAM[1,7]<-summary(EGFRMDRD_summary)$coeff[2,4]
+
+
+# EGFRCKD aka EGFRCKD- need to cut outliers 
+ggdensity(subset_Mexican_pheno$EGFRCKD)
+
+cut_EGFRCKD_outlier<-subset_Mexican_pheno[which(subset_Mexican_pheno$EGFRCKD>40),]
+ggdensity(cut_EGFRCKD_outlier$EGFRCKD)
+
+
+EGFRCKD_summary=lm(EGFRCKD~NAM+estimated_birth_year+GENDERNUM+CENTER2+log(WEIGHT_FINAL_NORM_OVERALL), data=cut_EGFRCKD_outlier)
+
+EGFRCKD_table_NAM<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Trait","Ancestry","N","R2","Effect","Std.Err","P"))
+EGFRCKD_table_NAM[1,1]<-"EGFR CKD Epi"
+EGFRCKD_table_NAM[1,2]<-(summary(EGFRCKD_summary)$df[2]) + 6
+EGFRCKD_table_NAM[1,3]<-"NAM"
+EGFRCKD_table_NAM[1,4]<-summary(EGFRCKD_summary)$r.squared
+EGFRCKD_table_NAM[1,5]<-summary(EGFRCKD_summary)$coeff[2,1]
+EGFRCKD_table_NAM[1,6]<-summary(EGFRCKD_summary)$coeff[2,2]
+EGFRCKD_table_NAM[1,7]<-summary(EGFRCKD_summary)$coeff[2,4]
+
+all_cut_tables_combined<-rbind(HEIGHT_table_NAM, ANTA10B_table_NAM,LABA68_table_NAM,LABA10_table_NAM,LABA23_table_NAM,LABA69_table_NAM,LABA66_table_NAM,LABA1_table_NAM,SBPA6_table_NAM,PRBA36_table_NAM,LABA25_table_NAM,SBPA5_table_NAM,LABA72_table_NAM,HBA1C_SI_table_NAM,LABA83_table_NAM,WAIST_HIP_table_NAM,ECGA10_table_NAM,LABA11_table_NAM,FEV1_FVC_RATIO_table_NAM,LABA99_table_NAM,EGFRMDRD_table_NAM,EGFRCKD_table_NAM)
+
+
+
+
