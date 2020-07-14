@@ -1,0 +1,62 @@
+---
+title: "Statistical analyses"
+author: "Melissa Spear"
+date: "14/07/2020"
+output: html_document
+---
+The following code is the analyses listed within the "Dynamic Global Ancestry Proportions in Mexican Americans" of the paper in addition to the files provided for table 1. 
+
+Testing for effect of years in US on overall model 
+
+Read in data and subset 
+```{r}
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+#extracting the non US born individuals 
+non_US_born = d[which(d$US_BORN=='0'),]
+
+#extracting US born individuals
+US_born = d[which(d$US_BORN=='1'),]
+```
+
+Models 
+```{r}
+#Model: Native ancestry vs birth year for non-US born individuals 
+BY_only_model = lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data=non_US_born) 
+summary(BY_only_model)
+```
+
+```{r}
+#Model: Birth year and time in US 
+BY_time_model = lm(NAM ~ estimated_birth_year + YRSUS + log(WEIGHT_FINAL_NORM_OVERALL), data=non_US_born)
+summary(BY_time_model)
+```
+
+Assessing parental birthplace and its effects on AI ancestry 
+
+```{r}
+#creating new variable of number of US born parents 
+usborn_mexam_parents <- US_born
+usborn_mexam_parents$num_us_parents <- with(usborn_mexam_parents,
+                                            ifelse(PIEA14=='63' & PIEA11=='63',2,
+                                                   ifelse(PIEA14!='63' & PIEA11!='63',0,1)))
+
+usborn_mexam_parents$num_us_parents <- factor(usborn_mexam_parents$num_us_parents)
+```
+
+
+```{r}
+BY_reg_num_us_0 <- lm(NAM ~ estimated_birth_year + log(WEIGHT_FINAL_NORM_OVERALL), data = subset(usborn_mexam_parents, num_us_parents==0))
+summary(BY_reg_num_us_0)
+```
+
+```{r}
+BY_reg_num_us_1 <- lm(NAM ~ estimated_birth_year + log(WEIGHT_FINAL_NORM_OVERALL), data = subset(usborn_mexam_parents, num_us_parents==1))
+summary(BY_reg_num_us_1)
+```
+
+```{r}
+BY_reg_num_us_2 <- lm(NAM ~ estimated_birth_year + log(WEIGHT_FINAL_NORM_OVERALL), data = subset(usborn_mexam_parents, num_us_parents==2))
+summary(BY_reg_num_us_2)
+```
+
