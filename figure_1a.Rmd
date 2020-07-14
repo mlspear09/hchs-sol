@@ -1,0 +1,115 @@
+---
+title: "Figure 1A"
+author: "Melissa Spear"
+date: "14/07/2020"
+output: html_document
+---
+
+#####Reading in the admixture run file, subsetting the reference pops, extracting admixed samples 
+```{r}
+#Read in the admixture file estimates file 
+HCHS_SOL_admixture_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+names(HCHS_SOL_admixture_file) <- c("YRI","CEU","AI")
+
+#Reading in the fam file accompaniment of the .bed file called for the admixture run 
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
+fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
+
+#subset ref pops
+CEU<-fam_file_with_IDs[1:104,] #subset the CEU ref pop
+YRI<-fam_file_with_IDs[105:211,] #subset the YRI ref pop
+AI<-fam_file_with_IDs[212:323,] #subset the AI ref pop 
+
+all_ref<-rbind(CEU,YRI,AI)
+
+#all HCHS/SOL with reference pops 
+dim(fam_file_with_IDs)
+```
+
+##### Reading in the HCHS/SOL phenotype files and merging with the global ancestry estimates 
+```{r}
+#Read in the HCHS/SOL phenotype file 
+HCHS_SOL_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
+
+#merge the admixture estimates with the pheno file 
+all_with_pheno=merge(fam_file_with_IDs, HCHS_SOL_pheno, by.x =c("FID"), by.y=c("SUBJECT_ID"))
+dim(all_with_pheno) #minus the ref
+```
+
+
+#####Subsetting the admixed 95 HCHS/SOL populations 
+```{r}
+#Dominican subset 
+Dominican<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "0"),]
+dim(Dominican)
+```
+
+```{r}
+#Central American subset
+Central_American<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "1"),]
+dim(Central_American)
+```
+
+```{r}
+#Cuban subset
+Cuban<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "2"),]
+dim(Cuban)
+```
+
+```{r}
+#Mexican subset 
+Mexican<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "3"),]
+dim(Mexican)
+```
+
+```{r}
+#Puerto Rican subset 
+Puerto_Rican<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "4"),]
+dim(Puerto_Rican)
+```
+
+```{r}
+#South American subset 
+South_American<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "5"),]
+dim(South_American)
+```
+
+```{r}
+#Mixed/Other samples
+mixed_other<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == '6'),]
+dim(mixed_other)
+```
+
+##The following section is for Figure 1 of the paper 
+
+```{r}
+#Loading in package dependicies for Figure 1
+library('Ternary') 
+require(RColorBrewer)
+pcol<-brewer.pal(9, "Set1")
+set3<-brewer.pal(9,"Set3")
+```
+
+```{r}
+#Figure 1A 
+all_with_pheno2<-all_with_pheno[,7:9]
+all_with_pheno3<-subset(all_with_pheno,select=c("CEU","AI","YRI"))
+AncCol=c("#E41A1C","#377EB8","#4DAF4A")
+
+AncRGB=col2rgb(AncCol)/255
+#pdf("HCHS_SOL_ternary_admixture_gradients_mixed_other_091019_figure_1A.pdf",height=2.375,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+TernaryPlot(alab="African ancestry (%)",blab="European ancestry (%)",clab="Amerindigenous ancestry (%)",lab.cex=0.6,axis.cex = 0.5)
+nmh=all_with_pheno3; #Needed to reorder ancestry order to get the color I wanted for each, Ryan wrote this script befroe we decided to change the colors for eahc of the pops and I was too lazy to figure out the indeces :) 
+
+for(i in 1:nrow(all_with_pheno2)){
+  ired = nmh[i,1]*AncRGB[1,1] + nmh[i,2]*AncRGB[2,1] + nmh[i,3]*AncRGB[3,1]
+  igreen = nmh[i,1]*AncRGB[1,2] + nmh[i,2]*AncRGB[2,2] + nmh[i,3]*AncRGB[3,2]
+  iblue = nmh[i,1]*AncRGB[1,3] + nmh[i,2]*AncRGB[2,3] + nmh[i,3]*AncRGB[3,3]
+  AddToTernary(points,all_with_pheno2[i,1:3],col=rgb(ired,igreen,iblue,1),pch=16,cex=0.5)
+}
+#dev.off()
+```
+
+
