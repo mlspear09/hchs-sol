@@ -38,59 +38,6 @@ dim(all_with_pheno) #minus the ref
 ```
 
 
-#####Subsetting the admixed 95 HCHS/SOL populations 
-```{r}
-#Dominican subset 
-Dominican<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "0"),]
-dim(Dominican)
-```
-
-```{r}
-#Central American subset
-Central_American<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "1"),]
-dim(Central_American)
-```
-
-```{r}
-#Cuban subset
-Cuban<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "2"),]
-dim(Cuban)
-```
-
-```{r}
-#Mexican subset 
-Mexican<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "3"),]
-dim(Mexican)
-```
-
-```{r}
-#Puerto Rican subset 
-Puerto_Rican<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "4"),]
-dim(Puerto_Rican)
-```
-
-```{r}
-#South American subset 
-South_American<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == "5"),]
-dim(South_American)
-```
-
-```{r}
-#Mixed/Other samples
-mixed_other<-all_with_pheno[which(all_with_pheno$BKGRD1_C7 == '6'),]
-dim(mixed_other)
-```
-
-##The following section is for Figure 1 of the paper 
-
-```{r}
-#Loading in package dependicies for Figure 1
-library('Ternary') 
-require(RColorBrewer)
-pcol<-brewer.pal(9, "Set1")
-set3<-brewer.pal(9,"Set3")
-```
-
 
 ```{r}
 #read in umap results 
@@ -122,7 +69,6 @@ umap_pheno<-merge(combined_pheno_fam, final_umap_file, by.x=c("SUBJECT_ID"), by.
 #subset for variables needed for plot itself 
 umap_pheno_subset<-subset(umap_pheno, select=c("IID.x","BKGRD1_C7","V1","V2"))
 ```
-
 
 
 ```{r}
@@ -158,9 +104,17 @@ names(Final_Latinx_pops)<-c("IID","Population","V1","V2")
 Final_reference=subset(reference_umap,select=c("IID","Population","V1","V2"))  
 
 all_pops<-rbind(Final_Latinx_pops,Final_reference)  
-
-
 ```
+
+
+```{r}
+#Loading in package dependicies for Figure 1
+library('Ternary') 
+require(RColorBrewer)
+pcol<-brewer.pal(9, "Set1")
+set3<-brewer.pal(9,"Set3")
+```
+
 
 ```{r}
 #Figure 1C 
