@@ -1,0 +1,69 @@
+---
+title: "figure 2b"
+author: "Melissa Spear"
+date: "14/07/2020"
+output: html_document
+---
+
+```{r}
+#Figure 2B
+MX_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+
+set.seed(123)
+fit.native = lm(NAM ~ estimated_birth_year+ log(WEIGHT_FINAL_NORM_OVERALL),data=MX_pheno)
+
+#Bootstrap iterations of global ancestry 
+library(boot)
+
+boot_fn <- function(data, indices) {
+  d <- data[indices, ]
+  d <- d[order(d$estimated_birth_year),]
+  loess_fit <- loess(NAM ~ estimated_birth_year, d,
+                     control = loess.control(surface = "direct"))
+  predict(loess_fit, data.frame(estimated_birth_year = seq(1934, 1993, 1)), se = T)$fit
+}
+
+loess_boot <- boot(MX_pheno, R = 1000, statistic = boot_fn)
+
+``` 
+
+```{r}
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/NativeAmerican_ancestry_bootstrap_loess_linear_081319_new_figure_2B.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=range(d[,284]),ylim=c(0.38,0.55),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0.35,0.6,by=0.05),col=rgb(0,0,0,0.1))
+abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90)
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90,at=c("0.35","0.4","0.45","0.5","0.55","0.6"), labels=c("35","40","45","50","55","60"))
+mtext(side=1,"Birth year",line=1.1)
+mtext(side=2,"Amerindigenous ancestry (%)",line=1.1)
+#plot(MX_pheno$estimated_birth_year, MX_pheno$NAM,ylim=c(0.3,0.6),pch = 20, col = "black", xlab = "Birth year",
+     #ylab = "Native American ancestry (%)")
+for(i in sample(nrow(loess_boot$t), 1000)) { #function to plot each row on top of one another 
+  lines(seq(1934, 1993, 1), loess_boot$t[i,], col = "gray",lwd=0.75)
+}
+I1 = which.min(d[,284])
+I2 = which.max(d[,284])
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit.native$fitted.values[I1],y1=fit.native$fitted.values[I2],col="white",lwd=4)
+segments(x0=d[I1,284], x1=d[I2,284],y0=fit.native$fitted.values[I1],y1=fit.native$fitted.values[I2],col=pcol[2],lwd=3)
+pw = 10 #partition width, in years
+part=seq(min(floor(d[,9]/10)*10),max(ceiling(d[,284]/10)*10),by=pw)
+for(i in 1:(length(part)-1)){
+  q1 = max(part[i],min(d[,284]));
+  q2 = min(part[i+1],max(d[,284]));
+  dbin = d[which(d[,284]>q1 & d[,284]<=q2),]
+  m = mean(dbin[,9],na.rm=T)
+  se = 2*sd(dbin[,9],na.rm=T)/sqrt(nrow(dbin))
+  segments(x0=q1,x1=q2,y0=m)
+  segments(x0=(q1+q2)/2,y0=m-se,y1=m+se)
+  cat(i,q1,q2,m,se,"\n",sep="\t")
+}
+conf_97.5 <- apply(loess_boot$t, 2, function(x) quantile(x, .975))
+conf_2.5 <- apply(loess_boot$t, 2, function(x) quantile(x, .025))
+lines(seq(1934, 1993, 1), conf_97.5, type ="l",
+      col = "black", lty=5)
+lines(seq(1934, 1993, 1), conf_2.5, type ="l",
+      col = "black",lty=5)
+#dev.off()
+
+```
