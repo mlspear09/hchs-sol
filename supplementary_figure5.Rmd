@@ -1,0 +1,8 @@
+---
+title: "supplementary figure 5"
+author: "Melissa Spear"
+date: "14/07/2020"
+output: html_document
+---
+
+Supplementary Figure 5 code is at https://github.com/diazale/hispanic_admix/blob/master/code/hrs_admix.R
