@@ -31,6 +31,16 @@ MX.1990.YRI$prop = MX.1990.YRI$value/sum(MX.1990.YRI$value)
 #MX.1990.CEU$prop2 <- log(MX.1990.CEU$prop)
 #MX.1990.YRI$prop2 <- log(MX.1990.YRI$prop)
 
+MX.1990.NAM$value2 = MX.1990.NAM$value + 0.1
+MX.1990.CEU$value2 = MX.1990.CEU$value + 0.1
+MX.1990.YRI$value2 = MX.1990.YRI$value + 0.1
+MX.1990.NAM$normalized_tracts = MX.1990.NAM$value/130
+MX.1990.CEU$normalized_tracts = MX.1990.CEU$value/130
+MX.1990.YRI$normalized_tracts = MX.1990.YRI$value/130
+MX.1990.NAM$prop = MX.1990.NAM$value2/sum(MX.1990.NAM$value2)
+MX.1990.CEU$prop = MX.1990.CEU$value2/sum(MX.1990.CEU$value2)
+MX.1990.YRI$prop = MX.1990.YRI$value2/sum(MX.1990.YRI$value2)
+
 #this replaces any 0s? Not too sure....
 MX.1990.NAM <- do.call(data.frame, lapply(MX.1990.NAM, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1990.CEU <- do.call(data.frame, lapply(MX.1990.CEU, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
@@ -57,6 +67,18 @@ MX.1980.CEU <- do.call(data.frame, lapply(MX.1980.CEU, function(x) {replace(x, i
 MX.1980.YRI <- do.call(data.frame, lapply(MX.1980.YRI, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1980.NAM_no0s = MX.1980.NAM[which(MX.1980.NAM$prop!='0'),]
 
+MX.1980.NAM$value2 = MX.1980.NAM$value + 0.1
+MX.1980.CEU$value2 = MX.1980.CEU$value + 0.1
+MX.1980.YRI$value2 = MX.1980.YRI$value + 0.1
+MX.1980.NAM$normalized_tracts = MX.1980.NAM$value/508
+MX.1980.CEU$normalized_tracts = MX.1980.CEU$value/508
+MX.1980.YRI$normalized_tracts = MX.1980.YRI$value/508
+MX.1980.NAM$prop = MX.1980.NAM$value2/sum(MX.1980.NAM$value2)
+MX.1980.CEU$prop = MX.1980.CEU$value2/sum(MX.1980.CEU$value2)
+MX.1980.YRI$prop = MX.1980.YRI$value2/sum(MX.1980.YRI$value2)
+
+
+
 #1970s
 innameTRACTS.1970 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1970s/boot0.bins.data.txt', sep="")
 MX_1970s = read.table(innameTRACTS.1970, header= T, check.names=F)
@@ -76,6 +98,16 @@ MX.1970.NAM <- do.call(data.frame, lapply(MX.1970.NAM, function(x) {replace(x, i
 MX.1970.CEU <- do.call(data.frame, lapply(MX.1970.CEU, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1970.YRI <- do.call(data.frame, lapply(MX.1970.YRI, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1970.NAM_no0s = MX.1970.NAM[which(MX.1970.NAM$prop!='0'),]
+
+MX.1970.NAM$value2 <- MX.1970.NAM$value + 0.1
+MX.1970.CEU$value2 <- MX.1970.CEU$value + 0.1
+MX.1970.YRI$value2 <- MX.1970.YRI$value + 0.1
+MX.1970.NAM$normalized_tracts = MX.1970.NAM$value/629
+MX.1970.CEU$normalized_tracts = MX.1970.CEU$value/629
+MX.1970.YRI$normalized_tracts = MX.1970.YRI$value/629
+MX.1970.NAM$prop = MX.1970.NAM$value2/sum(MX.1970.NAM$value2)
+MX.1970.CEU$prop = MX.1970.CEU$value2/sum(MX.1970.CEU$value2)
+MX.1970.YRI$prop = MX.1970.YRI$value2/sum(MX.1970.YRI$value2)
 
 #1960s
 innameTRACTS.1960 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1960s/boot0.bins.data.txt', sep="")
@@ -97,6 +129,18 @@ MX.1960.CEU <- do.call(data.frame, lapply(MX.1960.CEU, function(x) {replace(x, i
 MX.1960.YRI <- do.call(data.frame, lapply(MX.1960.YRI, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1960.NAM_no0s = MX.1960.NAM[which(MX.1960.NAM$prop!='0'),]
 
+MX.1960.NAM$value2 <- MX.1960.NAM$value + 0.1
+MX.1960.CEU$value2 <- MX.1960.CEU$value + 0.1
+MX.1960.YRI$value2 <- MX.1960.YRI$value + 0.1
+MX.1960.NAM$normalized_tracts = MX.1960.NAM$value/996
+MX.1960.CEU$normalized_tracts = MX.1960.CEU$value/996
+MX.1960.YRI$normalized_tracts = MX.1960.YRI$value/996
+MX.1960.NAM$prop = MX.1960.NAM$value2/sum(MX.1960.NAM$value2)
+MX.1960.CEU$prop = MX.1960.CEU$value2/sum(MX.1960.CEU$value2)
+MX.1960.YRI$prop = MX.1960.YRI$value2/sum(MX.1960.YRI$value2)
+
+
+
 #1950s
 innameTRACTS.1950 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1950s/boot0.bins.data.txt', sep="")
 MX_1950s = read.table(innameTRACTS.1950, header= T, check.names=F)
@@ -116,6 +160,18 @@ MX.1950.NAM <- do.call(data.frame, lapply(MX.1950.NAM, function(x) {replace(x, i
 MX.1950.CEU <- do.call(data.frame, lapply(MX.1950.CEU, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1950.YRI <- do.call(data.frame, lapply(MX.1950.YRI, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1950.NAM_no0s = MX.1950.NAM[which(MX.1950.NAM$prop!='0'),]
+
+MX.1950.NAM$value2 <- MX.1950.NAM$value + 0.1
+MX.1950.CEU$value2 <- MX.1950.CEU$value + 0.1
+MX.1950.YRI$value2 <- MX.1950.YRI$value + 0.1
+MX.1950.NAM$normalized_tracts = MX.1950.NAM$value/843
+MX.1950.CEU$normalized_tracts = MX.1950.CEU$value/843
+MX.1950.YRI$normalized_tracts = MX.1950.YRI$value/843
+MX.1950.NAM$prop = MX.1950.NAM$value2/sum(MX.1950.NAM$value2)
+MX.1950.CEU$prop = MX.1950.CEU$value2/sum(MX.1950.CEU$value2)
+MX.1950.YRI$prop = MX.1950.YRI$value2/sum(MX.1950.YRI$value2)
+
+
 
 #1940s
 innameTRACTS.1940 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1940s/boot0.bins.data.txt', sep="")
@@ -137,6 +193,16 @@ MX.1940.CEU <- do.call(data.frame, lapply(MX.1940.CEU, function(x) {replace(x, i
 MX.1940.YRI <- do.call(data.frame, lapply(MX.1940.YRI, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1940.NAM_no0s = MX.1940.NAM[which(MX.1940.NAM$prop!='0'),]
 
+MX.1940.NAM$value2 <- MX.1940.NAM$value + 0.1
+MX.1940.CEU$value2 <- MX.1940.CEU$value + 0.1
+MX.1940.YRI$value2 <- MX.1940.YRI$value + 0.1
+MX.1940.NAM$normalized_tracts = MX.1940.NAM$value/437
+MX.1940.CEU$normalized_tracts = MX.1940.CEU$value/437
+MX.1940.YRI$normalized_tracts = MX.1940.YRI$value/437
+MX.1940.NAM$prop = MX.1940.NAM$value2/sum(MX.1940.NAM$value2)
+MX.1940.CEU$prop = MX.1940.CEU$value2/sum(MX.1940.CEU$value2)
+MX.1940.YRI$prop = MX.1940.YRI$value2/sum(MX.1940.YRI$value2)
+
 #1930s
 innameTRACTS.1930 = paste('/Users/melissaspear/Dropbox/HCHS_SOL/tracts_proportions/1930s/boot0.bins.data.txt', sep="")
 MX_1930s = read.table(innameTRACTS.1930, header= T, check.names=F)
@@ -156,6 +222,16 @@ MX.1930.NAM <- do.call(data.frame, lapply(MX.1930.NAM, function(x) {replace(x, i
 MX.1930.CEU <- do.call(data.frame, lapply(MX.1930.CEU, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1930.YRI <- do.call(data.frame, lapply(MX.1930.YRI, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
 MX.1930.NAM_no0s = MX.1930.NAM[which(MX.1930.NAM$prop!='0'),]
+
+MX.1930.NAM$value2 <- MX.1930.NAM$value + 0.1
+MX.1930.CEU$value2 <- MX.1930.CEU$value + 0.1
+MX.1930.YRI$value2 <- MX.1930.YRI$value + 0.1
+MX.1930.NAM$normalized_tracts = MX.1930.NAM$value/79
+MX.1930.CEU$normalized_tracts = MX.1930.CEU$value/79
+MX.1930.YRI$normalized_tracts = MX.1930.YRI$value/79
+MX.1930.NAM$prop = MX.1930.NAM$value2/sum(MX.1930.NAM$value2)
+MX.1930.CEU$prop = MX.1930.CEU$value2/sum(MX.1930.CEU$value2)
+MX.1930.YRI$prop = MX.1930.YRI$value2/sum(MX.1930.YRI$value2)
 
 all_NAM_decades = rbind(MX.1930.NAM, MX.1940.NAM, MX.1950.NAM, MX.1960.NAM, MX.1970.NAM, MX.1980.NAM, MX.1990.NAM)
 all_CEU_decades = rbind(MX.1930.CEU, MX.1940.CEU, MX.1950.CEU, MX.1960.CEU, MX.1970.CEU, MX.1980.CEU, MX.1990.CEU)
@@ -221,3 +297,19 @@ legend("bottomleft",legend=c("1930s","1940s","1950s","1960s","1970s","1980s","19
 
 
 Testing the models 
+
+```{r}
+MX.1930.NAM$age_bin <- as.integer(as.character("0"))
+MX.1940.NAM$age_bin <-  as.integer(as.character("1"))
+MX.1950.NAM$age_bin <-  as.integer(as.character("2"))
+MX.1960.NAM$age_bin <-  as.integer(as.character("3"))
+MX.1970.NAM$age_bin <-  as.integer(as.character("4"))
+MX.1980.NAM$age_bin <-  as.integer(as.character("5"))
+MX.1990.NAM$age_bin <-  as.integer(as.character("6"))
+
+all_decades = rbind(MX.1930.NAM, MX.1940.NAM, MX.1950.NAM, MX.1960.NAM, MX.1970.NAM, MX.1980.NAM, MX.1990.NAM)
+
+tracts_model = lm(log(prop) ~ variable100 + age_bin, data = all_decades)
+summary(tracts_model)
+```
+
