@@ -120,9 +120,9 @@ ceu_roh_with_pheno_admixture$prop_genome_CEU_ROH<-(ceu_roh_with_pheno_admixture$
 ```
 
 
-#
+#Plot figure 
 ```{r}
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_norm_ROH_CEU_AI_alltracts_052620_new_figure3C.pdf",height=2.25,width=2.375,pointsize=10)
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/Mexicans_norm_ROH_CEU_AI_alltracts_052620_new_figure3C.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.3,0.25))
 plot(1,1,type='n',xlim=c(1934, 1993),ylim=c(0,0.04),xlab="",ylab="",xaxt='n',yaxt='n')
 abline(h=seq(0,0.04,by=0.01),col=rgb(0,0,0,0.1))
@@ -168,213 +168,31 @@ lw4_ai <- loess(ROH_A_NORM ~ estimated_birth_year,data=ai_roh_with_pheno_admixtu
 j4_ai<- order(ai_roh_with_pheno_admixture$estimated_birth_year)
 lines(ai_roh_with_pheno_admixture$estimated_birth_year[j4_ai],lw4_ai$fitted[j4_ai],col="#D95F02",lwd=1)
 
-dev.off()
-
-```
-
-
-```{r}
-library(vioplot)
-
-###
-#Plot the ROH per decade 
-require(RColorBrewer)
-pcol=brewer.pal(9, "Set1")
-
-pcol2=brewer.pal(8, "Dark2")
-###plotting the plots for the paper. 
-#regular aesthetics wont work with vioplot package 
-
-#par(mar=c(2.1,2.1,0.1,0.1))
-#plot(1,1,type='n',xlim=range(d[,284]),ylim=c(0.35,0.6),xlab="",ylab="",xaxt='n',yaxt='n')
-#abline(h=seq(0.35,0.6,by=0.05),col=rgb(0,0,0,0.1))
-#abline(v=seq(1930,2000,by=5),col=rgb(0,0,0,0.1))
-#mtext(side=1,"Birth year",line=1.1)
-#mtext(side=2,"Native American ancestry (%)",line=1.1)
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexicans_ROH_overlap_NAM_ancestry_070919.pdf",height=6.00,width=6.0,pointsize=10)
-#par(mfrow=c(2,2), mai = c(0.4, 0.4, 0.2, 0.3))
-par(mfrow=c(1,1), mai = c(0.4, 0.4, 0.2, 0.3))
-
-vioplot(mexicans_1930s$ROH_allclasses_sums_NORM,mexicans_1940s$ROH_allclasses_sums_NORM,mexicans_1950s$ROH_allclasses_sums_NORM,mexicans_1960s$ROH_allclasses_sums_NORM,mexicans_1970s$ROH_allclasses_sums_NORM,mexicans_1980s$ROH_allclasses_sums_NORM,mexicans_1990s$ROH_allclasses_sums_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
-        col="#1B9E77",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.1))
-axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
-axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
-mtext(side=1,"Decades",line=1.1)
-mtext(side=2,"Proportion of genome covered by ROH length",line=1.1)
-abline(h=seq(0,9000,by=1000),col=rgb(0,0,0,0.1))
-abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
-
-
-```
-
-
-#Small ROH 
-vioplot(mexicans_1930s$ROH_A_Mb_norm,mexicans_1940s$ROH_A_Mb_norm,mexicans_1950s$ROH_A_Mb_norm,mexicans_1960s$ROH_A_Mb_norm,mexicans_1970s$ROH_A_Mb_norm,mexicans_1980s$ROH_A_Mb_norm,mexicans_1990s$ROH_A_Mb_norm,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
-        col="#D95F02",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,120))
-axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
-axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
-mtext(side=1,"Decades",line=1.1)
-mtext(side=2,"Total small ROH length (Mbps)",line=1.1)
-abline(h=seq(0,900,by=100),col=rgb(0,0,0,0.1))
-abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
-
-#Medium ROH
-vioplot(mexicans_1930s$ROH_B_Mb_norm,mexicans_1940s$ROH_B_Mb_norm,mexicans_1950s$ROH_B_Mb_norm,mexicans_1960s$ROH_B_Mb_norm,mexicans_1970s$ROH_B_Mb_norm,mexicans_1980s$ROH_B_Mb_norm,mexicans_1990s$ROH_B_Mb_norm,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
-        col="#7570B3",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
-axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
-axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
-mtext(side=1,"Decades",line=1.1)
-mtext(side=2,"Total medium ROH length (Mbps)",line=1.1)
-abline(h=seq(0,1100,by=100),col=rgb(0,0,0,0.1))
-abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
-
-#Long ROH
-vioplot(mexicans_1930s$ROH_C_Mb_norm,mexicans_1940s$ROH_C_Mb_norm,mexicans_1950s$ROH_C_Mb_norm,mexicans_1960s$ROH_C_Mb_norm,mexicans_1970s$ROH_C_Mb_norm,mexicans_1980s$ROH_C_Mb_norm,mexicans_1990s$ROH_C_Mb_norm,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
-        col="#E7298A",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,1000))
-axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
-axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
-mtext(side=1,"Decades",line=1.1)
-mtext(side=2,"Total long ROH length (Mbps)",line=1.1)
-abline(h=seq(0,8000,by=1000),col=rgb(0,0,0,0.1))
-abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
 #dev.off()
 
-
-
-
-```{r}
-#######Adding a "Decade" variable in orde to group the birth years in the plots 
-mexicans_1930s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year<1940),]
-mexicans_1930s$Decade ="1930s"
-
-mexicans_1940s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1940 & roh_with_pheno_admixture$estimated_birth_year<1950),]
-mexicans_1940s$Decade ="1940s"
-
-mexicans_1950s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1950 & roh_with_pheno_admixture$estimated_birth_year<1960),]
-mexicans_1950s$Decade ="1950s"
-
-mexicans_1960s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1960 & roh_with_pheno_admixture$estimated_birth_year<1970),]
-mexicans_1960s$Decade ="1960s"
-
-mexicans_1970s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1970 & roh_with_pheno_admixture$estimated_birth_year<1980),]
-mexicans_1970s$Decade ="1970s"
-
-mexicans_1980s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1980 & roh_with_pheno_admixture$estimated_birth_year<1990),]
-mexicans_1980s$Decade ="1980s"
-
-mexicans_1990s<-roh_with_pheno_admixture[which(roh_with_pheno_admixture$estimated_birth_year>=1990),]
-mexicans_1990s$Decade ="1990s"
-
-mexicans_with_decades<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
-
-
-
 ```
 
-Kendal tau correlation on AI tracts 
+
+#####
+Statistical Analyses supporting figure 3C 
+Correlation between normalized ROH proportion and birth year
+
 ```{r}
 #all tracts 
 cor.test(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
 ```
 
 ```{r}
-#short tracts 
+#short ROH tracts 
 cor.test(ai_roh_with_pheno_admixture$ROH_A_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
 ```
 
 ```{r}
-#medium 
-
+#medium ROH tracts 
 cor.test(ai_roh_with_pheno_admixture$ROH_B_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
 ```
 
 ```{r}
+#long ROH tracts 
 cor.test(ai_roh_with_pheno_admixture$ROH_C_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
 ```
-
-########short
-
-cor.test(roh_with_pheno$ROH_A_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
-
-#Kendall's rank correlation tau
-
-data:  roh_with_pheno$ROH_A_Mb and roh_with_pheno$estimated_birth_year
-z = 9.4713, p-value < 2.2e-16
-alternative hypothesis: true tau is not equal to 0
-sample estimates:
-tau 
-0.106802 
-
-cor.test(roh_with_pheno$ROH_A_Mb,roh_with_pheno$estimated_birth_year)
-> cor.test(roh_with_pheno$ROH_A_Mb,roh_with_pheno$estimated_birth_year)
-
-#Pearson's product-moment correlation
-
-data:  roh_with_pheno$ROH_A_Mb and roh_with_pheno$estimated_birth_year
-t = 9.1444, df = 3568, p-value < 2.2e-16
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
-0.1191123 0.1832215
-sample estimates:
-cor 
-0.151326 
-
-
-#####medium
-cor.test(roh_with_pheno$ROH_B_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
-
-#Kendall's rank correlation tau
-
-data:  roh_with_pheno$ROH_B_Mb and roh_with_pheno$estimated_birth_year
-z = 8.8953, p-value < 2.2e-16
-alternative hypothesis: true tau is not equal to 0
-sample estimates:
-tau 
-0.1003128 
-
-cor.test(roh_with_pheno$ROH_B_Mb,roh_with_pheno$estimated_birth_year)
-
-> cor.test(roh_with_pheno$ROH_B_Mb,roh_with_pheno$estimated_birth_year)
-
-#Pearson's product-moment correlation
-
-data:  roh_with_pheno$ROH_B_Mb and roh_with_pheno$estimated_birth_year
-t = 8.4189, df = 3568, p-value < 2.2e-16
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
-0.1072500 0.1715835
-sample estimates:
-cor 
-0.139564 
-
-#######long 
-cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
-
-> cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year,method="kendall")
-
-#Kendall's rank correlation tau
-
-data:  roh_with_pheno$ROH_C_Mb and roh_with_pheno$estimated_birth_year
-z = 0.61369, p-value = 0.5394
-alternative hypothesis: true tau is not equal to 0
-sample estimates:
-        tau 
-0.007576936 
-
-
-cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year)
-
-> cor.test(roh_with_pheno$ROH_C_Mb,roh_with_pheno$estimated_birth_year)
-
-#Pearson's product-moment correlation
-
-data:  roh_with_pheno$ROH_C_Mb and roh_with_pheno$estimated_birth_year
-t = -0.4486, df = 3568, p-value = 0.6537
-alternative hypothesis: true correlation is not equal to 0
-95 percent confidence interval:
- -0.04030506  0.02530134
-sample estimates:
-         cor 
--0.007509945 
-
-
