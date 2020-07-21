@@ -1,32 +1,217 @@
 ---
-title: "ROH bootsrap"
+title: "New supplementary figure 8"
 author: "Melissa Spear"
-date: "27/05/2020"
+date: "04/06/2020"
 output: html_document
 ---
 
-Bootstrap resampling of ROH proportions - Supplementary Figure 8
+Plotting supplementary figure 8. The following script plots 3 separate panels that were pasted together in keynote for prgnaizational purposes 
 
-AI tracts 
+#Plot of sums of all tracts in MB
+
 ```{r}
-#read in summed ROH calls 
+#Importing in the BED files for the Mexicans 
+all_roh<-read.table("/Volumes/LaCie/Downloads/HCHS_SOL_95admixed_Mexicans_ROH_calls.txt", header=T,sep='\t')
+
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+pheno_subsetted<-subset(d,select=c("V1","V2","US_BORN","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL"))
+
+#some individuals do not have ROH so need to add 1 BP for plotting purposes 
+all_roh$ROH_A = all_roh$ROH_A+1
+all_roh$ROH_B = all_roh$ROH_B+1
+all_roh$ROH_C = all_roh$ROH_C+1
+
+
+all_roh$ROH_A_Mb = all_roh$ROH_A/1000000
+all_roh$ROH_B_Mb = all_roh$ROH_B/1000000
+all_roh$ROH_C_Mb = all_roh$ROH_C/1000000
+
+
+all_roh_with_pheno<-merge(all_roh,pheno_subsetted,by.x=("ID"),by.y=c("V2"))
+#creating new variable summing three ROH columns 
+
+all_roh_with_pheno$ROH_sums<- rowSums(all_roh_with_pheno[,c("ROH_A_Mb", "ROH_B_Mb","ROH_C_Mb")])
+```
+
+```{r}
+mexicans_1930s_all<-all_roh_with_pheno[which(all_roh_with_pheno$estimated_birth_year<1940),]
+mexicans_1930s_all$Decade ="1930s"
+
+mexicans_1940s_all<-all_roh_with_pheno[which(all_roh_with_pheno$estimated_birth_year>=1940 & all_roh_with_pheno$estimated_birth_year<1950),]
+mexicans_1940s_all$Decade ="1940s"
+
+mexicans_1950s_all<-all_roh_with_pheno[which(all_roh_with_pheno$estimated_birth_year>=1950 & all_roh_with_pheno$estimated_birth_year<1960),]
+mexicans_1950s_all$Decade ="1950s"
+
+mexicans_1960s_all<-all_roh_with_pheno[which(all_roh_with_pheno$estimated_birth_year>=1960 & all_roh_with_pheno$estimated_birth_year<1970),]
+mexicans_1960s_all$Decade ="1960s"
+
+mexicans_1970s_all<-all_roh_with_pheno[which(all_roh_with_pheno$estimated_birth_year>=1970 & all_roh_with_pheno$estimated_birth_year<1980),]
+mexicans_1970s_all$Decade ="1970s"
+
+mexicans_1980s_all<-all_roh_with_pheno[which(all_roh_with_pheno$estimated_birth_year>=1980 & all_roh_with_pheno$estimated_birth_year<1990),]
+mexicans_1980s_all$Decade ="1980s"
+
+mexicans_1990s_all<-all_roh_with_pheno[which(all_roh_with_pheno$estimated_birth_year>=1990),]
+mexicans_1990s_all$Decade ="1990s"
+
+#mexicans_with_decades_all<-rbind(mexicans_1930s_all,mexicans_1940s_all,mexicans_1950s_all,mexicans_1960s_all,mexicans_1970s_all,mexicans_1980s_all,mexicans_1990s_all)
+
+```
+
+```{r}
+library("ggplot2")
+library(vioplot)
+require(RColorBrewer)
+pcol=brewer.pal(9, "Set1")
+
+####Plotting the vioplot for all ROH, not jsut Native american regions 
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/supplementary_figure8_panelA.pdf",height=2.00,width=6.0,pointsize=10)
+par(mfrow=c(1,4), mai = c(0.25, 0.25, 0.2, 0.1))
+vioplot(mexicans_1930s_all$ROH_sums,mexicans_1940s_all$ROH_sums,mexicans_1950s_all$ROH_sums,mexicans_1960s_all$ROH_sums,mexicans_1970s_all$ROH_sums,mexicans_1980s_all$ROH_sums,mexicans_1990s_all$ROH_sums,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#1B9E77",xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,1000))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.6)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.30)
+mtext(side=2,"Total ROH (Mbps)",line=1.1,cex.lab=0.30)
+abline(h=seq(0,1000,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Small ROH 
+vioplot(mexicans_1930s_all$ROH_A_Mb,mexicans_1940s_all$ROH_A_Mb,mexicans_1950s_all$ROH_A_Mb,mexicans_1960s_all$ROH_A_Mb,mexicans_1970s_all$ROH_A_Mb,mexicans_1980s_all$ROH_A_Mb,mexicans_1990s_all$ROH_A_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#D95F02",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.axis=0.50)
+mtext(side=2,"Total small ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,200,by=50),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Medium ROH
+vioplot(mexicans_1930s_all$ROH_B_Mb,mexicans_1940s_all$ROH_B_Mb,mexicans_1950s_all$ROH_B_Mb,mexicans_1960s_all$ROH_B_Mb,mexicans_1970s_all$ROH_B_Mb,mexicans_1980s_all$ROH_B_Mb,mexicans_1990s_all$ROH_B_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#7570B3",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.50)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.50)
+mtext(side=2,"Total medium ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,200,by=50),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Long ROH
+vioplot(mexicans_1930s_all$ROH_C_Mb,mexicans_1940s_all$ROH_C_Mb,mexicans_1950s_all$ROH_C_Mb,mexicans_1960s_all$ROH_C_Mb,mexicans_1970s_all$ROH_C_Mb,mexicans_1980s_all$ROH_C_Mb,mexicans_1990s_all$ROH_C_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#E7298A",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,800))
+axis(side=1,padj=-2,cex.axis=0.60,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.50)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.50)
+mtext(side=2,"Total long ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,800,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+dev.off()
+
+```
+
+
+###############################################
+#Panel B - Plot of sum of AI tracts in MB
+
+```{r}
+#read in summed AI ROH calls 
 ai_roh_calls<-read.table("/Volumes/LaCie/Downloads/split_roh_files/NAM_ROH_segments/reclassified_classes/summed_calls2/HCHS_SOL_Mexicans_alldecades_summed_NAM_ROH_calls_newclasses_080519.txt",header=F,sep='\t')
 
 #adding column titles 
 names(ai_roh_calls)=c("IID","ROH_A","ROH_B","ROH_C")
 
-#3570 samples made the cut - some samples do not have NAM roh. 
+#some samples do not have roh in some classes and will cause errors in the analysis pipeline so added roh of 1 BP long to all samples to fill in 0s.  
+ai_roh_calls$ROH_A<-ai_roh_calls$ROH_A+1
+ai_roh_calls$ROH_B<-ai_roh_calls$ROH_B+1
+ai_roh_calls$ROH_C<-ai_roh_calls$ROH_C+1
 
-#read in pheno file 
-d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
-
-#subset for needed variables
-pheno_subsetted<-subset(d,select=c("V1","V2","US_BORN","estimated_birth_year","WEIGHT_FINAL_NORM_OVERALL"))
+#New column of bp to Mbp
+ai_roh_calls$ROH_A_Mb = ai_roh_calls$ROH_A/1000000
+ai_roh_calls$ROH_B_Mb = ai_roh_calls$ROH_B/1000000
+ai_roh_calls$ROH_C_Mb = ai_roh_calls$ROH_C/1000000
 
 #merge with pheno file 
 ai_roh_with_pheno<-merge(ai_roh_calls,pheno_subsetted,by.x=("IID"),by.y=c("V2"))
+
+#sum of ROH classes 
+ai_roh_with_pheno$ROH_sums<- rowSums(ai_roh_with_pheno[,c("ROH_A_Mb", "ROH_B_Mb","ROH_C_Mb")])
 ```
 
+
+```{r}
+mexicans_1930s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year<1940),]
+mexicans_1930s_ai$Decade ="1930s"
+
+mexicans_1940s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1940 & ai_roh_with_pheno$estimated_birth_year<1950),]
+mexicans_1940s_ai$Decade ="1940s"
+
+mexicans_1950s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1950 & ai_roh_with_pheno$estimated_birth_year<1960),]
+mexicans_1950s_ai$Decade ="1950s"
+
+mexicans_1960s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1960 & ai_roh_with_pheno$estimated_birth_year<1970),]
+mexicans_1960s_ai$Decade ="1960s"
+
+mexicans_1970s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1970 & ai_roh_with_pheno$estimated_birth_year<1980),]
+mexicans_1970s_ai$Decade ="1970s"
+
+mexicans_1980s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1980 & ai_roh_with_pheno$estimated_birth_year<1990),]
+mexicans_1980s_ai$Decade ="1980s"
+
+mexicans_1990s_ai<-ai_roh_with_pheno[which(ai_roh_with_pheno$estimated_birth_year>=1990),]
+mexicans_1990s_ai$Decade ="1990s"
+
+```
+
+
+```{r}
+####Plotting the vioplot for ai ROH, not jsut Native american regions 
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/supplementary_figure8_panelB.pdf",height=2.00,width=6.0,pointsize=10)
+par(mfrow=c(1,4), mai = c(0.25, 0.25, 0.2, 0.1))
+vioplot(mexicans_1930s_ai$ROH_sums,mexicans_1940s_ai$ROH_sums,mexicans_1950s_ai$ROH_sums,mexicans_1960s_ai$ROH_sums,mexicans_1970s_ai$ROH_sums,mexicans_1980s_ai$ROH_sums,mexicans_1990s_ai$ROH_sums,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#1B9E77",xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,1000))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.6)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.30)
+mtext(side=2,"Total AI ROH (Mbps)",line=1.1,cex.lab=0.30)
+abline(h=seq(0,1000,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Small ROH 
+vioplot(mexicans_1930s_ai$ROH_A_Mb,mexicans_1940s_ai$ROH_A_Mb,mexicans_1950s_ai$ROH_A_Mb,mexicans_1960s_ai$ROH_A_Mb,mexicans_1970s_ai$ROH_A_Mb,mexicans_1980s_ai$ROH_A_Mb,mexicans_1990s_ai$ROH_A_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#D95F02",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.axis=0.50)
+mtext(side=2,"Total small AI ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,200,by=50),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Medium ROH
+vioplot(mexicans_1930s_ai$ROH_B_Mb,mexicans_1940s_ai$ROH_B_Mb,mexicans_1950s_ai$ROH_B_Mb,mexicans_1960s_ai$ROH_B_Mb,mexicans_1970s_ai$ROH_B_Mb,mexicans_1980s_ai$ROH_B_Mb,mexicans_1990s_ai$ROH_B_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#7570B3",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,200))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.50)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.50)
+mtext(side=2,"Total medium AI ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,200,by=50),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Long ROH
+vioplot(mexicans_1930s_ai$ROH_C_Mb,mexicans_1940s_ai$ROH_C_Mb,mexicans_1950s_ai$ROH_C_Mb,mexicans_1960s_ai$ROH_C_Mb,mexicans_1970s_ai$ROH_C_Mb,mexicans_1980s_ai$ROH_C_Mb,mexicans_1990s_ai$ROH_C_Mb,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#E7298A",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,800))
+axis(side=1,padj=-2,cex.axis=0.60,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.50)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.50)
+mtext(side=2,"Total long AI ROH (Mbps)",line=1.1,cex.lab=0.50)
+abline(h=seq(0,800,by=100),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+dev.off()
+```
+
+
+###############################################
+#Panel C - Plot of normalized AI tracts in BP 
 
 ```{r}
 #Read in the admixture file estimates file 
@@ -46,11 +231,6 @@ ai_roh_with_pheno_admixture$AI_both_haps_length<- (ai_roh_with_pheno_admixture$A
 ```
 
 ```{r}
-#some samples do not have roh in some classes and will cause errors in the analysis pipeline so added roh of 1 BP long to all samples to fill in 0s.  
-ai_roh_with_pheno_admixture$ROH_A<-ai_roh_with_pheno_admixture$ROH_A+1
-ai_roh_with_pheno_admixture$ROH_B<-ai_roh_with_pheno_admixture$ROH_B+1
-ai_roh_with_pheno_admixture$ROH_C<-ai_roh_with_pheno_admixture$ROH_C+1
-
 #creating new variable summing three ROH columns 
 ai_roh_with_pheno_admixture$ROH_allclasses_sums<- rowSums(ai_roh_with_pheno_admixture[,c("ROH_A", "ROH_B","ROH_C")])
 
@@ -63,582 +243,86 @@ ai_roh_with_pheno_admixture$ROH_A_NORM<-(ai_roh_with_pheno_admixture$ROH_A)/((ai
 #normalizing medium ROH by global ancestry 
 ai_roh_with_pheno_admixture$ROH_B_NORM<-(ai_roh_with_pheno_admixture$ROH_B)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
 
-#normalizing long ROH by global ancestry 
+#normalizing long ROH by global ancestry
 ai_roh_with_pheno_admixture$ROH_C_NORM<-(ai_roh_with_pheno_admixture$ROH_C)/((ai_roh_with_pheno_admixture$AI_both_haps_length)/(2)) 
 
-#adjusted BP genome covered in ROH???
-#2781821274 BP when looking at only one haplotype
-ai_roh_with_pheno_admixture$prop_genome_AI_ROH<-(ai_roh_with_pheno_admixture$ROH_allclasses_sums_NORM * 2781821274)
-```
-
-#calculating the mean for each of the groups 
-```{r}
-#90s
-ai_all_90s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1990),]
-ai_mean_90s_ROH_total<-mean(ai_all_90s$ROH_allclasses_sums_NORM)
-ai_mean_90s_ROH_A<-mean(ai_all_90s$ROH_A_NORM)
-ai_mean_90s_ROH_B<-mean(ai_all_90s$ROH_B_NORM)
-ai_mean_90s_ROH_C<-mean(ai_all_90s$ROH_C_NORM)
-
-#80s
-ai_all_80s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1980 & ai_roh_with_pheno_admixture$estimated_birth_year<1990),]
-ai_mean_80s_ROH_total<-mean(ai_all_80s$ROH_allclasses_sums_NORM)
-ai_mean_80s_ROH_A<-mean(ai_all_80s$ROH_A_NORM)
-ai_mean_80s_ROH_B<-mean(ai_all_80s$ROH_B_NORM)
-ai_mean_80s_ROH_C<-mean(ai_all_80s$ROH_C_NORM)
-
-#70s
-ai_all_70s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1970 & ai_roh_with_pheno_admixture$estimated_birth_year<1980),]
-ai_mean_70s_ROH_total<-mean(ai_all_70s$ROH_allclasses_sums_NORM)
-ai_mean_70s_ROH_A<-mean(ai_all_70s$ROH_A_NORM)
-ai_mean_70s_ROH_B<-mean(ai_all_70s$ROH_B_NORM)
-ai_mean_70s_ROH_C<-mean(ai_all_70s$ROH_C_NORM)
-
-#60s
-ai_all_60s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1960 & ai_roh_with_pheno_admixture$estimated_birth_year<1970),]
-ai_mean_60s_ROH_total<-mean(ai_all_60s$ROH_allclasses_sums_NORM)
-ai_mean_60s_ROH_A<-mean(ai_all_60s$ROH_A_NORM)
-ai_mean_60s_ROH_B<-mean(ai_all_60s$ROH_B_NORM)
-ai_mean_60s_ROH_C<-mean(ai_all_60s$ROH_C_NORM)
-
-#50s
-ai_all_50s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1950 & ai_roh_with_pheno_admixture$estimated_birth_year<1960),]
-ai_mean_50s_ROH_total<-mean(ai_all_50s$ROH_allclasses_sums_NORM)
-ai_mean_50s_ROH_A<-mean(ai_all_50s$ROH_A_NORM)
-ai_mean_50s_ROH_B<-mean(ai_all_50s$ROH_B_NORM)
-ai_mean_50s_ROH_C<-mean(ai_all_50s$ROH_C_NORM)
-
-#40s
-ai_all_40s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1940 & ai_roh_with_pheno_admixture$estimated_birth_year<1950),]
-ai_mean_40s_ROH_total<-mean(ai_all_40s$ROH_allclasses_sums_NORM)
-ai_mean_40s_ROH_A<-mean(ai_all_40s$ROH_A_NORM)
-ai_mean_40s_ROH_B<-mean(ai_all_40s$ROH_B_NORM)
-ai_mean_40s_ROH_C<-mean(ai_all_40s$ROH_C_NORM)
-
-#30s
-ai_all_30s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year<1940),]
-ai_mean_30s_ROH_total<-mean(ai_all_30s$ROH_allclasses_sums_NORM)
-ai_mean_30s_ROH_A<-mean(ai_all_30s$ROH_A_NORM)
-ai_mean_30s_ROH_B<-mean(ai_all_30s$ROH_B_NORM)
-ai_mean_30s_ROH_C<-mean(ai_all_30s$ROH_C_NORM)
 ```
 
 
-90s AI 
 ```{r}
-#90s ROH classes total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_90s$ROH_allclasses_sums_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
+mexicans_1930s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year<1940),]
+mexicans_1930s$Decade ="1930s"
 
-lower_90_total_bound<-quantile(bstrap,.025)
-upper_90_total_bound<-quantile(bstrap,.975)
+mexicans_1940s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1940 & ai_roh_with_pheno_admixture$estimated_birth_year<1950),]
+mexicans_1940s$Decade ="1940s"
 
-#90s ROH A total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_90s$ROH_A_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
+mexicans_1950s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1950 & ai_roh_with_pheno_admixture$estimated_birth_year<1960),]
+mexicans_1950s$Decade ="1950s"
 
-lower_90_A_bound<-quantile(bstrap,.025)
-upper_90_A_bound<-quantile(bstrap,.975)
+mexicans_1960s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1960 & ai_roh_with_pheno_admixture$estimated_birth_year<1970),]
+mexicans_1960s$Decade ="1960s"
 
-#90s ROH B total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_90s$ROH_B_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
+mexicans_1970s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1970 & ai_roh_with_pheno_admixture$estimated_birth_year<1980),]
+mexicans_1970s$Decade ="1970s"
 
-lower_90_B_bound<-quantile(bstrap,.025)
-upper_90_B_bound<-quantile(bstrap,.975)
+mexicans_1980s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1980 & ai_roh_with_pheno_admixture$estimated_birth_year<1990),]
+mexicans_1980s$Decade ="1980s"
 
-#90s ROH C total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_90s$ROH_C_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_90_C_bound<-quantile(bstrap,.025)
-upper_90_C_bound<-quantile(bstrap,.975)
+mexicans_1990s<-ai_roh_with_pheno_admixture[which(ai_roh_with_pheno_admixture$estimated_birth_year>=1990),]
+mexicans_1990s$Decade ="1990s"
 
 ```
 
 
 
-80s AI
 ```{r}
-#80s ROH classes total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_80s$ROH_allclasses_sums_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_80_total_bound<-quantile(bstrap,.025)
-upper_80_total_bound<-quantile(bstrap,.975)
-
-#80s ROH A total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_80s$ROH_A_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_80_A_bound<-quantile(bstrap,.025)
-upper_80_A_bound<-quantile(bstrap,.975)
-
-#80s ROH B total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_80s$ROH_B_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_80_B_bound<-quantile(bstrap,.025)
-upper_80_B_bound<-quantile(bstrap,.975)
-
-#80s ROH C total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_80s$ROH_C_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_80_C_bound<-quantile(bstrap,.025)
-upper_80_C_bound<-quantile(bstrap,.975)
-
-```
-
-
-70s AI
-```{r}
-#70s ROH classes total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_70s$ROH_allclasses_sums_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_70_total_bound<-quantile(bstrap,.025)
-upper_70_total_bound<-quantile(bstrap,.975)
-
-#70s ROH A total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_70s$ROH_A_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_70_A_bound<-quantile(bstrap,.025)
-upper_70_A_bound<-quantile(bstrap,.975)
-
-#70s ROH B total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_70s$ROH_B_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_70_B_bound<-quantile(bstrap,.025)
-upper_70_B_bound<-quantile(bstrap,.975)
-
-#70s ROH C total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_70s$ROH_C_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_70_C_bound<-quantile(bstrap,.025)
-upper_70_C_bound<-quantile(bstrap,.975)
-
-```
-
-
-60s AI
-```{r}
-#60s ROH classes total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_60s$ROH_allclasses_sums_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_60_total_bound<-quantile(bstrap,.025)
-upper_60_total_bound<-quantile(bstrap,.975)
-
-#60s ROH A total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_60s$ROH_A_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_60_A_bound<-quantile(bstrap,.025)
-upper_60_A_bound<-quantile(bstrap,.975)
-
-#60s ROH B total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_60s$ROH_B_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_60_B_bound<-quantile(bstrap,.025)
-upper_60_B_bound<-quantile(bstrap,.975)
-
-#60s ROH C total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_60s$ROH_C_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_60_C_bound<-quantile(bstrap,.025)
-upper_60_C_bound<-quantile(bstrap,.975)
-
-```
-
-
-
-50s AI
-```{r}
-#50s ROH classes total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_50s$ROH_allclasses_sums_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_50_total_bound<-quantile(bstrap,.025)
-upper_50_total_bound<-quantile(bstrap,.975)
-
-#50s ROH A total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_50s$ROH_A_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_50_A_bound<-quantile(bstrap,.025)
-upper_50_A_bound<-quantile(bstrap,.975)
-
-#50s ROH B total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_50s$ROH_B_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_50_B_bound<-quantile(bstrap,.025)
-upper_50_B_bound<-quantile(bstrap,.975)
-
-#50s ROH C total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_50s$ROH_C_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_50_C_bound<-quantile(bstrap,.025)
-upper_50_C_bound<-quantile(bstrap,.975)
-
-```
-
-
-
-40s AI
-```{r}
-#40s ROH classes total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_40s$ROH_allclasses_sums_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_40_total_bound<-quantile(bstrap,.025)
-upper_40_total_bound<-quantile(bstrap,.975)
-
-#40s ROH A total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_40s$ROH_A_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_40_A_bound<-quantile(bstrap,.025)
-upper_40_A_bound<-quantile(bstrap,.975)
-
-#40s ROH B total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_40s$ROH_B_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_40_B_bound<-quantile(bstrap,.025)
-upper_40_B_bound<-quantile(bstrap,.975)
-
-#40s ROH C total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_40s$ROH_C_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_40_C_bound<-quantile(bstrap,.025)
-upper_40_C_bound<-quantile(bstrap,.975)
-
-```
-
-
-30s AI
-```{r}
-#30s ROH classes total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_30s$ROH_allclasses_sums_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_30_total_bound<-quantile(bstrap,.025)
-upper_30_total_bound<-quantile(bstrap,.975)
-
-#30s ROH A total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_30s$ROH_A_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_30_A_bound<-quantile(bstrap,.025)
-upper_30_A_bound<-quantile(bstrap,.975)
-
-#30s ROH B total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_30s$ROH_B_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_30_B_bound<-quantile(bstrap,.025)
-upper_30_B_bound<-quantile(bstrap,.975)
-
-#30s ROH C total 
-set.seed(1234)
-bstrap <- c()
-for (i in 1:1000){
-  # First take the sample
-  bsample <- sample(ai_all_30s$ROH_C_NORM,replace=T)
-    #now calculate the bootstrap estimate + 
-  bestimate <- mean(bsample)
-  bstrap <- c(bstrap,bestimate)}
-
-lower_30_C_bound<-quantile(bstrap,.025)
-upper_30_C_bound<-quantile(bstrap,.975)
-
-```
-
-```{r}
-#All ROH 
-###combining all the upper bounds for all ROH  
-ai_ROH_total_all_upper_bounds<-rbind(upper_30_total_bound[[1]],upper_40_total_bound[[1]],upper_50_total_bound[[1]],upper_60_total_bound[[1]],upper_70_total_bound[[1]],upper_80_total_bound[[1]],upper_90_total_bound[[1]])
-
-###combining all the lower bounds for all ROH  
-ai_ROH_total_all_lower_bounds<-rbind(lower_30_total_bound[[1]],lower_40_total_bound[[1]],lower_50_total_bound[[1]],lower_60_total_bound[[1]],lower_70_total_bound[[1]],lower_80_total_bound[[1]],lower_90_total_bound[[1]])
-
-#ROH A 
-###combining all the upper bounds for A ROH  
-ai_ROH_A_all_upper_bounds<-rbind(upper_30_A_bound[[1]],upper_40_A_bound[[1]],upper_50_A_bound[[1]],upper_60_A_bound[[1]],upper_70_A_bound[[1]],upper_80_A_bound[[1]],upper_90_A_bound[[1]])
-
-###combining all the lower bounds for A ROH  
-ai_ROH_A_all_lower_bounds<-rbind(lower_30_A_bound[[1]],lower_40_A_bound[[1]],lower_50_A_bound[[1]],lower_60_A_bound[[1]],lower_70_A_bound[[1]],lower_80_A_bound[[1]],lower_90_A_bound[[1]])
-
-#ROH B 
-###combining all the upper bounds for B ROH  
-ai_ROH_B_all_upper_bounds<-rbind(upper_30_B_bound[[1]],upper_40_B_bound[[1]],upper_50_B_bound[[1]],upper_60_B_bound[[1]],upper_70_B_bound[[1]],upper_80_B_bound[[1]],upper_90_B_bound[[1]])
-
-###combining all the lower bounds for B ROH  
-ai_ROH_B_all_lower_bounds<-rbind(lower_30_B_bound[[1]],lower_40_B_bound[[1]],lower_50_B_bound[[1]],lower_60_B_bound[[1]],lower_70_B_bound[[1]],lower_80_B_bound[[1]],lower_90_B_bound[[1]])
-
-#ROH C 
-###combining all the upper bounds for C ROH  
-ai_ROH_C_all_upper_bounds<-rbind(upper_30_C_bound[[1]],upper_40_C_bound[[1]],upper_50_C_bound[[1]],upper_60_C_bound[[1]],upper_70_C_bound[[1]],upper_80_C_bound[[1]],upper_90_C_bound[[1]])
-
-###combining all the lower bounds for C ROH  
-ai_ROH_C_all_lower_bounds<-rbind(lower_30_C_bound[[1]],lower_40_C_bound[[1]],lower_50_C_bound[[1]],lower_60_C_bound[[1]],lower_70_C_bound[[1]],lower_80_C_bound[[1]],lower_90_C_bound[[1]])
-
-```
-
-
-
-
-```{r}
-#merging info together for all ROH classes 
-ai_total_roh_dataframe=data.frame(c(1,2,3,4,5,6,7),c(ai_mean_30s_ROH_total,ai_mean_40s_ROH_total,ai_mean_50s_ROH_total,ai_mean_60s_ROH_total,ai_mean_70s_ROH_total,ai_mean_80s_ROH_total,ai_mean_90s_ROH_total),c(lower_30_total_bound[[1]],lower_40_total_bound[[1]],lower_50_total_bound[[1]],lower_60_total_bound[[1]],lower_70_total_bound[[1]],lower_80_total_bound[[1]],lower_90_total_bound[[1]]),c(upper_30_total_bound[[1]],upper_40_total_bound[[1]],upper_50_total_bound[[1]],upper_60_total_bound[[1]],upper_70_total_bound[[1]],upper_80_total_bound[[1]],upper_90_total_bound[[1]]))
-
-names(ai_total_roh_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
-
-means_ai_total_roh_dataframe=c(ai_mean_30s_ROH_total,ai_mean_40s_ROH_total,ai_mean_50s_ROH_total,ai_mean_60s_ROH_total,ai_mean_70s_ROH_total,ai_mean_80s_ROH_total,ai_mean_90s_ROH_total)
-```
-
-```{r}
-#merging info together for A ROH classes 
-ai_A_roh_dataframe=data.frame(c(1,2,3,4,5,6,7),c(ai_mean_30s_ROH_A,ai_mean_40s_ROH_A,ai_mean_50s_ROH_A,ai_mean_60s_ROH_A,ai_mean_70s_ROH_A,ai_mean_80s_ROH_A,ai_mean_90s_ROH_A),c(lower_30_A_bound[[1]],lower_40_A_bound[[1]],lower_50_A_bound[[1]],lower_60_A_bound[[1]],lower_70_A_bound[[1]],lower_80_A_bound[[1]],lower_90_A_bound[[1]]),c(upper_30_A_bound[[1]],upper_40_A_bound[[1]],upper_50_A_bound[[1]],upper_60_A_bound[[1]],upper_70_A_bound[[1]],upper_80_A_bound[[1]],upper_90_A_bound[[1]]))
-
-names(ai_A_roh_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
-
-means_ai_A_roh_dataframe=c(ai_mean_30s_ROH_A,ai_mean_40s_ROH_A,ai_mean_50s_ROH_A,ai_mean_60s_ROH_A,ai_mean_70s_ROH_A,ai_mean_80s_ROH_A,ai_mean_90s_ROH_A)
-```
-
-```{r}
-#merging info together for B ROH classes 
-ai_B_roh_dataframe=data.frame(c(1,2,3,4,5,6,7),c(ai_mean_30s_ROH_B,ai_mean_40s_ROH_B,ai_mean_50s_ROH_B,ai_mean_60s_ROH_B,ai_mean_70s_ROH_B,ai_mean_80s_ROH_B,ai_mean_90s_ROH_B),c(lower_30_B_bound[[1]],lower_40_B_bound[[1]],lower_50_B_bound[[1]],lower_60_B_bound[[1]],lower_70_B_bound[[1]],lower_80_B_bound[[1]],lower_90_B_bound[[1]]),c(upper_30_B_bound[[1]],upper_40_B_bound[[1]],upper_50_B_bound[[1]],upper_60_B_bound[[1]],upper_70_B_bound[[1]],upper_80_B_bound[[1]],upper_90_B_bound[[1]]))
-
-names(ai_B_roh_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
-
-means_ai_B_roh_dataframe=c(ai_mean_30s_ROH_B,ai_mean_40s_ROH_B,ai_mean_50s_ROH_B,ai_mean_60s_ROH_B,ai_mean_70s_ROH_B,ai_mean_80s_ROH_B,ai_mean_90s_ROH_B)
-```
-
-
-
-
-```{r}
-#merging info together for C ROH classes 
-ai_C_roh_dataframe=data.frame(c(1,2,3,4,5,6,7),c(ai_mean_30s_ROH_C,ai_mean_40s_ROH_C,ai_mean_50s_ROH_C,ai_mean_60s_ROH_C,ai_mean_70s_ROH_C,ai_mean_80s_ROH_C,ai_mean_90s_ROH_C),c(lower_30_C_bound[[1]],lower_40_C_bound[[1]],lower_50_C_bound[[1]],lower_60_C_bound[[1]],lower_70_C_bound[[1]],lower_80_C_bound[[1]],lower_90_C_bound[[1]]),c(upper_30_C_bound[[1]],upper_40_C_bound[[1]],upper_50_C_bound[[1]],upper_60_C_bound[[1]],upper_70_C_bound[[1]],upper_80_C_bound[[1]],upper_90_C_bound[[1]]))
-
-names(ai_C_roh_dataframe)=c("decade_order","mean","lower_CI","upper_CI")
-
-means_ai_C_roh_dataframe=c(ai_mean_30s_ROH_C,ai_mean_40s_ROH_C,ai_mean_50s_ROH_C,ai_mean_60s_ROH_C,ai_mean_70s_ROH_C,ai_mean_80s_ROH_C,ai_mean_90s_ROH_C)
-```
-
-
-
-
-
-
-```{r}
-###################
-
-require(RColorBrewer)
-mycolors2=brewer.pal(11, "Spectral")
-####plotting all individuals 
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/HCHS_SOL_Mexican_ROH_AI_ancestry_ALL_with_CI_052720.pdf",height=2.25,width=2.375,pointsize=10)
-par(mar=c(2.1,2.1,0.3,0.1))
-plot(1,1,type='n',xlim=c(1,7),ylim=c(0,0.05),xlab="",ylab="",xaxt='n',yaxt='n')
-axis(side=1,padj=-2,cex.axis=0.7,at=1:7, labels=c("30s","40s","50s","60s","70s","80s","90s")) 
-axis(side=2,padj=1.5,cex.axis=0.7)
-mtext(side=1,"Decades",line=1.1)
-mtext(side=2,"Proportion of genome with ROH",line=1.1)
-abline(h=seq(0.0,0.05,by=0.01),col=rgb(0,0,0,0.1))
-abline(v=seq(0,6,by=1),col=rgb(0,0,0,0.1))
-legend("topleft",legend=c("All","ROH A","ROH B","ROH C"), col=c(mycolors2[2],mycolors2[4],mycolors2[7],mycolors2[9]),lty=1,lwd=1,bg="white",cex=0.5)
-#all  ROH
-points(ai_total_roh_dataframe$mean,pch=19,type="b",col=mycolors2[2])
-polygon(c(ai_total_roh_dataframe$decade_order,rev(ai_total_roh_dataframe$decade_order)),c(ai_total_roh_dataframe$upper_CI,rev(ai_total_roh_dataframe$lower_CI)),col=adjustcolor(mycolors2[2], alpha.f = 0.20), border = NA)
-
-#ROH A 
-points(ai_A_roh_dataframe$mean,pch=19,type="b",col=mycolors2[4])
-polygon(c(ai_A_roh_dataframe$decade_order,rev(ai_A_roh_dataframe$decade_order)),c(ai_A_roh_dataframe$upper_CI,rev(ai_A_roh_dataframe$lower_CI)),col=adjustcolor(mycolors2[4], alpha.f = 0.20), border = NA)
-
-#ROH B 
-points(ai_B_roh_dataframe$mean,pch=19,type="b",col=mycolors2[7])
-polygon(c(ai_B_roh_dataframe$decade_order,rev(ai_B_roh_dataframe$decade_order)),c(ai_B_roh_dataframe$upper_CI,rev(ai_B_roh_dataframe$lower_CI)),col=adjustcolor(mycolors2[7], alpha.f = 0.20), border = NA)
-
-#ROH C 
-points(ai_C_roh_dataframe$mean,pch=19,type="b",col=mycolors2[9])
-polygon(c(ai_C_roh_dataframe$decade_order,rev(ai_C_roh_dataframe$decade_order)),c(ai_C_roh_dataframe$upper_CI,rev(ai_C_roh_dataframe$lower_CI)),col=adjustcolor(mycolors2[9], alpha.f = 0.20), border = NA)
-
-
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/supplementary_figure8_panelC.pdf",height=2.00,width=6.0,pointsize=10)
+par(mfrow=c(1,4), mai = c(0.25, 0.4, 0.2, 0.1))
+vioplot(mexicans_1930s$ROH_allclasses_sums_NORM,mexicans_1940s$ROH_allclasses_sums_NORM,mexicans_1950s$ROH_allclasses_sums_NORM,mexicans_1960s$ROH_allclasses_sums_NORM,mexicans_1970s$ROH_allclasses_sums_NORM,mexicans_1980s$ROH_allclasses_sums_NORM,mexicans_1990s$ROH_allclasses_sums_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#1B9E77",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.7))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Total AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.7,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Small ROH 
+vioplot(mexicans_1930s$ROH_A_NORM,mexicans_1940s$ROH_A_NORM,mexicans_1950s$ROH_A_NORM,mexicans_1960s$ROH_A_NORM,mexicans_1970s$ROH_A_NORM,mexicans_1980s$ROH_A_NORM,mexicans_1990s$ROH_A_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#D95F02",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Small AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.1,by=0.01),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Medium ROH
+vioplot(mexicans_1930s$ROH_B_NORM,mexicans_1940s$ROH_B_NORM,mexicans_1950s$ROH_B_NORM,mexicans_1960s$ROH_B_NORM,mexicans_1970s$ROH_B_NORM,mexicans_1980s$ROH_B_NORM,mexicans_1990s$ROH_B_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#7570B3",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.1))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Medium AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.1,by=0.01),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
+
+#Long ROH
+vioplot(mexicans_1930s$ROH_C_NORM,mexicans_1940s$ROH_C_NORM,mexicans_1950s$ROH_C_NORM,mexicans_1960s$ROH_C_NORM,mexicans_1970s$ROH_C_NORM,mexicans_1980s$ROH_C_NORM,mexicans_1990s$ROH_C_NORM,  names=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"), 
+        col="#E7298A",cex.axis=0.60,cex.lab=0.9,xlab="",ylab="",xaxt='n',yaxt='n',ylim=c(0,0.7))
+axis(side=1,padj=-2,cex.axis=0.60,cex.lab=0.90,at=c('1','2','3','4','5','6','7'), labels=c("1930s","1940s","1950s","1960s","1970s","1980s","1990s"))
+axis(side=2,padj=1.5,cex.axis=0.60,cex.lab=0.90)
+mtext(side=1,"Decades",line=1.3,cex.lab=0.3)
+mtext(side=2,"Proportion of genome covered",line=2.2,cex.lab=0.3)
+mtext(side=2,"by Long AI ROH",line=1,cex.lab=0.3)
+abline(h=seq(0,0.7,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(1,7,by=1),col=rgb(0,0,0,0.1))
 dev.off()
 
-```
 
+```
 
 
