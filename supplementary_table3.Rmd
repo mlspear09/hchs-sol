@@ -54,7 +54,7 @@ Height_table_all[1,6]<-summary(all_groups_center)$coeff[2,2]
 Height_table_all[1,7]<-summary(all_groups_center)$coeff[2,4]
 
 Height_table_High<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Group","X","N","R2","Effect","Std.Err","P"))
-Height_table_High[1,1]<-"NAM>0.58"
+Height_table_High[1,1]<-"AI>0.58"
 Height_table_High[1,2]<-"Birth year"
 Height_table_High[1,3]<-(summary(High_model_center)$df[2]) + 5
 Height_table_High[1,4]<-summary(High_model_center)$r.squared
@@ -63,7 +63,7 @@ Height_table_High[1,6]<-summary(High_model_center)$coeff[2,2]
 Height_table_High[1,7]<-summary(High_model_center)$coeff[2,4]
 
 Height_table_Moderate<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Group","X","N","R2","Effect","Std.Err","P"))
-Height_table_Moderate[1,1]<-"0.46<=NAM<=0.58"
+Height_table_Moderate[1,1]<-"0.46<=AI<=0.58"
 Height_table_Moderate[1,2]<-"Birth year"
 Height_table_Moderate[1,3]<-(summary(Moderate_model_center)$df[2]) + 5
 Height_table_Moderate[1,4]<-summary(Moderate_model_center)$r.squared
@@ -72,7 +72,7 @@ Height_table_Moderate[1,6]<-summary(Moderate_model_center)$coeff[2,2]
 Height_table_Moderate[1,7]<-summary(Moderate_model_center)$coeff[2,4]
 
 Height_table_Lower<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Group","X","N","R2","Effect","Std.Err","P"))
-Height_table_Lower[1,1]<-"0.37<=NAM<0.46"
+Height_table_Lower[1,1]<-"0.37<=AI<0.46"
 Height_table_Lower[1,2]<-"Birth year"
 Height_table_Lower[1,3]<-(summary(Lower_model_center)$df[2]) + 5
 Height_table_Lower[1,4]<-summary(Lower_model_center)$r.squared
@@ -81,7 +81,7 @@ Height_table_Lower[1,6]<-summary(Lower_model_center)$coeff[2,2]
 Height_table_Lower[1,7]<-summary(Lower_model_center)$coeff[2,4]
 
 Height_table_Lowest<-setNames(data.frame(matrix(ncol=7, nrow=0)), c("Group","X","N","R2","Effect","Std.Err","P"))
-Height_table_Lowest[1,1]<-"NAM<0.37"
+Height_table_Lowest[1,1]<-"AI<0.37"
 Height_table_Lowest[1,2]<-"Birth year"
 Height_table_Lowest[1,3]<-(summary(Lowest_model_center)$df[2]) + 5
 Height_table_Lowest[1,4]<-summary(Lowest_model_center)$r.squared
