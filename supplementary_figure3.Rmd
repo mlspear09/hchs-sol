@@ -31,6 +31,11 @@ fit = lm(pheno_new_global_ancestry_estiamtes[,301] ~ pheno_new_global_ancestry_e
 
 ```
 
+
+```{r}
+summary(fit)
+```
+
 ```{r}
 #plot code it self 
 #pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_RFMix_NativeAmerican_ancestry_points+wiskers_dbins_071519_supplementary_figure3.pdf",height=2.25,width=2.375,pointsize=10)
