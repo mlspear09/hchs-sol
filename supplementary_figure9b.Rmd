@@ -39,32 +39,6 @@ us_born<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$US_BORN=='1
 ```
 
 
-```{r}
-#break up by decades for all 
-mexicans_1930s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year<1940),]
-mexicans_1930s$Decade ="1930"
-
-mexicans_1940s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1940 & mexicans_assor_data_subset$estimated_birth_year<1950),]
-mexicans_1940s$Decade ="1940"
-
-mexicans_1950s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1950 & mexicans_assor_data_subset$estimated_birth_year<1960),]
-mexicans_1950s$Decade ="1950"
-
-mexicans_1960s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1960 & mexicans_assor_data_subset$estimated_birth_year<1970),]
-mexicans_1960s$Decade ="1960"
-
-mexicans_1970s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1970 & mexicans_assor_data_subset$estimated_birth_year<1980),]
-mexicans_1970s$Decade ="1970"
-
-mexicans_1980s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1980 & mexicans_assor_data_subset$estimated_birth_year<1990),]
-mexicans_1980s$Decade ="1980"
-
-mexicans_1990s<-mexicans_assor_data_subset[which(mexicans_assor_data_subset$estimated_birth_year>=1990),]
-mexicans_1990s$Decade ="1990"
-
-mexicans_all<-rbind(mexicans_1930s,mexicans_1940s,mexicans_1950s,mexicans_1960s,mexicans_1970s,mexicans_1980s,mexicans_1990s)
-```
-
 US Born decade breakdown
 ```{r}
 mexicans_1930s_us_born<-us_born[which(us_born$estimated_birth_year<1940),]
