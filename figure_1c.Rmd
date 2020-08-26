@@ -126,7 +126,7 @@ final_umap_file<-cbind(fam_file,umap_results)
 admixture_estimates_filename<-"/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q"
 admixture_estimates<-read.table(admixture_estimates_filename,header=F,sep=" ")
 AncCol=c("#E41A1C","#377EB8","#4DAF4A")
-admixture_estimates3<-subset(admixture_estimates,select=c("V2","V3","V1"))
+admixture_estimates3<-subset(admixture_estimates,select=c("V1","V2","V3"))
 
 AncRGB=col2rgb(AncCol)/255
 #pdf("HCHS_SOL_Umap_PC3_admixture_gradients_071519.pdf",height=2.375,width=2.375,pointsize=5)
@@ -145,7 +145,7 @@ for(i in 1:nrow(ae)){
 
 ```{r}
 #Legend for 1C 
-AncCol=c("#4DAF4A","#E41A1C","#377EB8")
+AncCol=c("#E41A1C","#377EB8","#4DAF4A")
 
 AncRGB=col2rgb(AncCol)/255
 #pdf("UMAP_ternary_plot_Figure1B_legend.pdf",height=2.375,width=2.375,pointsize=10)
