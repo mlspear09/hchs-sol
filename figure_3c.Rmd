@@ -196,3 +196,11 @@ cor.test(ai_roh_with_pheno_admixture$ROH_B_NORM, ai_roh_with_pheno_admixture$est
 #long ROH tracts 
 cor.test(ai_roh_with_pheno_admixture$ROH_C_NORM, ai_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
 ```
+
+
+CEU ROH analyses 
+
+```{r}
+#all tracts 
+cor.test(ceu_roh_with_pheno_admixture$ROH_allclasses_sums_NORM, ceu_roh_with_pheno_admixture$estimated_birth_year,method="kendall")
+```
