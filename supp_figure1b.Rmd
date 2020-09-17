@@ -1,0 +1,71 @@
+---
+title: "plot umap hchs sol no ref"
+author: "Melissa Spear"
+date: "11/08/2020"
+output: html_document
+---
+
+The following script runs a for loop of plotting a umap plot of HCHS/SOL run without the reference in base R 
+
+```{r}
+#read in the data 
+hchs_sol<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt",header=T,sep='\t')
+hchs_sol_pheno_subset<-subset(hchs_sol,select=c("SUBJECT_ID","BKGRD1_C7"))
+
+#read in fam file 
+fam_filename<-"/Volumes/LaCie/Downloads/HCHS_SOL_imputed_data/HCHS_SOL_only_clean_set_hg19_FINAL_030718_PRUNED.fam"
+fam_file<-read.table(fam_filename,header=F,sep=" ")
+names(fam_file)<-c("FID","IID","PID","MID","Sex","Pheno")
+```
+
+
+```{r}
+library(ggplot2)
+require(RColorBrewer)
+
+setwd("/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/hchs_sol_only/projections")
+
+pcol=brewer.pal(9, "Set1")
+
+files <- list.files(pattern=".txt")
+
+for (input in files){
+  output <- basename(file.path(input,fsep=".txt"))
+  umap_file  <- read.table(input,header=F)
+
+  umap_fam_file<-cbind(fam_file,umap_file)
+
+  names(umap_fam_file)=c("FID","IID","PID","MID","Sex","Pheno","V1","V2")
+
+  #merging umap with hchs_sol
+  hchs_sol_pop_umap<-merge(umap_fam_file,hchs_sol_pheno_subset,by.x=c("FID"),by.y=c("SUBJECT_ID"))
+  
+  #Create new Pop variable and then group 
+  Dominican_reclassified<-hchs_sol_pop_umap[which(hchs_sol_pop_umap$BKGRD1_C7 == "0"),]
+  Central_American_reclassified<-hchs_sol_pop_umap[which(hchs_sol_pop_umap$BKGRD1_C7 == "1"),]
+  Cuban_reclassified<-hchs_sol_pop_umap[which(hchs_sol_pop_umap$BKGRD1_C7 == "2"),]
+  Mexican_reclassified<-hchs_sol_pop_umap[which(hchs_sol_pop_umap$BKGRD1_C7 == "3"),]
+  Puerto_Rican_reclassified<-hchs_sol_pop_umap[which(hchs_sol_pop_umap$BKGRD1_C7 == "4"),]
+  South_American_reclassified<-hchs_sol_pop_umap[which(hchs_sol_pop_umap$BKGRD1_C7 == "5"),]
+  Mixed_Other<-hchs_sol_pop_umap[which(hchs_sol_pop_umap$BKGRD1_C7 == "6"),]
+
+#Plot Umap plot 
+  #pdf(paste0("/Users/melissaspear/Dropbox/HCHS_SOL/UMAP/hchs_sol_only/plots/", input,"_base_R.pdf"),height=2.375,width=2.375,pointsize=5)
+  par(mar=c(2.1,2.1,0.1,0.1))  
+  plot(hchs_sol_pop_umap$V1,hchs_sol_pop_umap$V2,pch=0,type='n',xlab="",ylab="",xaxt='n',yaxt='n',bty='n')
+  legend("bottomleft",legend=c("Mexican","Cuban","Dominican","Central American","Puerto Rican","South American","Mixed/Other"),col=c(pcol[1],pcol[2],pcol[3],pcol[4],pcol[5],pcol[6],pcol[7]),pch=5,cex=0.75,bg='white',bty='n')
+  points(Mexican_reclassified$V1,Mexican_reclassified$V2,col=pcol[1],pch=5,cex=0.1)
+  points(Central_American_reclassified$V1,Central_American_reclassified$V2,col=pcol[4],pch=5,cex=0.1)
+  points(South_American_reclassified$V1,South_American_reclassified$V2,col=pcol[6],pch=5,cex=0.1)
+  points(Dominican_reclassified$V1,Dominican_reclassified$V2,col=pcol[3],pch=5,cex=0.1)
+  points(Cuban_reclassified$V1,Cuban_reclassified$V2,col=pcol[2],pch=5,cex=0.1)
+  points(Puerto_Rican_reclassified$V1,Puerto_Rican_reclassified$V2,col=pcol[5],pch=5,cex=0.1)
+  points(Mixed_Other$V1,Mixed_Other$V2,col=pcol[7],pch=5,cex=0.1)
+  #dev.off()
+}
+```
+
+
+
+
+

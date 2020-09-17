@@ -10,7 +10,7 @@ output: html_document
 ###Plotting PRS based on 1 Mb distance SNPs, stratifed by ancestry 
 pheno_file<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T, sep='\t')
 
-PRS_phys<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/PRS/phys_distance_1Mb/data/HCHS_SOL_Mexicans_040219_UKBB_snps_individual_polygenic_height_scores_phys_distance_1Mb_filter.txt")
+PRS_phys<-read.table("/Volumes/LaCie/Downloads/PRS/HCHS_SOLMexicans_090120_UKBB_snps_individual_polygenic_height_scores_phys_distance_1Mb_filter_TEST2.txt")
 names(PRS_phys)<-c("FID","IID","risk_score")
 merged_data_phys<-merge(PRS_phys,pheno_file,by.x=("FID"),by.y=c("V1"))
 
@@ -67,7 +67,7 @@ require(RColorBrewer)
 mypalette2<-brewer.pal(9,"BuPu")
 
 
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexican_PRS_Height_NAM_ancestry_stratified_102119_diffcolors_figure_4b.pdf",height=2.25,width=2.375,pointsize=10)
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexican_PRS_Height_NAM_ancestry_stratified_090120_diffcolors_figure_4b_NEW.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.1,0.1))
 
 plot(1,1,type='n',xlim=range(merged_data_phys_noNAs$HEIGHT),ylim=c(-1,1),xlab="",ylab="",xaxt='n',yaxt='n')

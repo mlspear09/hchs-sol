@@ -1,0 +1,173 @@
+---
+title: "TGP AMR frequency extraction"
+author: "Melissa Spear & Alex Diaz-Papkovich"
+date: "08/09/2020"
+output: html_document
+---
+
+The following scripts extract the snps with the assocaited TGP AMR frequecies.
+
+
+```{r}
+library(dplyr)
+library(tidyr)
+
+#creating a new file with reveresed alleles 
+summary_statistics<-read.table("/Volumes/LaCie/Downloads/UKBB_height_GWAS_only_Sig_level_snp_per_1Mb_040219_ALLCHR.txt",header=F,sep='\t')
+#names(summary_statistics)=c("extra","Chr","BP","A1","A2","variant","minor_allele","minor_AF","low_confidence_variant",	"n_complete_samples","AC","ytx","beta","se","tstat","pval")
+map_file<-read.table("/Volumes/LaCie/Downloads/PRS/matched_snps/Mexicans.ALLchr_UKBB_GWAS_SNPs_082820_FINAL2.bim",header=F)
+
+names(map_file)=c("Chr","SNP","cM","BP","A1","A2")
+
+#map_file_subsetted<-subset(map_file,select=c("Chr","SNP","BP"))
+test_merge = merge(map_file,summary_statistics, by.x=c("Chr","BP"),by.y=c("V2","V3"))
+
+sorted_snps= test_merge[order(test_merge$Chr, test_merge$BP),]
+head(sorted_snps)
+
+df <- subset(sorted_snps,select=c("SNP"))
+foo <- data.frame(do.call('rbind', strsplit(as.character(df$SNP),':',fixed=TRUE)))
+
+
+#create new dataframe of chr:bp:V4:V5
+cols <- c('X1','X2','X4','X3')
+foo$new_id <- apply( foo[ , cols ] , 1 , paste , collapse = ":" )
+new_table<-subset(foo,select=c("new_id"))
+
+foo$new_id <-
+  paste(foo$X1,foo$X2,foo$X4, 
+        foo$X3, sep = ":")
+
+new_table<-subset(foo,select=c("new_id"))
+
+write.table(new_table,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_reversed_alleles.txt",row.names=F,col.names=F,sep=' ',quote=F)
+
+rsid_only<-subset(foo,select=c("X1"))
+write.table(rsid_only,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_rsid_no_alleles.txt",row.names=F,col.names=F,sep=' ',quote=F)
+
+chr_bp<-subset(sorted_snps,select=c("Chr","BP"))
+write.table(chr_bp,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_chr_bp.txt",row.names=F,col.names=F,sep=' ',quote=F)
+```
+
+```{bash}
+for f in `seq 1 22` ; do echo $f; awk -v chrom=$f '$1 == chrom {print $1,$2}' /Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_chr_bp.txt > /Volumes/LaCie/Downloads/PRS/split_files/chr${f}_BP.txt; done
+```
+
+
+```{bash}
+#match based on BP column 
+#extract row from legend file if mathches bp column 
+for chr in $(seq 1 22); do 
+awk 'NR==FNR{a[$2];next} ($2) in a' /Volumes/LaCie/Downloads/PRS/split_files/chr${chr}_BP.txt <(gzip -dc /Volumes/LaCie/1KGP/1000GP_Phase3/1000GP_Phase3_chr${chr}.legend.gz) > /Volumes/LaCie/Downloads/PRS/frequencies/chr${chr}_bp_matches.txt; done
+```
+
+
+```{bash}
+awk 'FNR==NR{a[$2];next} ($2 in a) {print $1,a[$1],$2}' file2 file1
+awk  'NR==FNR{a[$1]=$0;next} ($2 in a){print a[$2],$1,$3,$4,$5}' f2.txt f3.txt > f4.txt
+
+awk 'NR==FNR{a[$2]=$0;next} ($2 in a){print a[$1],$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11}' /Volumes/LaCie/Downloads/PRS/split_files/chr22_BP.txt <(gzip -dc /Volumes/LaCie/1KGP/1000GP_Phase3/1000GP_Phase3_chr22.legend.gz) > /Volumes/LaCie/Downloads/PRS/frequencies/chr22_bp_matches_extra.txt
+
+```
+
+
+
+
+
+
+```{bash}
+cat /Volumes/LaCie/Downloads/PRS/frequencies/*_bp_matches.txt >  /Volumes/LaCie/Downloads/PRS/frequencies/all_chr_bp_matches.txt 
+```
+
+
+#extra 8 rows - due to multiallelic in legend files, will needto remove 
+```{bash}
+#cut header and add to results 
+sed '1!d' /Volumes/LaCie/1KGP/1000GP_Phase3/1000GP_Phase3_chr22.legend > /Volumes/LaCie/Downloads/PRS/frequencies/header.txt
+
+cat /Volumes/LaCie/Downloads/PRS/frequencies/header.txt /Volumes/LaCie/Downloads/PRS/frequencies/all_chr_bp_matches.txt > /Volumes/LaCie/Downloads/PRS/frequencies/all_chr_bp_matches_with_header.txt
+```
+
+
+
+```{R}
+#create new alt allele freq column
+#V5 is alt allele, V7 is Minor Allele, V8 is MAF
+
+sorted_snps$ukbb_freq <- ifelse(as.character(sorted_snps$V5)==as.character(sorted_snps$V7),
+                               sorted_snps$V8,
+                               ifelse(as.character(sorted_snps$V5)!=as.character(sorted_snps$V7),
+                                      1-sorted_snps$V8, NA))
+      
+```
+
+
+```{r}
+#Read in tgp file 
+tgp_freq<-read.table("/Volumes/LaCie/Downloads/PRS/frequencies/all_chr_bp_matches_with_header.txt",header=T,sep=' ')
+temp_table<-left_join(x=tgp_freq,y=chr_bp,by=c("position"="BP"))
+
+#merge tgp data and ukbb data 
+tgp_ukbb<-left_join(x=temp_table,y=sorted_snps,by=c("position"="BP","Chr"="Chr"))
+
+#if tgp a1 = ukbb a1 then freq is AMR freq, if not, 1 - AMR freq 
+tgp_ukbb$AMR_freq <- ifelse(as.character(tgp_ukbb$a1)==as.character(tgp_ukbb$V5),
+                               tgp_ukbb$AMR,
+                               ifelse(as.character(tgp_ukbb$a1)!=as.character(tgp_ukbb$V5),
+                                      1-tgp_ukbb$AMR, NA))
+
+plot(tgp_ukbb$ukbb_freq,tgp_ukbb$AMR_freq)
+
+```
+
+```{r}
+#extract R rows where BP is duplicated. 8 variants were duplicated during the mwerge process. 
+
+dups<-tgp_ukbb[duplicated(tgp_ukbb$position), ]
+
+test1<-tgp_ukbb[which(tgp_ukbb$position=="89862700"), ]
+test2<-tgp_ukbb[which(tgp_ukbb$position=="127752706"), ]
+test3<-tgp_ukbb[which(tgp_ukbb$position=="9525561"), ]
+test4<-tgp_ukbb[which(tgp_ukbb$position=="30504373"), ]
+test5<-tgp_ukbb[which(tgp_ukbb$position=="92317970"), ]
+test6<-tgp_ukbb[which(tgp_ukbb$position=="16999915"), ]
+test7<-tgp_ukbb[which(tgp_ukbb$position=="36563082"), ]
+
+
+Drop 
+
+#rs115466154:89862700:G:A
+#rs1295893:127752706:G:T
+#11:9525561:C:T
+#rs367674532:30504373:CA:CAA
+#8:92317970:T:G 
+#rs142410908:16999915:CATGTCAATG:TATGTCAATG
+#9:36563082:G:GTATTAT
+#9:36563082:G:GTATTATTATTAT
+
+tgp_no_dups<-tgp_ukbb[which(tgp_ukbb$id!="rs115466154:89862700:G:A" & tgp_ukbb$id!="rs1295893:127752706:G:T" & tgp_ukbb$id!="11:9525561:C:T" & tgp_ukbb$id!="rs367674532:30504373:CA:CAA" & tgp_ukbb$id!="8:92317970:T:G" & tgp_ukbb$id!="rs142410908:16999915:CATGTCAATG:TATGTCAATG" & tgp_ukbb$id!="9:36563082:G:GTATTAT" & tgp_ukbb$id!="9:36563082:G:GTATTATTATTAT"),]
+
+plot(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq)
+cor.test(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq)
+```
+
+
+```{r}
+
+require(RColorBrewer)
+myColors=brewer.pal(7, "Set1")
+
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/PRS/Supplementary_figure12.pdf",height=2.25,width=2.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(1,1,type='n',xlim=c(0,1),ylim=c(0,1),xlab="",ylab="",xaxt='n',yaxt='n')
+abline(h=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+abline(v=seq(0,1,by=0.1),col=rgb(0,0,0,0.1))
+axis(side=1,padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.5,cex.axis=0.7)
+mtext(side=1,"UKBB Frequency",line=1.1)
+mtext(side=2,"TGP AMR Frequency",line=1.1)
+c=col2rgb(pcol[4])/255;
+abline(0,1,col="black",lwd=2,lty="dashed")
+points(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq,col=rgb(c[1],c[2],c[3],0.5),pch=21,cex=0.75)
+dev.off()
+```

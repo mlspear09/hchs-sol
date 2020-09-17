@@ -44,6 +44,9 @@ male_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data =
 female_model<-lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data = female)
 
 
+```
+
+```{r}
 ###
 All<-setNames(data.frame(matrix(ncol = 8, nrow = 0)), c("Category", "N", "Mean","Median","R2","Effect","Std.Err","P"))
  
@@ -171,4 +174,79 @@ all_models<-rbind(All,Chicago_df,San_Diego_df,US_born_df,US_migrant_df,male_df,f
 
 all_models
 
+```
+
+test of distribution between the groups. 
+```{r}
+hist(Chicago$NAM)
+hist(San_Diego$NAM)
+```
+
+```{r} 
+#recruitment region 
+
+t.test(Chicago$NAM, San_Diego$NAM)
+
+```
+
+```{r}
+#sex 
+t.test(male$NAM, female$NAM)
+```
+
+```{r}
+#us_born/not us born 
+t.test(US_migrant$NAM, US_born$NAM)
+```
+
+```{r}
+#educational attainament 
+# Compute the analysis of variance
+res.aov <- aov(NAM ~ EDUCATION_C3, data = Mexican_reclassified)
+# Summary of the analysis
+summary(res.aov)
+```
+
+```{r}
+library(ggplot2)
+p_edu <- ggplot(Mexican_reclassified, aes(x=NAM, fill=as.factor(EDUCATION_C3))) +
+  geom_histogram()
+p_edu
+```
+
+```{r doing t tests}
+EDU_C3_1 <- subset(Mexican_reclassified, EDUCATION_C3==1)
+EDU_C3_2 <- subset(Mexican_reclassified, EDUCATION_C3==2)
+EDU_C3_3 <- subset(Mexican_reclassified, EDUCATION_C3==3)
+
+t.test(EDU_C3_1$NAM, EDU_C3_2$NAM)
+t.test(EDU_C3_1$NAM, EDU_C3_3$NAM)
+t.test(EDU_C3_2$NAM, EDU_C3_3$NAM)
+```
+```{r education_c3 regression}
+EDU_C3_regression <- lm(NAM ~ as.factor(EDUCATION_C3), data = Mexican_reclassified)
+summary(EDU_C3_regression)
+```
+
+```{r}
+Mexican_reclassified_edu <- subset(Mexican_reclassified,
+                                   !is.na(EDUCATION_C3))
+Mexican_reclassified_edu$EDUCATION_C3_FACT <- as.factor(Mexican_reclassified_edu$EDUCATION_C3)
+
+p_EDU_BOX <- ggplot(data = Mexican_reclassified_edu) +
+                    aes(y = NAM, fill = EDUCATION_C3_FACT) +
+  geom_boxplot()
+
+p_EDU_BOX
+```
+
+```{r means by group education}
+mean(Mexican_reclassified_edu$NAM)
+mean(subset(Mexican_reclassified_edu, EDUCATION_C3_FACT=="1")$NAM) #b0 in lm
+mean(subset(Mexican_reclassified_edu, EDUCATION_C3_FACT=="2")$NAM) #b1 in lm
+mean(subset(Mexican_reclassified_edu, EDUCATION_C3_FACT=="3")$NAM) #b2 in lm
+```
+
+```{R}
+res.aov
 ```

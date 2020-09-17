@@ -1,0 +1,128 @@
+---
+title: "Interaction models"
+author: "Melissa Spear & Alex Diaz-Papkovich"
+date: "31/08/2020"
+output: html_document
+---
+
+```{r Import statemnts}
+library(interactions)
+d = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",header=T,sep='\t')
+```
+
+```{r Early models}
+#extracting the non US born individuals 
+non_US_born = d[which(d$US_BORN=='0'),]
+
+#Birth year only model
+BY_only_model = lm(NAM ~ estimated_birth_year+log(WEIGHT_FINAL_NORM_OVERALL), data=non_US_born) #linear model: Native ancestry vs birth year
+
+BY_time_model2 = lm(NAM ~ estimated_birth_year+ YRSUS + log(WEIGHT_FINAL_NORM_OVERALL), data=non_US_born)
+
+summary(BY_time_model2)
+```
+
+Below we test the interaction models. We are interested in the question: what drives the increase in Amerindigenous ancestry in younger Mexican-Americans? There are multiple possibilities:
+* Assortative mating: Mexican-Americans generally mate with others who have higher AI ancestry, thus increasing their proportion of AI relative to other Americans. If this is the case, then there should be no difference between those who are born inside or outside of the US, or whether their parents are born inside or outside the US.
+* Migration: Mexican-Americans who migrate to the United States have tended to have higher AI ancestry over the course of time.
+
+```{r Models based on US_born status}
+BY_time_model6 = lm(NAM ~ estimated_birth_year + as.factor(US_BORN) + (estimated_birth_year*as.factor(US_BORN)) + 
+                      log(WEIGHT_FINAL_NORM_OVERALL), data=d)
+print(summary(BY_time_model6))
+
+BY_time_model7 = lm(NAM ~ estimated_birth_year + as.factor(US_BORN) + log(WEIGHT_FINAL_NORM_OVERALL), data=d)
+print(summary(BY_time_model7))
+```
+
+We are interested in testing whether the birthplace of the parents impacts the AI level of children. An interaction model will tell us if the increase in AI by birth year is different depending on whether the parents were born inside or outside of the US. Conversely, if we don't use an interaction model, we may learn whether there is a difference in AI ancestry by birth year *on average* (i.e. the difference is constant across birth year).
+
+If the increase in AI by birth year is driven by migration, we would observe a faster increase in AI ancestry levels by birth year for Mexican-Americans whose parents were born outside the US, and a slower increase (or possibly decrease/no change) in AI ancestry by birth year for those whose parents were born inside the US. 
+
+A good test case for this question is Mexican-Americans who were born in the United States.
+
+```{r Models based on the US_born status of parents}
+# subset the data to Mexican-Americans born in the US
+US_born = d[which(d$US_BORN=='1'),]
+
+# Create a variable based on the birth country of the parents
+gen1_samples =US_born[which(US_born$PIEA14 =='46' &US_born$PIEA11 =='46' ),] #both parents born in MX
+gen1_samples2 =US_born[which(US_born$PIEA14 !='63' &US_born$PIEA11 !='63' ),] #both parents not born in US 
+gen2_samples = US_born[which(US_born$PIEA14 =='63' &US_born$PIEA11 =='63' ),] #both parents born inside US 
+
+gen2_samples2 = US_born[which(US_born$PIEA14 =='63'),] #father
+gen2_samples3 = US_born[which(US_born$PIEA11 =='63'),] #mother 
+
+# Derive a variable for the number of parents born in the US (0, 1, 2)
+usborn_mexam_parents <- US_born
+usborn_mexam_parents$num_us_parents <- with(usborn_mexam_parents,
+                                            ifelse(PIEA14=='63' & PIEA11=='63',2,
+                                                   ifelse(PIEA14!='63' & PIEA11!='63',0,1)))
+
+# We turn this variable into a factor so that we can test the interaction (the variable is meant to be categorical)
+usborn_mexam_parents$num_us_parents <- factor(usborn_mexam_parents$num_us_parents)
+
+head(usborn_mexam_parents)
+
+BY_mexam_parents = lm(NAM ~ estimated_birth_year + as.factor(num_us_parents) + log(WEIGHT_FINAL_NORM_OVERALL),
+                      data=usborn_mexam_parents)
+summary(BY_mexam_parents)
+```
+
+We observe that the number of US parents has an effect. Specifically, having at least one US-born parent leads to a decrease in AI ancestry levels.
+
+```{r Model based on having at least one parent born outside the US}
+usborn_mexam_parents$alo_us_parent <- with(usborn_mexam_parents,
+                                           ifelse(PIEA14!='63' & PIEA11!='63',0,1))
+
+BY_mexam_parents_alo <- lm(NAM ~ estimated_birth_year + as.factor(alo_us_parent) + log(WEIGHT_FINAL_NORM_OVERALL), usborn_mexam_parents)
+summary(BY_mexam_parents_alo)
+```
+
+However, this is on average, and we wish to see how the impact of birth year on AI ancestry changes with the number of parents born in the US. An interaction model would test this.
+
+```{r Interaction model based on having at least one parent born in the US}
+BY_mexam_parents_alo_int <- lm(NAM ~ estimated_birth_year + as.factor(alo_us_parent) + log(WEIGHT_FINAL_NORM_OVERALL) +
+                               estimated_birth_year*as.factor(alo_us_parent), data = usborn_mexam_parents)
+summary(BY_mexam_parents_alo_int)
+
+# make the interaction plot for the above
+interact_plot(BY_mexam_parents_alo_int, pred = estimated_birth_year, modx = alo_us_parent)
+```
+
+The interaction plot above shows that there are very different changes in AI ancestry based on whether you have born parents born outside the US. If both parents are born outside the US (`alo_us_parent==0`) then the increase in AI by birth year is much, much larger. This lends evidence to the hypothesis that migration is a driver of the phenomenon.
+
+```{r Interaction model for the number of parents born outside the US}
+BY_mexam_parents_int = lm(NAM ~ estimated_birth_year + num_us_parents + estimated_birth_year*num_us_parents + log(WEIGHT_FINAL_NORM_OVERALL), data=usborn_mexam_parents)
+summary(BY_mexam_parents_int)
+confint(BY_mexam_parents_int)
+
+# look at interaction plot by number of US-born parents by birth year
+#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/Interaction_usborn_parents_birthyear_ancestry.pdf",height=2.25,width=2.375,pointsize=10)
+interact_plot(BY_mexam_parents_int, pred = estimated_birth_year, modx = num_us_parents, x.label="Birth year", y.label="AI ancestry",legend.main="Number of US born parents") + theme(panel.border = element_rect(colour = "black", fill=NA, size=1))
+#dev.off()
+
+```
+
+Below we have some sanity checks (they all passed)
+```{r}
+# plot residuals manually
+plot(BY_mexam_parents_int$residuals)
+
+# pull out the individuals with 2 US-born parents and look at birth year
+hist(subset(usborn_mexam_parents, num_us_parents==2)$estimated_birth_year)
+
+# sanity check: split data by number of parents and run 3 quick regressions to check consistency
+BY_reg_num_us_0 <- lm(NAM ~ estimated_birth_year + log(WEIGHT_FINAL_NORM_OVERALL), data = subset(usborn_mexam_parents, num_us_parents==0))
+BY_reg_num_us_1 <- lm(NAM ~ estimated_birth_year + log(WEIGHT_FINAL_NORM_OVERALL), data = subset(usborn_mexam_parents, num_us_parents==1))
+BY_reg_num_us_2 <- lm(NAM ~ estimated_birth_year + log(WEIGHT_FINAL_NORM_OVERALL), data = subset(usborn_mexam_parents, num_us_parents==2))
+
+summary(BY_reg_num_us_0)
+summary(BY_reg_num_us_1)
+summary(BY_reg_num_us_2)
+```
+
+
+
+
+

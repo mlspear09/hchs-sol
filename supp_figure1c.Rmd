@@ -1,0 +1,38 @@
+---
+title: "Scree plot"
+author: "Melissa Spear"
+date: "10/08/2020"
+output: html_document
+---
+
+
+```{bash}
+#rerun plink on hchs sol data with ref 
+/Users/melissaspear/Downloads/plink_mac_20200121/plink --bfile /Volumes/LaCie/Downloads/HCHS_SOL_imputed_data/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718 --extract /Volumes/LaCie/Downloads/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED_snpsonly.txt --make-bed --out /Volumes/LaCie/Downloads/HCHS_SOL_imputed_data/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718
+```
+
+Rerun pca on data 
+```{bash}
+#run plink pca on dataset 
+/Users/melissaspear/Downloads/plink2-2 --bfile /Volumes/LaCie/Downloads/HCHS_SOL_imputed_data/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718 --pca 20 approx --out /Users/melissaspear/Dropbox/HCHS_SOL/smartPCA/data/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_PRUNED_plink
+```
+
+
+Plotting a scree plot of the data 
+
+```{R}
+#Read in pca data with the references 
+pca_data<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/smartPCA/data/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_PRUNED_plink.eigenval",header=F)
+```
+
+Plot scree plot 
+```{r}
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/smartPCA/data/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_PRUNED_plink_screeplot.pdf",height=2.25,width=4.375,pointsize=10)
+par(mar=c(2.1,2.1,0.1,0.1))
+plot(pca_data$V1/sum(pca_data$V1), col="black", type="b",lwd=2, pch=19,xlab="",ylab="",xaxt='n',yaxt='n', cex=0.75)
+axis(side=1,seq(1,20,1),padj=-2,cex.axis=0.7)
+axis(side=2,padj=1.8,cex.axis=0.5)
+mtext(side=1,"Number of PCs",line=1.1)
+mtext(side=2,"Variance explained",line=1.1)
+dev.off()
+```

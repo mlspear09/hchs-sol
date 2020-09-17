@@ -9,20 +9,20 @@ The following scripts create the supplementary table of results for the other HC
 all three ancestries 
 
 ```{r}
-setwd("/Users/melissaleespear/Dropbox/HCHS_SOL/paper/tables")
+#setwd("/Users/melissaleespear/Dropbox/HCHS_SOL/paper/tables")
 
 #Read in the admixture file estimates file 
-HCHS_SOL_admixture_file <- read.table("/Users/melissaleespear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
+HCHS_SOL_admixture_file <- read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.3.Q", header =F, sep = ' ')
 names(HCHS_SOL_admixture_file) <- c("YRI","CEU","NAM")
 
 ##reading in the fam file accompaniment of the .bed file i used for the admixture run 
-fam_file = read.table("/Users/melissaleespear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
+fam_file = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_clean_set_with_Reich_NAM_CEU_YRI_hg19_FINAL_030718_forwardstrand_PRUNED.fam", header=F, sep = ' ')
 fam_file_with_IDs <- cbind(fam_file, HCHS_SOL_admixture_file)
 
 ##Pulling out only the 95% admixed samples from the previous analysis I used to fit a line to 
 admixed_95 <- fam_file_with_IDs[which(fam_file_with_IDs$CEU <= 0.95 & fam_file_with_IDs$YRI <=0.95 & fam_file_with_IDs$NAM <=0.95),]
 
-HCHS_SOL_pheno<-read.table("/Users/melissaleespear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
+HCHS_SOL_pheno<-read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_allphenotypes_ALL_samples_new_birthyear.txt", header= T, sep = '\t')
 
 #merge the admixture estimates with the pheno file 
 admixed_with_pheno = merge(admixed_95, HCHS_SOL_pheno, by.x =c("V1"), by.y=c("SUBJECT_ID"))

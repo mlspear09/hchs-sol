@@ -666,10 +666,8 @@ not_sig_points=sorted_nam_correlation_plot_table[which(sorted_nam_correlation_pl
 plot_labels=c("Height","Hip girth","HDL cholesterol","% neutrophils", "Age at natural menopause","Neutrophil count","LDL cholesterol","Total cholesterol", "White blood count","Average diastolic blood pressure","Predicted FVC","Monocyte count","Average systolic blood pressure","Waist girth","Left brachial systolic blood pressure","Creatinine","% Fat","FVC","Ferritin","% Transferrin saturation","Right brachial systolic blood pressure","Heart rate, ventricular","Mean corpuscular volume","High-sensitivity C-reactive protein","PR duration","Mean corpuscular hemoglobin","Heart rate, atrial","Basophil count","Right dorsalis pedis systolic blood pressure","FEV1","Iron","Left posterior tibial systolic blood pressure","Right posterior tibial systolic blood pressure","Mean corpuscular hemoglobin concentration","Left dorsalis pedis systolic blood pressure","QTc calculated","Eosinophil count","% Monocytes","Hemoglobin","HRV","% Hematocrit","Body mass index","Mean SpO2","Platelet count","Albumin/creatine ratio","Age at which menses began","Lymphocyte count","Red blood cell count","QT duration","Urine microalbumin, random","% Eosinophils","Triglycerides","Urine creatinine, random","Heart rate, ventricular","Glucose, fasting","Glucose, post OGTT","% Glycosylated hemoglobin","Glycosylated hemoglobin (HbA1c)","Total iron binding capacity","Waist to hip ratio","QRS duration","% Lymphocytes","FEV1 FVC Ratio","% Immature granulocytes","EGFR MDRD","EGFR CKD Epi")
 
 
-
-
 #####plotting the points 
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/supplementary_figure10.pdf",height=4.25,width=6,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/supplementary_figure10.pdf",height=4.25,width=,pointsize=10)
 par(mar=c(13,2.1,0.1,0.1))
 plot(1,1,type='n',xlim=c(1,66),ylim=c(-0.3,0.3),xlab="",ylab="",xaxt='n',yaxt='n')
 abline(h=seq(-0.3,0.3,by=0.1),col=rgb(0,0,0,0.1))
@@ -682,5 +680,5 @@ points(sorted_nam_correlation_plot_table$observation_order,sorted_nam_correlatio
 points(not_sig_points$observation_order,not_sig_points$NAM_tau, pch=15, col="black",cex=1)
 legend("topleft", legend=c("p<0.00075","p>0.00075"),
        col=c(pcol[4],"black"), pch=c(15,15),cex=0.6,bg="white")
-dev.off()
+#dev.off()
 ```

@@ -1,11 +1,9 @@
 ---
-title: "Local ancestry analyses supps"
+title: "supplementary figure 6"
 author: "Melissa Spear"
-date: "13/05/2020"
+date: "14/07/2020"
 output: html_document
 ---
-
-The following code is for Supplementary Figures 6-9 in the paper. 
 
 Supplementary Figure 6
 ```{r}
@@ -13,7 +11,7 @@ Supplementary Figure 6
 hchs_sol_AGE_admixture_results = read.table("/Volumes/LaCie/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/AdmxMapping/Mexicans/HCHS_SOL_Mexicans_AdmxMap_NAM_AGE_results_AllChr_020519.txt", header= TRUE)
 hchs_sol_GEN_admixture_results = read.table("/Volumes/LaCie/Downloads/home/mlspear/HCHS_SOL/data/phased_data_030718/AdmxMapping/Mexicans/HCHS_SOL_Mexicans_AdmxMap_NAM_GEN_results_AllChr_020519.txt", header= TRUE)
 
-install.packages("coda")
+#install.packages("coda")
 library(coda)
 
 p = hchs_sol_AGE_admixture_results$p
@@ -103,19 +101,16 @@ pcol=brewer.pal(8, "Set2")
 ```
 
 ```{r}
-#plot 6a 
+#plot 8a 
 #png("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexicans_AdmxMap_manhattan_AGE_051519_wide_line.png", width = 800, height = 400)
 manhattan(final_admixture_results_AGE, colors=c(pcol[1],pcol[3],pcol[8]), pch=20, genomewideline=F, suggestiveline=F)
 #dev.off()
-
 ```
 
+
 ```{r}
-#plot 6b 
+#plot 8b 
 #png("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexicans_AdmxMap_manhattan_GEN_051519_wide_line.png", width = 800, height = 400)
 manhattan(final_admixture_results_GEN, colors=c(pcol[1],pcol[3],pcol[8]), pch=20, genomewideline=F, suggestiveline=F)
 #dev.off()
 ```
-
-
-Supplementary Figure 7 

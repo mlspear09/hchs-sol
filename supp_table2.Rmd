@@ -1,0 +1,141 @@
+---
+title: "extended table 1"
+author: "Melissa Spear"
+date: "27/07/2020"
+output: html_document
+---
+
+The following code creates a different version of table 1 broken up by the decades 
+
+```{r}
+library(tidyverse)
+```
+
+Read in data
+```{r}
+MX_pheno=read_delim("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_95_full_pheno_010919.txt",delim='\t')
+```
+
+#subset data for variables I need
+```{r}
+MX_subset=MX_pheno[,c("V2", "estimated_birth_year","CENTER","US_BORN","GENDER","EDUCATION_C3")]
+```
+
+#Create new decade variable based on birth year ranges 
+```{r}
+MX_subset2<-MX_subset %>%
+  select(V2:estimated_birth_year,CENTER,US_BORN,GENDER,EDUCATION_C3) %>%
+  mutate(
+    Decade = case_when(
+      estimated_birth_year < 1940 ~ 1930,
+      estimated_birth_year >= 1940 & estimated_birth_year < 1950 ~ 1940,
+      estimated_birth_year >= 1950 & estimated_birth_year < 1960 ~ 1950,
+      estimated_birth_year >= 1960 & estimated_birth_year< 1970 ~ 1960,
+      estimated_birth_year >= 1970 & estimated_birth_year< 1980 ~ 1970,
+      estimated_birth_year >= 1980 & estimated_birth_year< 1990 ~ 1980,
+      estimated_birth_year >= 1990 ~ 1990),
+  )
+```
+  
+  
+```{r}
+# Convert to factors with levels
+# advantage: don't have to create new columns
+# disadvantage: can be a pain in the ass to use levels()
+MX_subset_factors <- MX_subset2
+MX_subset_factors$CENTER <- as.factor(MX_subset_factors$CENTER)
+MX_subset_factors$US_BORN <- as.factor(MX_subset_factors$US_BORN)
+MX_subset_factors$GENDER <- as.factor(MX_subset_factors$GENDER)
+MX_subset_factors$EDUCATION_C3 <- as.factor(MX_subset_factors$EDUCATION_C3)
+
+levels(MX_subset_factors$CENTER)[levels(MX_subset_factors$CENTER)=="C"] <- "Chicago"
+levels(MX_subset_factors$CENTER)[levels(MX_subset_factors$CENTER)=="B"] <- "Bronx"
+levels(MX_subset_factors$CENTER)[levels(MX_subset_factors$CENTER)=="M"] <- "Miami"
+levels(MX_subset_factors$CENTER)[levels(MX_subset_factors$CENTER)=="S"] <- "San_Diego"
+
+levels(MX_subset_factors$US_BORN)[levels(MX_subset_factors$US_BORN)=="0"] <- "Non_US"
+levels(MX_subset_factors$US_BORN)[levels(MX_subset_factors$US_BORN)=="1"] <- "US_born"
+
+levels(MX_subset_factors$EDUCATION_C3)[levels(MX_subset_factors$EDUCATION_C3)=="1"] <- "Less_than_HS"
+levels(MX_subset_factors$EDUCATION_C3)[levels(MX_subset_factors$EDUCATION_C3)=="2"] <- "HS"
+levels(MX_subset_factors$EDUCATION_C3)[levels(MX_subset_factors$EDUCATION_C3)=="3"] <- "More_than_HS"
+
+
+# Alternately: Just create a new column (character) for each case
+# but we've already written the code using existing variable names
+```
+
+
+#create frequency tables for each of the variables
+```{r}
+#Center
+out_center_data <- MX_subset_factors %>%
+  group_by(Decade,CENTER) %>% # ,decade
+  summarize(n = n())
+
+out_center_data
+
+wide_center_data <- spread(out_center_data, CENTER, n, fill = 0)
+wide_center_data
+```
+  
+
+```{r}
+#Education
+out_education_data <- MX_subset_factors %>%
+  group_by(Decade,EDUCATION_C3) %>% # ,decade
+  summarize(n = n()) %>%
+  drop_na()
+
+out_education_data
+
+wide_education_data <- spread(out_education_data, EDUCATION_C3, n, fill = 0)
+
+wide_education_data
+
+#4 poeple NA 
+```
+
+```{r}
+#Gender
+out_gender_data <- MX_subset_factors %>%
+  group_by(Decade,GENDER) %>% # ,decade
+  summarize(n = n())
+
+out_gender_data
+
+wide_gender_data <- spread(out_gender_data, GENDER, n, fill = 0)
+wide_gender_data
+```
+
+```{r}
+#birth location
+out_birth_data <- MX_subset_factors %>%
+  group_by(Decade,US_BORN) %>% # ,decade
+  summarize(n = n())%>%
+  drop_na()
+
+out_birth_data
+
+wide_birth_data <- spread(out_birth_data, US_BORN, n, fill = 0)
+wide_birth_data
+
+#1 sample = NA 
+```
+
+Joining all the tables together
+```{r}
+final_dataset<-left_join(wide_center_data,wide_birth_data,by="Decade") %>%
+                         left_join(., wide_gender_data,by="Decade") %>%
+                                  left_join(.,wide_education_data,by="Decade")
+
+write.table(final_dataset,"/Users/melissaspear/Dropbox/HCHS_SOL/paper_figures/new_supplementary_table2.txt",row.names=F,col.names=T, sep='\t',quote=F)
+```
+
+
+```{r}
+#?aggregate
+#aggregate(out_data, )
+```
+
+

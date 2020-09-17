@@ -1,0 +1,62 @@
+---
+title: "figure 4a"
+author: "Melissa Spear"
+date: "15/09/2020"
+output: html_document
+---
+
+
+```{r}
+setwd("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/")
+QN = c("","_quantile_normalized");
+## generate plots of each covariate for all phenotypes
+for(QNi in 1:2){
+  #pheno = read.table(paste("extended_supplementary_table3_new_090720",QN[QNi],".txt",sep=""),skip=1,sep='\t')
+  pheno = read.table(paste("extended_supplementary_table3_new_090720",QN[QNi],".txt",sep=""),skip=1,sep='\t')
+
+  pheno.AI = subset(pheno,pheno[,2]=="AI")
+  
+  
+  covs = unique(pheno[,2])
+  covs.names = c("AI","Birth Year", "Gender", "Weight", "Center")
+  for(cov.index in 1:length(covs)){
+    cov.i = covs[cov.index]
+    pheno.cov = subset(pheno,pheno[,2]==cov.i)
+    pheno.cov.rank = rank(pheno.cov[,3], ties.method="first")
+    
+    pdf(paste("phenoPlots/phenoPlot_QN_",cov.i,QN[QNi],".pdf",sep=""),height=4,width=7,pointsize=10)
+    par(mar=c(12.5,2.5,.1,.1))
+    plot(1,1,type='n', xlim=c(3,nrow(pheno.cov)-2), ylim=range(pheno.cov[,3]), xlab="",ylab="",xaxt='n', yaxt='n')
+    abline(h=0, col='darkgrey')
+    axis(side=2, padj=1, cex.axis=0.7)
+    mtext(side=2, paste("Effect Size(",covs.names[cov.index],")",sep=""), line=1.5)
+    for(i in 1:nrow(pheno.cov)){
+      if(pheno.cov[i,5] <= 0.05/nrow(pheno)){
+        axis(side=1,at=pheno.cov.rank[i],labels=pheno.cov[i,1],las=2,cex.axis=.7,col="orange",col.axis="orange")
+        points(pheno.cov.rank[i], pheno.cov[i,3], col="orange", pch=18)
+      }
+      else{
+        axis(side=1,at=pheno.cov.rank[i],labels=pheno.cov[i,1],las=2,cex.axis=.7)
+        points(pheno.cov.rank[i], pheno.cov[i,3], col="black", pch=18)
+      }
+    }
+    if(min(pheno.cov[,3]) < -3*max(pheno.cov[,3])){
+      legend("bottomright",c(expression(P <= 0.000145), expression(P > 0.000145)), col=c("orange","black"), pch=18)
+    }
+    else{
+      legend("topleft",c(expression(P <= 0.000145), expression(P > 0.000145)), col=c("orange","black"), pch=18)
+    }
+    dev.off()
+  }
+}
+
+```
+
+
+```{r}
+pheno = read.table(paste("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/extended_supplementary_table3_new_090720.txt",sep=""),skip=1,sep='\t')
+
+0.05/nrow(pheno)
+```
+
+
