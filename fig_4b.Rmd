@@ -13,7 +13,7 @@ a = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_9
 require(RColorBrewer)
 
 ###Stratified height plots
-a$CENTER2=as.numeric(a$CENTER)
+a$CENTER2=as.factor(a$CENTER)
 #plotting height as a function of birthyear 
 Lowest_NAM=a[which(a$NAM>=0.01 & a$NAM<0.37),]
 Lower_NAM=a[which(a$NAM>=0.37 & a$NAM<0.46),]
@@ -51,7 +51,7 @@ par(mfrow=c(1,1))
 
 
 #same plot as above but different color palette
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexican_Height_estimated_birth_year_NAM_ancestry_stratified_102119_diffcolors_figure_4A.pdf",height=2.25,width=2.375,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexican_Height_estimated_birth_year_NAM_ancestry_stratified_102119_diffcolors_figure_4B.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.1,0.1))
 plot(1,1,type='n',xlim=range(all_levels$estimated_birth_year),ylim=c(115,200),xlab="",ylab="",xaxt='n',yaxt='n')
 abline(h=seq(120,200,by=10),col=rgb(0,0,0,0.1))
@@ -87,7 +87,7 @@ lines(x = 1934:1993, y = coefficients(all_groups_center)[1] + coefficients(all_g
 legend("bottomright", legend=c("0.01<AI<0.37","0.37<AI<0.46","0.46<AI<0.58","0.58<AI","All"),
        col=c(mypalette2[3],mypalette2[5],mypalette2[6],mypalette2[8],"black"), bg="white",lty=1, lwd=2,cex=0.4)
 
-#dev.off()
+dev.off()
 
 
 

@@ -11,14 +11,14 @@ setwd("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/")
 QN = c("","_quantile_normalized");
 ## generate plots of each covariate for all phenotypes
 for(QNi in 1:2){
-  #pheno = read.table(paste("extended_supplementary_table3_new_090720",QN[QNi],".txt",sep=""),skip=1,sep='\t')
-  pheno = read.table(paste("extended_supplementary_table3_new_090720",QN[QNi],".txt",sep=""),skip=1,sep='\t')
+  #pheno = read.table(paste("extended_supplementary_table3_new_10020",QN[QNi],".txt",sep=""),skip=1,sep='\t')
+  pheno = read.table(paste("extended_supplementary_table3_new_101920",QN[QNi],"_edu_usborn_parents.txt",sep=""),skip=1,sep='\t')
 
   pheno.AI = subset(pheno,pheno[,2]=="AI")
   
   
   covs = unique(pheno[,2])
-  covs.names = c("AI","Birth Year", "Gender", "Weight", "Center")
+  covs.names = c("AI","Birth Year", "Gender", "Weight", "CenterC","CenterM","CenterS","Education2","Education3","US_BORN","num_us_parents")
   for(cov.index in 1:length(covs)){
     cov.i = covs[cov.index]
     pheno.cov = subset(pheno,pheno[,2]==cov.i)
@@ -41,10 +41,10 @@ for(QNi in 1:2){
       }
     }
     if(min(pheno.cov[,3]) < -3*max(pheno.cov[,3])){
-      legend("bottomright",c(expression(P <= 0.000145), expression(P > 0.000145)), col=c("orange","black"), pch=18)
+      legend("bottomright",c(expression(P <= 0.000066), expression(P > 0.000066)), col=c("orange","black"), pch=18)
     }
     else{
-      legend("topleft",c(expression(P <= 0.000145), expression(P > 0.000145)), col=c("orange","black"), pch=18)
+      legend("topleft",c(expression(P <= 0.000066), expression(P > 0.000066)), col=c("orange","black"), pch=18)
     }
     dev.off()
   }
@@ -56,7 +56,7 @@ for(QNi in 1:2){
 ```{r}
 pheno = read.table(paste("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/extended_supplementary_table3_new_090720.txt",sep=""),skip=1,sep='\t')
 
-0.05/nrow(pheno)
+0.05/(69*8)
 ```
 
 

@@ -14,7 +14,7 @@ b = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/HCHS_SOL_Mexicans_admixed_9
 a = b[which(a$V2 != "WG0228238-DNAG09"),]
 
 ###Stratified height plots
-a$CENTER2=as.numeric(a$CENTER)
+a$CENTER2=as.factor(a$CENTER)
 
 #breaking up by the quartiles of NAM ancestry 
 Lowest_NAM=a[which(a$NAM>=0.01 & a$NAM<0.37),]

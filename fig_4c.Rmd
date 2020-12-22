@@ -16,7 +16,7 @@ merged_data_phys<-merge(PRS_phys,pheno_file,by.x=("FID"),by.y=c("V1"))
 
 
 #setting "Center" variable as numeric so R knows how to use it in model 
-merged_data_phys$CENTER2<-as.numeric(merged_data_phys$CENTER)
+merged_data_phys$CENTER2<-as.factor(merged_data_phys$CENTER)
 
 #Dividing dataset 
 Lowest_NAM <- merged_data_phys[which(merged_data_phys$NAM>=0.01 & merged_data_phys$NAM<0.37),]
@@ -67,7 +67,7 @@ require(RColorBrewer)
 mypalette2<-brewer.pal(9,"BuPu")
 
 
-#pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexican_PRS_Height_NAM_ancestry_stratified_090120_diffcolors_figure_4b_NEW.pdf",height=2.25,width=2.375,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/HCHS_SOL_Mexican_PRS_Height_NAM_ancestry_stratified_090120_diffcolors_figure_4C_NEW.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.1,0.1))
 
 plot(1,1,type='n',xlim=range(merged_data_phys_noNAs$HEIGHT),ylim=c(-1,1),xlab="",ylab="",xaxt='n',yaxt='n')
@@ -99,7 +99,7 @@ lines(x = 122:195, y = coefficients(all_model_center_height)[1] + coefficients(a
 
 legend("topleft", legend=c("0.01<AI<0.37","0.37<AI<0.46","0.46<AI<0.58","0.58<AI","All"),
        col=c(mypalette2[3],mypalette2[5],mypalette2[6],mypalette2[8],"black"),bg="white", lty=1, lwd=2,cex=0.4)
-#dev.off()
+dev.off()
 
 ```
 

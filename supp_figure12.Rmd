@@ -40,13 +40,13 @@ foo$new_id <-
 
 new_table<-subset(foo,select=c("new_id"))
 
-write.table(new_table,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_reversed_alleles.txt",row.names=F,col.names=F,sep=' ',quote=F)
+#write.table(new_table,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_reversed_alleles.txt",row.names=F,col.names=F,sep=' ',quote=F)
 
 rsid_only<-subset(foo,select=c("X1"))
-write.table(rsid_only,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_rsid_no_alleles.txt",row.names=F,col.names=F,sep=' ',quote=F)
+#write.table(rsid_only,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_rsid_no_alleles.txt",row.names=F,col.names=F,sep=' ',quote=F)
 
 chr_bp<-subset(sorted_snps,select=c("Chr","BP"))
-write.table(chr_bp,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_chr_bp.txt",row.names=F,col.names=F,sep=' ',quote=F)
+#write.table(chr_bp,"/Volumes/LaCie/Downloads/PRS/UKBB_ref_allele_1Mb_SNPs_chr_bp.txt",row.names=F,col.names=F,sep=' ',quote=F)
 ```
 
 ```{bash}
@@ -69,10 +69,6 @@ awk  'NR==FNR{a[$1]=$0;next} ($2 in a){print a[$2],$1,$3,$4,$5}' f2.txt f3.txt >
 awk 'NR==FNR{a[$2]=$0;next} ($2 in a){print a[$1],$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11}' /Volumes/LaCie/Downloads/PRS/split_files/chr22_BP.txt <(gzip -dc /Volumes/LaCie/1KGP/1000GP_Phase3/1000GP_Phase3_chr22.legend.gz) > /Volumes/LaCie/Downloads/PRS/frequencies/chr22_bp_matches_extra.txt
 
 ```
-
-
-
-
 
 
 ```{bash}
@@ -104,12 +100,20 @@ sorted_snps$ukbb_freq <- ifelse(as.character(sorted_snps$V5)==as.character(sorte
 
 ```{r}
 #Read in tgp file 
+library(dplyr)
+library(tidyr)
 tgp_freq<-read.table("/Volumes/LaCie/Downloads/PRS/frequencies/all_chr_bp_matches_with_header.txt",header=T,sep=' ')
 temp_table<-left_join(x=tgp_freq,y=chr_bp,by=c("position"="BP"))
 
 #merge tgp data and ukbb data 
 tgp_ukbb<-left_join(x=temp_table,y=sorted_snps,by=c("position"="BP","Chr"="Chr"))
 
+##here possible why ending up eith high freq snps
+```
+
+
+```{r}
+#V5 is alt allele, V7 is Minor Allele, V8 is MAF
 #if tgp a1 = ukbb a1 then freq is AMR freq, if not, 1 - AMR freq 
 tgp_ukbb$AMR_freq <- ifelse(as.character(tgp_ukbb$a1)==as.character(tgp_ukbb$V5),
                                tgp_ukbb$AMR,
@@ -134,18 +138,19 @@ test6<-tgp_ukbb[which(tgp_ukbb$position=="16999915"), ]
 test7<-tgp_ukbb[which(tgp_ukbb$position=="36563082"), ]
 
 
-Drop 
+#Drop 
 
-#rs115466154:89862700:G:A
-#rs1295893:127752706:G:T
-#11:9525561:C:T
-#rs367674532:30504373:CA:CAA
-#8:92317970:T:G 
-#rs142410908:16999915:CATGTCAATG:TATGTCAATG
-#9:36563082:G:GTATTAT
-#9:36563082:G:GTATTATTATTAT
+##rs115466154:89862700:G:A
+##rs1295893:127752706:G:T
+##11:9525561:C:T
+##rs367674532:30504373:CA:C
+##8:92317970:T:G *
+##rs142410908:16999915:CATGTCAATG:TATGTCAATG *
+#9:36563082:G:GTATTAT *
+#9:36563082:G:GTATTATTATTAT *
 
-tgp_no_dups<-tgp_ukbb[which(tgp_ukbb$id!="rs115466154:89862700:G:A" & tgp_ukbb$id!="rs1295893:127752706:G:T" & tgp_ukbb$id!="11:9525561:C:T" & tgp_ukbb$id!="rs367674532:30504373:CA:CAA" & tgp_ukbb$id!="8:92317970:T:G" & tgp_ukbb$id!="rs142410908:16999915:CATGTCAATG:TATGTCAATG" & tgp_ukbb$id!="9:36563082:G:GTATTAT" & tgp_ukbb$id!="9:36563082:G:GTATTATTATTAT"),]
+tgp_no_dups<-tgp_ukbb[which(tgp_ukbb$id!="rs115466154:89862700:G:A" & tgp_ukbb$id!="rs1295893:127752706:G:T" & tgp_ukbb$id!="11:9525561:C:T" & tgp_ukbb$id!="rs367674532:30504373:CA:C" & tgp_ukbb$id!="8:92317970:T:G" & tgp_ukbb$id!="rs142410908:16999915:CATGTCAATG:TATGTCAATG" & tgp_ukbb$id!="9:36563082:G:GTATTAT" & tgp_ukbb$id!="9:36563082:G:GTATTATTATTAT" & tgp_ukbb$id!="rs367674532:30504373:CA:CAA"),]
+
 
 plot(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq)
 cor.test(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq)
@@ -156,6 +161,8 @@ cor.test(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq)
 
 require(RColorBrewer)
 myColors=brewer.pal(7, "Set1")
+pcol<-brewer.pal(9, "Set1")
+
 
 pdf("/Users/melissaspear/Dropbox/HCHS_SOL/PRS/Supplementary_figure12.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.1,0.1))
@@ -168,6 +175,19 @@ mtext(side=1,"UKBB Frequency",line=1.1)
 mtext(side=2,"TGP AMR Frequency",line=1.1)
 c=col2rgb(pcol[4])/255;
 abline(0,1,col="black",lwd=2,lty="dashed")
-points(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq,col=rgb(c[1],c[2],c[3],0.5),pch=21,cex=0.75)
+points(tgp_no_dups$ukbb_freq,tgp_no_dups$AMR_freq,col=ifelse(tgp_no_dups$V13 < 0,pcol[2],pcol[4]),pch=20,cex=0.75)
+legend("bottomright", legend=c("Height increasing","Height decreasing"),
+       col=c(pcol[4],pcol[2]), pch=20,bg="white",cex=0.5)
 dev.off()
 ```
+
+
+
+```{r}
+#plot distribution of UKBB freq - AMR freq 
+plot(density(tgp_no_dups$ukbb_freq-tgp_no_dups$AMR_freq))
+```
+
+
+```{r}
+30504373

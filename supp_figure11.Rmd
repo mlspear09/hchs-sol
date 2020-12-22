@@ -18,7 +18,7 @@ merged_data_phys<-merge(PRS_phys,pheno_file,by.x=("FID"),by.y=c("V1"))
 
 
 #setting "Center" variable as numeric so R knows how to use it in model 
-merged_data_phys$CENTER2<-as.numeric(merged_data_phys$CENTER)
+merged_data_phys$CENTER2<-as.factor(merged_data_phys$CENTER)
 
 #Dividing dataset 
 Lowest_NAM <- merged_data_phys[which(merged_data_phys$NAM>=0.01 & merged_data_phys$NAM<0.37),]
@@ -55,7 +55,7 @@ mypalette2<-brewer.pal(9,"BuPu")
 
 par(mfrow=c(1,1))
 #pdf("/Users/melissaspear/Dropbox/HCHS_SOL/PRS/phys_distance_1Mb/plots/HCHS_SOL_Mexican_PRS_estimated_birth_year_NAM_ancestry_stratified_041219.pdf",height=5.00,width=6,pointsize=9)
-pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/supplementary_figure11_090320.pdf",height=2.25,width=2.375,pointsize=10)
+pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/supplementary_figure11_102520.pdf",height=2.25,width=2.375,pointsize=10)
 par(mar=c(2.1,2.1,0.1,0.1))
 plot(1,1,type='n',xlim=range(merged_data_phys$estimated_birth_year),ylim=c(-1,1),xlab="",ylab="",xaxt='n',yaxt='n')
 abline(h=seq(-1,1,by=0.5),col=rgb(0,0,0,0.1))
@@ -80,4 +80,8 @@ legend("topright", legend=c("0.01<AI<0.37","0.37<AI<0.46","0.46<AI<0.58","0.58<A
 dev.off()
 
 
+```
+
+```{r}
+summary(all_groups_center)
 ```

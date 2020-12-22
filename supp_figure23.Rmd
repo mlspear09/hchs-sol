@@ -10,14 +10,14 @@ setwd("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/")
 
 
 ## compare p-values for raw vs QN pheno distributions
-pheno = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/extended_supplementary_table3_new_090720.txt",skip=1,sep='\t')
+pheno = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/extended_supplementary_table3_new_101920_edu_usborn_parents.txt",skip=1,sep='\t')
 pheno.AI = subset(pheno,pheno[,2]=="AI")
 #pheno.AI = pheno.AI[sort(pheno.AI[,1],index.return=T)$ix,]
-phenoQN = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/extended_supplementary_table3_new_090720_quantile_normalized.txt",skip=1,sep='\t')
+phenoQN = read.table("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/extended_supplementary_table3_new_101920_quantile_normalized_edu_usborn_parents.txt",skip=1,sep='\t')
 phenoQN.AI = subset(phenoQN,phenoQN[,2]=="AI" & phenoQN[,1] %in% pheno.AI[,1])
 #phenoQN.AI = phenoQN.AI[sort(phenoQN.AI[,1],index.return=T)$ix,]
 
-pdf("phenoPlots/supplementary_figure23.pdf",height=3,width=3,pointsize=10)
+pdf("phenoPlots/supplementary_figure23_102520.pdf",height=3,width=3,pointsize=10)
 par(mar=c(2.5,2.5,.1,.1))
 plot(1,1,type='n',xlim=range(1,1e-87), ylim=range(1,1e-87),
      xaxt='n',yaxt='n',xlab="",ylab="",log='xy')

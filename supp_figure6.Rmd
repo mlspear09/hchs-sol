@@ -99,7 +99,7 @@ confint(BY_mexam_parents_int)
 
 # look at interaction plot by number of US-born parents by birth year
 #pdf("/Users/melissaspear/Dropbox/HCHS_SOL/paper/figures/Interaction_usborn_parents_birthyear_ancestry.pdf",height=2.25,width=2.375,pointsize=10)
-interact_plot(BY_mexam_parents_int, pred = estimated_birth_year, modx = num_us_parents, x.label="Birth year", y.label="AI ancestry",legend.main="Number of US born parents") + theme(panel.border = element_rect(colour = "black", fill=NA, size=1))
+interact_plot(BY_mexam_parents_int, pred = estimated_birth_year, modx = num_us_parents, x.label="Birth year", y.label="AI ancestry",legend.main="Number of US born parents") #+ theme(panel.border = element_rect(colour = "black", fill=NA, size=1))
 #dev.off()
 
 ```
