@@ -17,7 +17,7 @@ names(PRS_phys)<-c("FID","IID","risk_score")
 merged_data_phys<-merge(PRS_phys,pheno_file,by.x=("FID"),by.y=c("V1"))
 
 
-#setting "Center" variable as numeric so R knows how to use it in model 
+#setting "Center" variable as factor so R knows how to use it in model 
 merged_data_phys$CENTER2<-as.factor(merged_data_phys$CENTER)
 
 merged_data_phys$Education<-as.factor(merged_data_phys$EDUCATION_C3)
