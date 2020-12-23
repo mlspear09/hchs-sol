@@ -6,7 +6,7 @@ output: html_document
 ---
 
 
-Supplementary Figure 3
+
 ```{r}
 allchr = read.table("/Volumes/LaCie/Downloads/HCHS_SOL_only_ALLChr_RFMix_global_ancestry_estimates_050819.txt", header=T, stringsAsFactor = F)
 
