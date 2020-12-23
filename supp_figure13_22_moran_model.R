@@ -17,7 +17,6 @@
 ##
 ##########
 
-setwd('/Users/rhernandez/Dropbox/Research/People/Spear_Melissa/Papers/2_SOL/Sub1_eLife/hchs-sol_elife-revisions/sims')
 require(RColorBrewer)
 pcol=brewer.pal(9, "Set1")
 pcol=c(pcol,"black")
