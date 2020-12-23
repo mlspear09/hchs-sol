@@ -1,0 +1,174 @@
+ ---
+title: "figure 4a"
+author: "Melissa Spear"
+date: "15/09/2020"
+output: html_document
+---
+
+```{r}
+## this is Ryan's chunk
+## generate plots of each covariate for all phenotypes
+setwd("~/Dropbox/Research/People/Spear_Melissa/Papers/2_SOL/Sub1_eLife/hchs-sol_elife-revisions/")
+pheno = read.table(paste("extended_supplementary_table3_new_101920_quantile_normalized_edu_usborn_parents.txt",sep=""),skip=1,sep='\t')
+
+#pheno.AI = subset(pheno,pheno[,2]=="AI") #subsetting out AI ancestry 
+
+library(RColorBrewer)
+pcol=brewer.pal(11, "Paired") #selecting first 11 colros from this color set 
+tmp = pcol[1]; #swapping colors to make AI bright orange
+pcol[1] = pcol[8];
+pcol[8] = tmp;
+
+covs = unique(pheno[,2]) #identifying unique number of covriates in second column 
+##covs.names = c("AI","Birth Year", "Gender", "Weight", "CenterC","CenterM","CenterS","Education2","Education3","US_BORN","num_us_parents") #setting names
+
+#setting names- clarifying education levels and centers
+covs.names = c("AI","Birth Year", "Gender", "Weight", 
+               "Chicago","Miami","SanDiego","Ed<HS","Ed>=HS","US born",
+               "#US parents") #setting names 
+COVORD = c(1,3,6,5,7,10,8,9,11,4,2)
+
+pdf("elife_figs_tables/Figure4-figure-supplement1_temp-ryan.pdf",height=4,width=5,pointsize=10)
+par(mar=c(4.5,2.5,.1,.1)) #margins of plot
+plot(1,1, type='n', xlab="", ylab="", xaxt='n', yaxt='n',
+     xlim=c(0.75,length(covs.names)+0.25), ylim=c(-100,100))
+abline(h=0, col='darkgrey') #set abline at 0 
+abline(v=1:length(covs), col=rgb(0,0,0,0.1))
+axis(side=2, padj=1, cex.axis=0.7) #set margins of y-axis/tcik marks 
+mtext(side=2, paste("Effect Size",sep=""), line=1.5) #set the text on y-axis
+maxDen = 0;
+for(i in 1:length(covs)){ #for each phenotype for that spceicifc covarite 
+  cov.i = covs[COVORD[i]];
+  axis(side=1,at=i,labels=covs.names[COVORD[i]],las=2,cex.axis=.7) #color axis labels in black 
+  pheno.cov = subset(pheno,pheno[,2]==cov.i) #Subsetting out the phenotype associated with the covariate 
+  den = density(pheno.cov[,3])
+  if(max(den$y) > maxDen){
+    maxDen=max(den$y)
+  }
+}
+
+for(i in 1:length(covs)){ #for each phenotype for that spceicifc covarite 
+  cov.i = covs[COVORD[i]];
+  axis(side=1,at=i,labels=covs.names[COVORD[i]],las=2,cex.axis=.7) #color axis labels in black 
+  pheno.cov = subset(pheno,pheno[,2]==cov.i) #Subsetting out the phenotype associated with the covariate 
+  den = density(pheno.cov[,3])
+  polygon(x=c(i+den$y/max(den$y)*0.4, rev(i-den$y/max(den$y)*0.4)), y=c(den$x,rev(den$x)), col=rgb(0,0,0,0.1), border="lightgrey")
+  for(j in 1:nrow(pheno.cov)){
+    ival = which.min(abs(den$x-pheno.cov[j,3]))
+    if(pheno.cov[j,5] < 0.05/nrow(pheno)){
+      pointcol=rgb(1,0,0,0.3)
+    }
+    else{
+      pointcol=rgb(0,0,0,0.15)
+    }
+#    rng = den$y[ival]/maxDen*0.4
+    rng = den$y[ival]/max(den$y)*0.4
+    points(x=i+runif(1,min=-rng,max=rng), y=den$x[ival], pch=16, col=pointcol)
+  }
+}
+legend("topright",c("p<6.6e-05", "Not significant"), col=c(rgb(1,0,0,0.3),rgb(0,0,0,0.15)), pch=16, bg="white")
+dev.off()
+```
+
+```{r} 
+if(0){ ## Ryan's old plot
+  par(mar=c(12.5,2.5,.1,.1)) #margins of plot
+  plot(1, 1, type='n', xlim=c(3,nrow(pheno.cov)-2), ylim=range(-80,80),
+       xlab="", ylab="", xaxt='n', yaxt='n') #plot all data first 
+  abline(h=0, col='darkgrey') #set abline at 0 
+  abline(v=pheno.cov.rank, col=rgb(0,0,0,0.1))
+  axis(side=2, padj=1, cex.axis=0.7) #set margins of y-axis/tcik marks 
+  mtext(side=2, paste("Effect Size",sep=""), line=1.5) #set the text on y-axis
+  for(i in 1:nrow(pheno.cov)){ #for each phenotype for that spceicifc covarite 
+    if(pheno.cov[i,5] <= 0.05/nrow(pheno)){ # if pvalue meets threshold
+      axis(side=1,at=pheno.cov.rank[i],labels=pheno.cov[i,1],las=2,cex.axis=.7,col=pcol[1],col.axis=pcol[1]) #color axis labels in orange 
+    }
+    else{ #if not 
+      axis(side=1,at=pheno.cov.rank[i],labels=pheno.cov[i,1],las=2,cex.axis=.7) #color axis labels in black 
+    }
+  }
+  legend("bottomright",ncol=2, legend = covs.names, col=pcol[1:11],pch=18,cex=0.55, bg=rgb(1,1,1,0.5))
+  
+  for(i in 1:nrow(pheno)){
+    xloc = phenoMap[which(phenoMap[,1] == pheno[i,1]), 2];
+    cov.i = which(covs == pheno[i,2])
+      
+    if(pheno[i,5] <= 0.05/nrow(pheno)){ # if pvalue meets threshold
+      points(xloc, pheno[i,3], col=pcol[cov.i], pch=18) 
+    }
+    else if(cov.i == 1){ #if not 
+      points(xloc, pheno[i,3], col="black", pch=18) #plot points in orange
+    }
+  }
+}
+
+```
+
+
+Plotting only significant effects for additional covariates 
+```{r}
+setwd("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/")
+
+## generate plots of each covariate for all phenotypes
+pheno = read.table(paste("extended_supplementary_table3_new_101920_quantile_normalized_edu_usborn_parents.txt",sep=""),skip=1,sep='\t')
+
+#pheno.AI = subset(pheno,pheno[,2]=="AI") #subsetting out AI ancestry 
+
+library(RColorBrewer)
+pcol=brewer.pal(11, "Paired") #selecting first 11 colros from this color set 
+tmp = pcol[1]; #swapping colors to make AI bright orange
+pcol[1] = pcol[8];
+pcol[8] = tmp;
+
+covs = unique(pheno[,2]) #identifying unique number of covriates in second column 
+##covs.names = c("AI","Birth Year", "Gender", "Weight", "CenterC","CenterM","CenterS","Education2","Education3","US_BORN","num_us_parents") #setting names
+
+legend_text <- c()
+
+#covs=1
+for(cov.index in 1:length(covs)){ #for each index in the list of unique covariates
+legend_text <- c(legend_text, covs.names[cov.index])  
+
+  if(cov.index == 1){ #if first index, ie AI ancestry 
+    cov.i = covs[cov.index] #subsetting out 
+    pheno.cov = subset(pheno,pheno[,2]==cov.i) #Subsetting out the phenotype associated with the covairate 
+    pheno.cov.rank = rank(pheno.cov[,3], ties.method="first")#rank the variables based on their effect size 
+    
+    par(mar=c(12.5,2.5,.1,.1)) #margins of plot
+    plot(1,1,type='n', xlim=c(3,nrow(pheno.cov)-2), ylim=range(-80,80), xlab="",ylab="",xaxt='n', yaxt='n') #plot all data first 
+    abline(h=0, col='darkgrey') #set abline at 0 
+    axis(side=2, padj=1, cex.axis=0.7) #set margins of y-axis/tcik marks 
+    mtext(side=2, paste("Effect Size(",covs.names[cov.index],")",sep=""), line=1.5) #set the text on y-axis
+    for(i in 1:nrow(pheno.cov)){ #for each phenotype for that spceicifc covarite 
+      if(pheno.cov[i,5] <= 0.05/nrow(pheno)){ # if pvalue meets threshold
+        axis(side=1,at=pheno.cov.rank[i],labels=pheno.cov[i,1],las=2,cex.axis=.7,col=pcol[cov.i],col.axis=pcol[cov.i]) #color axis labels in orange 
+        points(pheno.cov.rank[i], pheno.cov[i,3], col=pcol[cov.i], pch=18) #plot points in orange
+      }
+      else{ #if not 
+        axis(side=1,at=pheno.cov.rank[i],labels=pheno.cov[i,1],las=2,cex.axis=.7) #color axis labels in black 
+        points(pheno.cov.rank[i], pheno.cov[i,3], col="black", pch=18) #plot poins in orange
+      }
+    }
+  }
+  else{ #if rest of covariates 
+    cov.i = covs[cov.index] #subsetting out 
+    pheno.cov = subset(pheno,pheno[,2]==cov.i)
+    for(i in 1:nrow(pheno.cov)){ #for each phenotype for that spceicifc covarite 
+      if(pheno.cov[i,5] <= 0.05/nrow(pheno)){ 
+        points(pheno.cov.rank[i], pheno.cov[i,3], col=pcol[cov.i], pch=18) #plot points in orange
+        abline(h=0, col='darkgrey') #recolor ablien since many points overlap it 
+      }
+  }
+  }
+legend("bottomright",ncol=2, legend = legend_text, col=pcol[1:11],pch=18,cex=0.55)
+}
+```
+
+
+```{r}
+#pheno = read.table(paste("/Users/melissaspear/Dropbox/HCHS_SOL/complex_traits/extended_supplementary_table3_new_090720.txt",sep=""),skip=1,sep='\t')
+
+#0.05/(69*8)
+```
+
+
